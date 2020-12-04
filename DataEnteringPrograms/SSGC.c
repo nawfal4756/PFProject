@@ -19,6 +19,7 @@ int main() {
     struct SSGCData userData[100];
     int userLength, counter, counter2, price;
     float tempUnits, tempPrice;
+    FILE *pointer;
 
     printf("Enter number of records you want to enter: ");
     scanf("%d", &userLength);
@@ -31,61 +32,75 @@ int main() {
         fflush(stdin);
     }
 
-    for (counter = 0; counter < userLength; counter++) {
-        printf("Enter consumer id of person %d: ", counter + 1);
-        scanf("%llu", &userData[counter].consumerId);
-        fflush(stdin);
-        while (userData[counter].consumerId < 999999999 || userData[counter].consumerId > 10000000000) {
-            printf("Incorrect value!\n");
-            printf("Enter consumer id of person %d again: ", counter + 1);
+    pointer = fopen("SSGCData.txt", "ab");
+
+    if (pointer != NULL) {
+
+        for (counter = 0; counter < userLength; counter++) {
+            printf("Enter consumer id of person %d: ", counter + 1);
             scanf("%llu", &userData[counter].consumerId);
             fflush(stdin);
-        }
+            while (userData[counter].consumerId < 999999999 || userData[counter].consumerId > 10000000000) {
+                printf("Incorrect value!\n");
+                printf("Enter consumer id of person %d again: ", counter + 1);
+                scanf("%llu", &userData[counter].consumerId);
+                fflush(stdin);
+            }
 
-        printf("Enter name of person %d: ", counter + 1);
-        scanf("%s", &userData[counter].name);
-        fflush(stdin);
+            printf("Enter name of person %d: ", counter + 1);
+            scanf("%s", &userData[counter].name);
+            fflush(stdin);
 
-        printf("Enter address of person %d: ", counter + 1);
-        scanf("%s", &userData[counter].address);
-        fflush(stdin);
+            printf("Enter address of person %d: ", counter + 1);
+            scanf("%s", &userData[counter].address);
+            fflush(stdin);
 
-        printf("Enter contact number of person %d: ", counter + 1);
-        scanf("%llu", &userData[counter].contactNumber);
-        fflush(stdin);
-        while (!ContactNumberVerification(userData[counter].contactNumber)) {
-            printf("Incorrect value!\n");
-            printf("Enter contact number of person %d again: ", counter + 1);
+            printf("Enter contact number of person %d: ", counter + 1);
             scanf("%llu", &userData[counter].contactNumber);
             fflush(stdin);
-        }
-
-        
-        for (counter2 = 0; counter2 < 12; counter2++) {
-            srand(time(NULL));
-
-            do {
-                tempUnits = rand() % 501;                
-            } while (tempUnits < 25 || tempUnits > 500);
-
-            userData[counter].unitsAndPayment[0][counter2] = tempUnits;
-            userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2]);
-            price = userData[counter].unitsAndPayment[1][counter2];
-
-            if (userData[counter].unitsAndPayment[1][counter2] < 200000) {
-                tempPrice = userData[counter].unitsAndPayment[1][counter2];
+            while (!ContactNumberVerification(userData[counter].contactNumber)) {
+                printf("Incorrect value!\n");
+                printf("Enter contact number of person %d again: ", counter + 1);
+                scanf("%llu", &userData[counter].contactNumber);
+                fflush(stdin);
             }
-            else {
+
+            
+            for (counter2 = 0; counter2 < 12; counter2++) {
+                srand(time(NULL));
+
                 do {
-                    tempPrice = rand() % price;                
-                } while (tempPrice > price); 
+                    tempUnits = rand() % 501;                
+                } while (tempUnits < 25 || tempUnits > 500);
+
+                userData[counter].unitsAndPayment[0][counter2] = tempUnits;
+                userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2]);
+                price = userData[counter].unitsAndPayment[1][counter2];
+
+                if (userData[counter].unitsAndPayment[1][counter2] < 200000) {
+                    tempPrice = userData[counter].unitsAndPayment[1][counter2];
+                }
+                else {
+                    do {
+                        tempPrice = rand() % price;                
+                    } while (tempPrice > price); 
+                }
+                
+                userData[counter].unitsAndPayment[2][counter2] = tempPrice;
+                
             }
             
-            userData[counter].unitsAndPayment[2][counter2] = tempPrice;
-            
         }
-        
+
+        fwrite(userData, sizeof(struct SSGCData), userLength, pointer);
+        printf("\n\nData written on file successfully!");
+
     }
+    else {
+        printf("\n\nUnable to open file!");
+        exit(1);
+    }
+
 }
 
 bool ContactNumberVerification(unsigned long long int number) {
