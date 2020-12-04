@@ -8,16 +8,17 @@ struct SSGCData {
     char name[30];
     char address[70];
     unsigned long long int contactNumber;
-    float unitsAndPayment[2][12];
+    float unitsAndPayment[3][12];
 };
 
 bool ContactNumberVerification(unsigned long long int number);
-float BillCalculatorSSGC(float units);
+float SSGCPriceCalculator(float units);
+
 
 int main() {
     struct SSGCData userData[100];
-    int userLength, counter, counter2;
-    float temp;
+    int userLength, counter, counter2, price;
+    float tempUnits, tempPrice;
 
     printf("Enter number of records you want to enter: ");
     scanf("%d", &userLength);
@@ -61,30 +62,86 @@ int main() {
 
         
         for (counter2 = 0; counter2 < 12; counter2++) {
-            srand(time(0));
+            srand(time(NULL));
 
-            printf("Enter units for month %d: ", counter2 + 1);
             do {
-                temp = rand();
-            } while (temp < 25 || temp > 400);
-            
-            userData[counter].unitsAndPayment[0][counter2] = temp;
-            printf("%f", userData[counter].unitsAndPayment[0][counter2]);
+                tempUnits = rand() % 501;                
+            } while (tempUnits < 25 || tempUnits > 500);
 
-            printf("Enter amount paid for month %d: ", counter2 + 1);
-            scanf("%d", &userData[counter].unitsAndPayment[1][counter2]);
-            fflush(stdin);
+            userData[counter].unitsAndPayment[0][counter2] = tempUnits;
+            userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2]);
+            price = userData[counter].unitsAndPayment[1][counter2];
+
+            if (userData[counter].unitsAndPayment[1][counter2] < 200000) {
+                tempPrice = userData[counter].unitsAndPayment[1][counter2];
+            }
+            else {
+                do {
+                    tempPrice = rand() % price;                
+                } while (tempPrice > price); 
+            }
+            
+            userData[counter].unitsAndPayment[2][counter2] = tempPrice;
+            
         }
         
     }
 }
 
 bool ContactNumberVerification(unsigned long long int number) {
-    if (number / 10000000000 == 3) {
+    int temp;
+    temp = number / 1000000000;
+    
+    if (temp == 3) {        
         if (number >= 3000000000 && number <= 39999999999) {
             return true;
         }
     }
 
     return false;
+}
+
+float SSGCPriceCalculator(float units) {
+    float price = 0;
+    
+    if (units > 50) {
+        price = 50 * 121;
+        units -= 50;
+        if (units > 100) {
+            price += 100 * 300;
+            units -= 100;
+            if (units > 100) {
+                price += 100 * 553;
+                units -= 100;
+                if (units > 100) {
+                    price += 100 * 738;
+                    units -= 100;
+                    if (units > 100) {
+                        price += 100 * 1107;
+                        units -= 100;
+                        if (units > 0) {
+                            price += units * 1460;
+                        }
+                    }
+                    else {
+                        price += units * 1107;
+                    }
+                }
+                else {
+                    price += units * 738;
+                }
+            }
+            else {
+                price += units * 553;
+            }
+        }
+        else {
+            price += units * 300;
+        }
+    }
+    else {
+        price = units * 121;
+    }
+
+    return price;
 }
