@@ -13,30 +13,43 @@ struct SSGCData {
 
 bool ContactNumberVerification(unsigned long long int number);
 float SSGCPriceCalculator(float units);
-
+int ArraySize(FILE* pointer, int structSize);
 
 int main() {
-    struct SSGCData userData[100];
-    int userLength, counter, counter2, price;
+    struct SSGCData userData[125];
+    int userLength, counter, counter2, price, sizeFromFile;
     float tempUnits, tempPrice;
     FILE *pointer;
 
+    pointer = fopen("SSGCData.txt", "rb");
+    if (pointer != NULL) {
+        sizeFromFile = ArraySize(pointer, sizeof(struct SSGCData));
+        fread(userData, sizeof(struct SSGCData), sizeFromFile, pointer);        
+    }
+    else {
+        printf("Unable to open file!");
+        exit(1);
+    }
+
+    fclose(pointer);
+    
     printf("Enter number of records you want to enter: ");
     scanf("%d", &userLength);
     fflush(stdin);
-    while (userLength < 0 || userLength >= 100) {
+    while (userLength < 0 || userLength >= 20) {
         printf("Incorrect value!\n");
-        printf("Enter value between 1 and 99 inclusive\n");
+        printf("Enter value between 1 and 20 inclusive\n");
         printf("Enter number of records you want to enter again: ");
         scanf("%d", &userLength);
         fflush(stdin);
     }
 
-    pointer = fopen("SSGCData.txt", "ab");
+    pointer = fopen("SSGCData.txt", "wb");
 
     if (pointer != NULL) {
 
-        for (counter = 0; counter < userLength; counter++) {
+        for (counter = sizeFromFile; counter < userLength + sizeFromFile; counter++) {
+            consumerID:
             printf("Enter consumer id of person %d: ", counter + 1);
             scanf("%llu", &userData[counter].consumerId);
             fflush(stdin);
@@ -45,6 +58,12 @@ int main() {
                 printf("Enter consumer id of person %d again: ", counter + 1);
                 scanf("%llu", &userData[counter].consumerId);
                 fflush(stdin);
+            }
+            for (counter2 = 0; counter2 < counter; counter2++) {
+                if(userData[counter].consumerId == userData[counter2].consumerId) {
+                    printf("\nUser already exist with this consumer ID. Enter another ID\n");
+                    goto consumerID;
+                }
             }
 
             printf("Enter name of person %d: ", counter + 1);
@@ -92,9 +111,10 @@ int main() {
             
         }
 
-        fwrite(userData, sizeof(struct SSGCData), userLength, pointer);
+        fwrite(userData, sizeof(struct SSGCData), userLength + sizeFromFile, pointer);
         printf("\n\nData written on file successfully!");
 
+        fclose(pointer);
     }
     else {
         printf("\n\nUnable to open file!");
@@ -117,6 +137,7 @@ bool ContactNumberVerification(unsigned long long int number) {
 }
 
 float SSGCPriceCalculator(float units) {
+
     float price = 0;
     
     if (units > 50) {
@@ -159,4 +180,15 @@ float SSGCPriceCalculator(float units) {
     }
 
     return price;
+}
+
+int ArraySize(FILE* pointer, int structSize) {
+    int size;
+
+    fseek(pointer, 0L, SEEK_END);
+    size = ftell(pointer);
+    size = size / structSize;
+    fseek(pointer, 0L, SEEK_SET);
+
+    return size;
 }
