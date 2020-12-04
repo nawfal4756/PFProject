@@ -85,9 +85,9 @@ int main() {
             }
 
             
+            srand(time(0));
             for (counter2 = 0; counter2 < 12; counter2++) {
-                srand(time(NULL));
-
+                tempUnits = 0;
                 do {
                     tempUnits = rand() % 501;                
                 } while (tempUnits < 25 || tempUnits > 500);
