@@ -8,11 +8,14 @@ struct SSGCData {
     char name[30];
     char address[70];
     unsigned long long int contactNumber;
+    char usageType;
+    // 0 = units, 1 = amount due, 2 = amount paid
     float unitsAndPayment[3][12];
 };
 
 bool ContactNumberVerification(unsigned long long int number);
-float SSGCPriceCalculator(float units);
+float SSGCPriceCalculator(float units, char usageType);
+bool SSGCConsumerIDVerification(unsigned long long int consumerID);
 int ArraySize(FILE* pointer, int structSize);
 
 int main() {
@@ -21,7 +24,7 @@ int main() {
     float tempUnits, tempPrice;
     FILE *pointer;
 
-    pointer = fopen("SSGCData.txt", "rb");
+    pointer = fopen("SSGCData.txt", "ab");
     if (pointer != NULL) {
         sizeFromFile = ArraySize(pointer, sizeof(struct SSGCData));
         fread(userData, sizeof(struct SSGCData), sizeFromFile, pointer);        
@@ -32,6 +35,11 @@ int main() {
     }
 
     fclose(pointer);
+
+    if (sizeFromFile > 120) {
+        printf("Entries exceed 120 so no need of more data");
+        exit(1);
+    }
     
     printf("Enter number of records you want to enter: ");
     scanf("%d", &userLength);
@@ -53,7 +61,7 @@ int main() {
             printf("Enter consumer id of person %d: ", counter + 1);
             scanf("%llu", &userData[counter].consumerId);
             fflush(stdin);
-            while (userData[counter].consumerId < 999999999 || userData[counter].consumerId > 10000000000) {
+            while (!SSGCConsumerIDVerification(userData[counter].consumerId)) {
                 printf("Incorrect value!\n");
                 printf("Enter consumer id of person %d again: ", counter + 1);
                 scanf("%llu", &userData[counter].consumerId);
@@ -84,28 +92,68 @@ int main() {
                 fflush(stdin);
             }
 
+            printf("Enter usage type of person %d (R - Residential, I - Industrial): ", counter + 1);
+            scanf("%c", &userData[counter].usageType);
+            fflush(stdin);
+            while (userData[counter].usageType == 'R' || userData[counter].usageType == 'I') {
+                printf("Incorrect option entered! Enter either R or I only\n");
+                printf("Enter usage type of person %d (R - Residential, I - Industrial) again: ", counter + 1);
+                scanf("%c", &userData[counter].usageType);
+                fflush(stdin);
+            }
             
             srand(time(0));
             for (counter2 = 0; counter2 < 12; counter2++) {
                 tempUnits = 0;
-                do {
-                    tempUnits = rand() % 501;                
-                } while (tempUnits < 25 || tempUnits > 500);
+                switch (userData[counter].usageType) {
+                    case 'R': {
+                        do {
+                            tempUnits = rand() % 501;                
+                        } while (tempUnits < 25 || tempUnits > 500);
 
-                userData[counter].unitsAndPayment[0][counter2] = tempUnits;
-                userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2]);
-                price = userData[counter].unitsAndPayment[1][counter2];
+                        userData[counter].unitsAndPayment[0][counter2] = tempUnits;
+                        userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2], userData[counter].usageType);
+                        price = userData[counter].unitsAndPayment[1][counter2];
 
-                if (userData[counter].unitsAndPayment[1][counter2] < 200000) {
-                    tempPrice = userData[counter].unitsAndPayment[1][counter2];
+                        if (userData[counter].unitsAndPayment[1][counter2] < 200000) {
+                            tempPrice = userData[counter].unitsAndPayment[1][counter2];
+                        }
+                        else {
+                            do {
+                                tempPrice = rand() % price;                
+                            } while (tempPrice > userData[counter].unitsAndPayment[1][counter2]); 
+                        }
+                        
+                        userData[counter].unitsAndPayment[2][counter2] = tempPrice;
+                        break;
+                    }
+                    case 'I': {
+                        do {
+                            tempUnits = rand() % 7001;                
+                        } while (tempUnits < 200 || tempUnits > 7000);
+
+                        userData[counter].unitsAndPayment[0][counter2] = tempUnits;
+                        userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2], userData[counter].usageType);
+                        price = userData[counter].unitsAndPayment[1][counter2];
+
+                        if (userData[counter].unitsAndPayment[1][counter2] < 400000) {
+                            tempPrice = userData[counter].unitsAndPayment[1][counter2];
+                        }
+                        else {
+                            do {
+                                tempPrice = rand() % price;                
+                            } while (tempPrice > userData[counter].unitsAndPayment[1][counter2]); 
+                        }
+                        
+                        userData[counter].unitsAndPayment[2][counter2] = tempPrice;
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
                 }
-                else {
-                    do {
-                        tempPrice = rand() % price;                
-                    } while (tempPrice > price); 
-                }
+
                 
-                userData[counter].unitsAndPayment[2][counter2] = tempPrice;
                 
             }
             
@@ -136,50 +184,83 @@ bool ContactNumberVerification(unsigned long long int number) {
     return false;
 }
 
-float SSGCPriceCalculator(float units) {
-
+float SSGCPriceCalculator(float units, char usageType) {
     float price = 0;
     
-    if (units > 50) {
-        price = 50 * 121;
-        units -= 50;
-        if (units > 100) {
-            price += 100 * 300;
-            units -= 100;
-            if (units > 100) {
-                price += 100 * 553;
-                units -= 100;
+    switch (usageType) {
+        case 'R': {
+            if (units > 50) {
+                price = 50 * 121;
+                units -= 50;
                 if (units > 100) {
-                    price += 100 * 738;
+                    price += 100 * 300;
                     units -= 100;
                     if (units > 100) {
-                        price += 100 * 1107;
+                        price += 100 * 553;
                         units -= 100;
-                        if (units > 0) {
-                            price += units * 1460;
+                        if (units > 100) {
+                            price += 100 * 738;
+                            units -= 100;
+                            if (units > 100) {
+                                price += 100 * 1107;
+                                units -= 100;
+                                if (units > 0) {
+                                    price += units * 1460;
+                                }
+                            }
+                            else {
+                                price += units * 1107;
+                            }
+                        }
+                        else {
+                            price += units * 738;
                         }
                     }
                     else {
-                        price += units * 1107;
+                        price += units * 553;
                     }
                 }
                 else {
-                    price += units * 738;
+                    price += units * 300;
                 }
             }
             else {
-                price += units * 553;
+                price = units * 121;
             }
+
+            if (price <= 172.58) {
+                price = 172.58;
+            }
+
+            break;
         }
-        else {
-            price += units * 300;
+
+        case 'I': {
+            price = units * 1225.25;
+            if (price <= 29967.34) {
+                price = 29967.34;
+            }
+            break;
         }
-    }
-    else {
-        price = units * 121;
+
+        default: {
+            price = 0;
+            break;
+        }
     }
 
+    
+
     return price;
+}
+
+bool SSGCConsumerIDVerification(unsigned long long int consumerID) {
+    if (consumerID >= 1000000000 && consumerID <= 9999999999) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 int ArraySize(FILE* pointer, int structSize) {

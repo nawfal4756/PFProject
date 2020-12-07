@@ -7,6 +7,8 @@ struct SSGCData {
     char name[30];
     char address[70];
     unsigned long long int contactNumber;
+    char usageType;
+    // 0 = units, 1 = amount due, 2 = amount paid
     float unitsAndPayment[3][12];
 };
 
@@ -27,6 +29,7 @@ int main() {
             printf("%s\n", userData[counter].name);
             printf("%s\n", userData[counter].address);
             printf("0%llu\n", userData[counter].contactNumber);
+            printf("%c\n", userData[counter].usageType);
 
             for (counter2 = 0; counter2 < 12; counter2++) {
                 printf("%.2f\t%.2f\t%.2f\n", userData[counter].unitsAndPayment[0][counter2], userData[counter].unitsAndPayment[1][counter2], userData[counter].unitsAndPayment[2][counter2]);
