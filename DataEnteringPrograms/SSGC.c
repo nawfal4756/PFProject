@@ -75,11 +75,11 @@ int main() {
             }
 
             printf("Enter name of person %d: ", counter + 1);
-            scanf("%s", &userData[counter].name);
+            gets(userData[counter].name);
             fflush(stdin);
 
             printf("Enter address of person %d: ", counter + 1);
-            scanf("%s", &userData[counter].address);
+            gets(userData[counter].address);
             fflush(stdin);
 
             printf("Enter contact number of person %d: ", counter + 1);
@@ -95,7 +95,7 @@ int main() {
             printf("Enter usage type of person %d (R - Residential, I - Industrial): ", counter + 1);
             scanf("%c", &userData[counter].usageType);
             fflush(stdin);
-            while (userData[counter].usageType == 'R' || userData[counter].usageType == 'I') {
+            while (userData[counter].usageType != 'R' && userData[counter].usageType != 'I') {
                 printf("Incorrect option entered! Enter either R or I only\n");
                 printf("Enter usage type of person %d (R - Residential, I - Industrial) again: ", counter + 1);
                 scanf("%c", &userData[counter].usageType);
@@ -157,6 +157,7 @@ int main() {
                 
             }
             
+            printf("\n\n");
         }
 
         fwrite(userData, sizeof(struct SSGCData), userLength + sizeFromFile, pointer);

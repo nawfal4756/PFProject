@@ -5,12 +5,16 @@
 
 bool KElectricAccountNumberVerification(unsigned long long int accountNumber);
 bool ContactNumberVerification(unsigned long long int number);
+float KElectricPriceCalculator(float unitsOffPeak, float unitsOnPeak, float allotedKW, char usageType);
+int ArraySize(FILE* pointer, int structSize);
 
 struct KElectricData {
     unsigned long long int accountNumber;
     char name[30];
     char address[70];
     unsigned long long int contactNumber;
+    char usageType;
+    float allotedLoad;
     // 0 = off peak units, 1 = on peak units, 2 = amount due, 3 = amount paid
     float unitsAndPayment[4][12];
     bool timePayment[12];
@@ -23,7 +27,7 @@ int main() {
     char tempBool;
     FILE *pointer;
 
-    pointer = fopen("KElectricData.txt", "rb");
+    pointer = fopen("KElectricData.txt", "ab");
     if (pointer != NULL) {
         sizeFromFile = ArraySize(pointer, sizeof(struct KElectricData));
         fread(userData, sizeof(struct KElectricData), sizeFromFile, pointer);        
@@ -62,7 +66,7 @@ int main() {
             fflush(stdin);
             while (!KElectricAccountNumberVerification(userData[counter].accountNumber)) {
                 printf("Incorrect value!\n");
-                printf("Enter consumer id of person %d again: ", counter + 1);
+                printf("Enter account number of person %d again: ", counter + 1);
                 scanf("%llu", &userData[counter].accountNumber);
                 fflush(stdin);
             }
@@ -74,11 +78,11 @@ int main() {
             }
 
             printf("Enter name of person %d: ", counter + 1);
-            scanf("%s", &userData[counter].name);
+            gets(userData[counter].name);
             fflush(stdin);
 
             printf("Enter address of person %d: ", counter + 1);
-            scanf("%s", &userData[counter].address);
+            gets(userData[counter].address);
             fflush(stdin);
 
             printf("Enter contact number of person %d: ", counter + 1);
@@ -88,6 +92,24 @@ int main() {
                 printf("Incorrect value!\n");
                 printf("Enter contact number of person %d again: ", counter + 1);
                 scanf("%llu", &userData[counter].contactNumber);
+                fflush(stdin);
+            }
+
+            printf("Enter usage type of person %d (R - Residential, C - Commercial): ", counter + 1);
+            scanf("%c", &userData[counter].usageType);
+            fflush(stdin);
+            while (userData[counter].usageType != 'R' && userData[counter].usageType != 'C') {
+                printf("Enter usage type of person %d (R - Residential, C - Commercial) again: ", counter + 1);
+                scanf("%c", &userData[counter].usageType);
+                fflush(stdin);
+            }
+
+            printf("Enter alloted load of person %d: ", counter + 1);
+            scanf("%f", &userData[counter].allotedLoad);
+            fflush(stdin);
+            while (userData[counter].allotedLoad <= 0) {
+                printf("Enter alloted load of person %d again: ", counter + 1);
+                scanf("%f", &userData[counter].allotedLoad);
                 fflush(stdin);
             }
 
@@ -107,6 +129,34 @@ int main() {
 
                 userData[counter].unitsAndPayment[0][counter2] = tempUnitsOffPeak;
                 userData[counter].unitsAndPayment[1][counter2] = tempUnitsOnPeak;
+                userData[counter].unitsAndPayment[2][counter2] = KElectricPriceCalculator(userData[counter].unitsAndPayment[0][counter2], userData[counter].unitsAndPayment[1][counter2], userData[counter].allotedLoad, userData[counter].usageType);
+                price = userData[counter].unitsAndPayment[3][counter2];
+
+                switch (userData[counter].usageType) {
+                    case 'R': {
+                        if (userData[counter].unitsAndPayment[2][counter2] < 70000) {
+                            userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[2][counter2];
+                        }
+                        else {
+                            do {
+                                userData[counter].unitsAndPayment[3][counter2] = rand() % price;
+                            } while (userData[counter].unitsAndPayment[3][counter2] < 0 || userData[counter].unitsAndPayment[3][counter2] > userData[counter].unitsAndPayment[2][counter2]);
+                        }
+                        break;
+                    }
+
+                    case 'C': {
+                        if (userData[counter].unitsAndPayment[2][counter2] < 250000) {
+                            userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[2][counter2];
+                        }
+                        else {
+                            do {
+                                userData[counter].unitsAndPayment[3][counter2] = rand() % price;
+                            } while (userData[counter].unitsAndPayment[3][counter2] < 0 || userData[counter].unitsAndPayment[3][counter2] > userData[counter].unitsAndPayment[2][counter2]);
+                        }
+                        break;
+                    }
+                }
             }
 
             for (counter2 = 0; counter2 < 12; counter2++) {
@@ -166,4 +216,87 @@ bool KElectricAccountNumberVerification(unsigned long long int accountNumber) {
     else {
         return false;
     }
+}
+
+float KElectricPriceCalculator(float unitsOffPeak, float unitsOnPeak, float allotedKW, char usageType) {
+    float price = 0, units = 0;
+    units = unitsOffPeak + unitsOnPeak;
+
+    switch (usageType) {
+        case 'R': {
+            if (allotedKW < 5) {
+                if (units <= 50) {
+                    price = units * 2;
+                }
+                if (units > 100) {
+                    units -= 100;
+                    price += 100 * 5.79;
+                    if (units > 100) {
+                        units -= 100;
+                        price += 100 * 8.11;
+                        if (units > 100) {
+                            units -= 100;
+                            price += 100 * 10.2;
+                            if (units > 400) {
+                                units -= 400;
+                                price += 400 * 19.25;
+                                if (units > 0) {
+                                    price += units * 22.35;
+                                }
+                            }
+                            else {
+                                price += units * 19.25;
+                            }
+                        }
+                        else {
+                            price += units * 10.2;    
+                        }
+                    }
+                    else {
+                        price += units * 8.11;
+                    }
+                }
+                else {
+                    price += units * 5.79;
+                }
+            }
+            else {
+                price += unitsOnPeak * 22.35;
+                price += unitsOffPeak * 16.03;
+            }
+
+            if (price < 150) {
+                price = 150;
+            }
+
+            break;
+        }
+
+        case 'C': {
+            if (allotedKW < 5) {
+                price = units * 19.09;
+            }
+            else {
+                price += unitsOffPeak * 18.52;
+                price += unitsOnPeak * 24.49;
+            }
+            
+            if (price < 350) {
+                price = 350;
+            }
+        }
+    }
+
+    return price;
+}
+
+int ArraySize(FILE* pointer, int structSize) {
+    int size;
+
+    fseek(pointer, 0L, SEEK_END);
+    size = ftell(pointer);
+    size = size / structSize;
+    fseek(pointer, 0L, SEEK_SET);
+
+    return size;
 }
