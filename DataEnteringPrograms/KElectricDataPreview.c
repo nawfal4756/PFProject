@@ -10,15 +10,16 @@ struct KElectricData {
     unsigned long long int contactNumber;
     char usageType;
     float allotedLoad;
-    // 0 = off peak units, 1 = on peak units, 2 = amount due, 3 = amount paid
-    float unitsAndPayment[4][12];
+    int numberOfTV;
+    // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
+    float unitsAndPayment[9][12];
     bool timePayment[12];
 };
 
 int ArraySize(FILE* pointer, int structSize);
 
 int main() {
-    int counter, counter2, size;
+    int counter, counter2, counter3, size;
     FILE* pointer;
     struct KElectricData userData[125];
 
@@ -34,9 +35,11 @@ int main() {
             printf("0%llu\n", userData[counter].contactNumber);
             printf("%c\n", userData[counter].usageType);
             printf("%.2f\n", userData[counter].allotedLoad);
-
+            printf("%d\n", userData[counter].numberOfTV);
             for (counter2 = 0; counter2 < 12; counter2++) {
-                printf("%.2f\t%.2f\t%.2f\t", userData[counter].unitsAndPayment[0][counter2], userData[counter].unitsAndPayment[1][counter2], userData[counter].unitsAndPayment[2][counter2]);
+                for (counter3 = 0; counter3 < 9; counter3++) {
+                    printf("%.2f\t", userData[counter].unitsAndPayment[counter3][counter2]);
+                }
                 printf("%s\n", userData[counter].timePayment[counter2] ? "True" : "False");
             }
             

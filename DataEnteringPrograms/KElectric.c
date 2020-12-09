@@ -15,15 +15,16 @@ struct KElectricData {
     unsigned long long int contactNumber;
     char usageType;
     float allotedLoad;
-    // 0 = off peak units, 1 = on peak units, 2 = amount due, 3 = amount paid
-    float unitsAndPayment[4][12];
+    int numberOfTV;
+    // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
+    float unitsAndPayment[9][12];
     bool timePayment[12];
 };
 
 int main() {
     struct KElectricData userData[125];
-    int userLength, counter, counter2, price, sizeFromFile;
-    float tempUnitsOffPeak, tempUnitsOnPeak, tempPrice;
+    int userLength, counter, counter2, counter3, price, sizeFromFile;
+    float tempUnitsOffPeak, tempUnitsOnPeak, tempPrice, tempSum;
     char tempBool;
     FILE *pointer;
 
@@ -108,8 +109,19 @@ int main() {
             scanf("%f", &userData[counter].allotedLoad);
             fflush(stdin);
             while (userData[counter].allotedLoad <= 0) {
+                printf("Incorrect amoun!\n");
                 printf("Enter alloted load of person %d again: ", counter + 1);
                 scanf("%f", &userData[counter].allotedLoad);
+                fflush(stdin);
+            }
+
+            printf("Enter number of TV's for person %d: ", counter + 1);
+            scanf("%d", &userData[counter].numberOfTV);
+            fflush(stdin);
+            while (userData[counter].numberOfTV <= 0 || userData[counter].numberOfTV > 40) {
+                printf("Incorrect amount of TVs! Range 0 to 40\n");
+                printf("Enter number of TV's for person %d again: ", counter + 1);
+                scanf("%d", &userData[counter].numberOfTV);
                 fflush(stdin);
             }
 
@@ -118,65 +130,80 @@ int main() {
             for (counter2 = 0; counter2 < 12; counter2++) {
                 tempUnitsOffPeak = 0;
                 tempUnitsOnPeak = 0;
-
-                do {
-                    tempUnitsOffPeak = rand() % 1251;
-                } while (tempUnitsOffPeak < 0 || tempUnitsOffPeak > 1250);
-
-                do {
-                    tempUnitsOnPeak = rand() % 1251;
-                } while (tempUnitsOnPeak < 0 || tempUnitsOnPeak > 1250);
-
-                userData[counter].unitsAndPayment[0][counter2] = tempUnitsOffPeak;
-                userData[counter].unitsAndPayment[1][counter2] = tempUnitsOnPeak;
-                userData[counter].unitsAndPayment[2][counter2] = KElectricPriceCalculator(userData[counter].unitsAndPayment[0][counter2], userData[counter].unitsAndPayment[1][counter2], userData[counter].allotedLoad, userData[counter].usageType);
-                price = userData[counter].unitsAndPayment[3][counter2];
+                tempSum = 0;
 
                 switch (userData[counter].usageType) {
                     case 'R': {
-                        if (userData[counter].unitsAndPayment[2][counter2] < 70000) {
-                            userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[2][counter2];
+                        do {
+                            tempUnitsOffPeak = rand() % 1251;
+                        } while(tempUnitsOffPeak < 0 || tempUnitsOffPeak > 1250);
+
+                        do {
+                            tempUnitsOnPeak = rand() % 1251;
+                        } while(tempUnitsOnPeak < 0 || tempUnitsOnPeak > 1250);
+
+                        userData[counter].unitsAndPayment[0][counter2] = tempUnitsOffPeak;
+                        userData[counter].unitsAndPayment[1][counter2] = tempUnitsOnPeak;
+                        userData[counter].unitsAndPayment[2][counter2] = KElectricPriceCalculator(tempUnitsOffPeak, tempUnitsOnPeak, userData[counter].allotedLoad, 'R');
+                        userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[2][counter2] * 0.015;
+                        userData[counter].unitsAndPayment[4][counter2] = userData[counter].unitsAndPayment[2][counter2] * 0.17;
+                        userData[counter].unitsAndPayment[5][counter2] = userData[counter].unitsAndPayment[2][counter2] * 0.04;
+                        userData[counter].unitsAndPayment[6][counter2] = userData[counter].numberOfTV * 35;
+
+                        for (counter3 = 2; counter3 < 7; counter3++) {
+                            tempSum += userData[counter].unitsAndPayment[counter3][counter2];
+                        }
+
+                        userData[counter].unitsAndPayment[7][counter2] = tempSum;
+                        price = tempSum;
+
+                        if (userData[counter].unitsAndPayment[7][counter2] < 110000) {
+                            userData[counter].unitsAndPayment[8][counter2] = userData[counter].unitsAndPayment[7][counter2];
+                            userData[counter].timePayment[counter2] = true;
                         }
                         else {
                             do {
-                                userData[counter].unitsAndPayment[3][counter2] = rand() % price;
-                            } while (userData[counter].unitsAndPayment[3][counter2] < 0 || userData[counter].unitsAndPayment[3][counter2] > userData[counter].unitsAndPayment[2][counter2]);
+                                userData[counter].unitsAndPayment[8][counter2] = rand() % price;
+                            } while (userData[counter].unitsAndPayment[8][counter2] <= 0 || userData[counter].unitsAndPayment[8][counter2] > userData[counter].unitsAndPayment[7][counter2]);
+                            userData[counter].timePayment[counter2] = false;
                         }
                         break;
                     }
 
                     case 'C': {
-                        if (userData[counter].unitsAndPayment[2][counter2] < 250000) {
-                            userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[2][counter2];
+                        do {
+                            tempUnitsOffPeak = rand() % 25001;
+                        } while(tempUnitsOffPeak < 0 || tempUnitsOffPeak > 25000);
+
+                        do {
+                            tempUnitsOnPeak = rand() % 25001;
+                        } while(tempUnitsOnPeak < 0 || tempUnitsOnPeak > 25000);
+
+                        userData[counter].unitsAndPayment[0][counter2] = tempUnitsOffPeak;
+                        userData[counter].unitsAndPayment[1][counter2] = tempUnitsOnPeak;
+                        userData[counter].unitsAndPayment[2][counter2] = KElectricPriceCalculator(tempUnitsOffPeak, tempUnitsOnPeak, userData[counter].allotedLoad, 'C');
+                        userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[2][counter2] * 0.02;
+                        userData[counter].unitsAndPayment[4][counter2] = userData[counter].unitsAndPayment[2][counter2] * 0.17;
+                        userData[counter].unitsAndPayment[5][counter2] = userData[counter].unitsAndPayment[2][counter2] * 0.08;
+                        userData[counter].unitsAndPayment[6][counter2] = userData[counter].numberOfTV * 60;
+
+                        for (counter3 = 2; counter3 < 7; counter3++) {
+                            tempSum += userData[counter].unitsAndPayment[counter3][counter2];
+                        }
+
+                        userData[counter].unitsAndPayment[7][counter2] = tempSum;
+                        price = tempSum;
+
+                        if (userData[counter].unitsAndPayment[7][counter2] < 1000000) {
+                            userData[counter].unitsAndPayment[8][counter2] = userData[counter].unitsAndPayment[7][counter2];
+                            userData[counter].timePayment[counter2] = true;
                         }
                         else {
                             do {
-                                userData[counter].unitsAndPayment[3][counter2] = rand() % price;
-                            } while (userData[counter].unitsAndPayment[3][counter2] < 0 || userData[counter].unitsAndPayment[3][counter2] > userData[counter].unitsAndPayment[2][counter2]);
+                                userData[counter].unitsAndPayment[8][counter2] = rand() % price;
+                            } while (userData[counter].unitsAndPayment[8][counter2] <= 0 || userData[counter].unitsAndPayment[8][counter2] > userData[counter].unitsAndPayment[7][counter2]);
+                            userData[counter].timePayment[counter2] = false;
                         }
-                        break;
-                    }
-                }
-            }
-
-            for (counter2 = 0; counter2 < 12; counter2++) {
-                printf("Enter if paid on time or not for person %d and for month %d(T or F): ", counter + 1, counter2 + 1);
-                timelyPayment:
-                scanf("%c", &tempBool);
-                fflush(stdin);
-                switch (tempBool) {
-                    case 'T': {
-                        userData[counter].timePayment[counter2] = true;
-                        break;
-                    }
-                    case 'F': {
-                        userData[counter].timePayment[counter2] = false;
-                        break;
-                    }
-                    default: {
-                        printf("Incorrect option selected! Enter T or F\n");
-                        printf("Enter if paid on time or not for person %d and for month %d(T or F) again: ", counter + 1, counter2 + 1);
-                        goto timelyPayment;
                         break;
                     }
                 }
