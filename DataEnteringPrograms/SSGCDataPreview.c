@@ -8,14 +8,14 @@ struct SSGCData {
     char address[70];
     unsigned long long int contactNumber;
     char usageType;
-    // 0 = units, 1 = amount due, 2 = amount paid
-    float unitsAndPayment[3][12];
+    // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
+    float unitsAndPayment[6][12];
 };
 
 int ArraySize(FILE* pointer, int structSize);
 
 int main() {
-    int counter, counter2, size;
+    int counter, counter2, counter3, size;
     FILE* pointer;
     struct SSGCData userData[125];
 
@@ -32,7 +32,10 @@ int main() {
             printf("%c\n", userData[counter].usageType);
 
             for (counter2 = 0; counter2 < 12; counter2++) {
-                printf("%.2f\t%.2f\t%.2f\n", userData[counter].unitsAndPayment[0][counter2], userData[counter].unitsAndPayment[1][counter2], userData[counter].unitsAndPayment[2][counter2]);
+                for (counter3 = 0; counter3 < 6; counter3++) {
+                    printf("%.2f\t", userData[counter].unitsAndPayment[counter3][counter2]);
+                }
+                printf("\n");
             }
             
             printf("\n\n");

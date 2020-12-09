@@ -9,8 +9,8 @@ struct SSGCData {
     char address[70];
     unsigned long long int contactNumber;
     char usageType;
-    // 0 = units, 1 = amount due, 2 = amount paid
-    float unitsAndPayment[3][12];
+    // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
+    float unitsAndPayment[6][12];
 };
 
 bool ContactNumberVerification(unsigned long long int number);
@@ -20,8 +20,8 @@ int ArraySize(FILE* pointer, int structSize);
 
 int main() {
     struct SSGCData userData[125];
-    int userLength, counter, counter2, price, sizeFromFile;
-    float tempUnits, tempPrice;
+    int userLength, counter, counter2, counter3, price, sizeFromFile;
+    float tempUnits, tempPrice, tempSum;
     FILE *pointer;
 
     pointer = fopen("SSGCData.txt", "ab");
@@ -105,26 +105,35 @@ int main() {
             srand(time(0));
             for (counter2 = 0; counter2 < 12; counter2++) {
                 tempUnits = 0;
+                tempSum = 0;
+
                 switch (userData[counter].usageType) {
                     case 'R': {
                         do {
-                            tempUnits = rand() % 501;                
-                        } while (tempUnits < 25 || tempUnits > 500);
+                            tempUnits = rand() % 301;                
+                        } while (tempUnits < 25 || tempUnits > 300);
 
                         userData[counter].unitsAndPayment[0][counter2] = tempUnits;
-                        userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2], userData[counter].usageType);
-                        price = userData[counter].unitsAndPayment[1][counter2];
+                        userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2], 'R');
+                        userData[counter].unitsAndPayment[2][counter2] = userData[counter].unitsAndPayment[1][counter2] * 0.17;
+                        userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[1][counter2] * 0.04;
 
-                        if (userData[counter].unitsAndPayment[1][counter2] < 200000) {
-                            tempPrice = userData[counter].unitsAndPayment[1][counter2];
+                        for (counter3 = 1; counter3 < 4; counter3++) {
+                            tempSum += userData[counter].unitsAndPayment[counter3][counter2];
+                        }
+
+                        userData[counter].unitsAndPayment[4][counter2] = tempSum;
+                        price = tempSum;
+
+                        if (userData[counter].unitsAndPayment[4][counter2] < 75000) {
+                            userData[counter].unitsAndPayment[5][counter2] = userData[counter].unitsAndPayment[4][counter2];
                         }
                         else {
                             do {
-                                tempPrice = rand() % price;                
-                            } while (tempPrice > userData[counter].unitsAndPayment[1][counter2]); 
+                                userData[counter].unitsAndPayment[5][counter2] = rand() % price;
+                            } while (userData[counter].unitsAndPayment[5][counter2] < 0 || userData[counter].unitsAndPayment[5][counter2] > userData[counter].unitsAndPayment[4][counter2]);
                         }
-                        
-                        userData[counter].unitsAndPayment[2][counter2] = tempPrice;
+
                         break;
                     }
                     case 'I': {
@@ -133,19 +142,26 @@ int main() {
                         } while (tempUnits < 200 || tempUnits > 7000);
 
                         userData[counter].unitsAndPayment[0][counter2] = tempUnits;
-                        userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2], userData[counter].usageType);
-                        price = userData[counter].unitsAndPayment[1][counter2];
+                        userData[counter].unitsAndPayment[1][counter2] = SSGCPriceCalculator(userData[counter].unitsAndPayment[0][counter2], 'I');
+                        userData[counter].unitsAndPayment[2][counter2] = userData[counter].unitsAndPayment[1][counter2] * 0.17;
+                        userData[counter].unitsAndPayment[3][counter2] = userData[counter].unitsAndPayment[1][counter2] * 0.08;
 
-                        if (userData[counter].unitsAndPayment[1][counter2] < 400000) {
-                            tempPrice = userData[counter].unitsAndPayment[1][counter2];
+                        for (counter3 = 1; counter3 < 4; counter3++) {
+                            tempSum += userData[counter].unitsAndPayment[counter3][counter2];
+                        }
+
+                        userData[counter].unitsAndPayment[4][counter2] = tempSum;
+                        price = tempSum;
+
+                        if (userData[counter].unitsAndPayment[4][counter2] < 300000) {
+                            userData[counter].unitsAndPayment[5][counter2] = userData[counter].unitsAndPayment[4][counter2];
                         }
                         else {
                             do {
-                                tempPrice = rand() % price;                
-                            } while (tempPrice > userData[counter].unitsAndPayment[1][counter2]); 
+                                userData[counter].unitsAndPayment[5][counter2] = rand() % price;
+                            } while (userData[counter].unitsAndPayment[5][counter2] < 0 || userData[counter].unitsAndPayment[5][counter2] > userData[counter].unitsAndPayment[4][counter2]);
                         }
-                        
-                        userData[counter].unitsAndPayment[2][counter2] = tempPrice;
+
                         break;
                     }
                     default: {
@@ -248,9 +264,7 @@ float SSGCPriceCalculator(float units, char usageType) {
             price = 0;
             break;
         }
-    }
-
-    price += (price * 0.17) + (price * 0.04);
+    }    
 
     return price;
 }

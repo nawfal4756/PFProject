@@ -86,10 +86,7 @@ float SSGCPriceCalculator(float units, char usageType) {
             price = 0;
             break;
         }
-    }
-
-    
-    price += (price * 0.17) + (price * 0.04);
+    }    
 
     return price;
 }
