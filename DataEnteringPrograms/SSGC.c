@@ -24,7 +24,7 @@ int main() {
     float tempUnits, tempPrice, tempSum;
     FILE *pointer;
 
-    pointer = fopen("SSGCData.txt", "ab");
+    pointer = fopen("SSGCData.txt", "rb");
     if (pointer != NULL) {
         sizeFromFile = ArraySize(pointer, sizeof(struct SSGCData));
         fread(userData, sizeof(struct SSGCData), sizeFromFile, pointer);        

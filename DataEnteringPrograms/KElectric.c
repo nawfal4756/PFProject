@@ -28,7 +28,7 @@ int main() {
     char tempBool;
     FILE *pointer;
 
-    pointer = fopen("KElectricData.txt", "ab");
+    pointer = fopen("KElectricData.txt", "rb");
     if (pointer != NULL) {
         sizeFromFile = ArraySize(pointer, sizeof(struct KElectricData));
         fread(userData, sizeof(struct KElectricData), sizeFromFile, pointer);        
