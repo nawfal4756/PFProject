@@ -3,8 +3,6 @@
 #include <time.h>
 #include <conio.h>
 
-void PTCLPriceCalculator(int packageLandline, int packageBroadband, char packageTV, char packageCharji, int onNetMinutes, int mobileMinutes, int otherMinutes, int internationalZone1Minutes, int internationalOtherZoneMinutes, int counter2, float payments[6][12]);
-
 struct PTCLData {
     int packageLandline;
     int packageBroadband;
@@ -18,6 +16,9 @@ struct PTCLData {
     // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
     float payments[6][12];
 };
+
+void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[6][12]);
+
 
 int main() {
     struct PTCLData userData;
@@ -106,8 +107,8 @@ int main() {
     do {
         userData.internationalOtherZoneMinutes = rand() % 151;
     } while (userData.internationalOtherZoneMinutes < 0 || userData.internationalOtherZoneMinutes > 150);
-    
-    PTCLPriceCalculator(userData.packageLandline, userData.packageBroadband, userData.packageTV, userData.packageCharji, userData.onNetMinutes, userData.mobileMinutes, userData.otherMinutes, userData.internationalZone1Minutes, userData.internationalOtherZoneMinutes, counter, userData.payments);
+
+    PTCLPriceCalculator(userData, counter, userData.payments);
 
     for (counter = 0; counter < 6; counter++) {
         printf("%.2f\n", userData.payments[counter][0]);
@@ -117,7 +118,7 @@ int main() {
     
 }
 
-void PTCLPriceCalculator(int packageLandline, int packageBroadband, char packageTV, char packageCharji, int onNetMinutes, int mobileMinutes, int otherMinutes, int internationalZone1Minutes, int internationalOtherZoneMinutes, int counter2, float payments[6][12]) {
+void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[6][12]) {
     int counter1;
     float price = 0, tempRate = 0, telephoneBill = 0, serviceTax = 0, withholdingTax = 0;
 
@@ -127,76 +128,76 @@ void PTCLPriceCalculator(int packageLandline, int packageBroadband, char package
     } while (tempRate >= 35 && tempRate <= 40);
     // tempRate = 37.5;
 
-    price += otherMinutes * 2;
-    price += internationalOtherZoneMinutes * tempRate;
+    price += userInfo.otherMinutes * 2;
+    price += userInfo.internationalOtherZoneMinutes * tempRate;
 
-    if (packageLandline != 1 && packageBroadband == 0) {
-        switch (packageLandline) {
+    if (userInfo.packageLandline != 1 && userInfo.packageBroadband == 0) {
+        switch (userInfo.packageLandline) {
             case 1: {
-                price += onNetMinutes * 0;
-                price += mobileMinutes * 2.5;
-                price += internationalZone1Minutes * 3.6;            
+                price += userInfo.onNetMinutes * 0;
+                price += userInfo.mobileMinutes * 2.5;
+                price += userInfo.internationalZone1Minutes * 3.6;            
                 break;
             }
 
             case 500: {
-                mobileMinutes -= 200;
+                userInfo.mobileMinutes -= 200;
                 
-                if (mobileMinutes > 0) {
-                    price += mobileMinutes * 2.5;
+                if (userInfo.mobileMinutes > 0) {
+                    price += userInfo.mobileMinutes * 2.5;
                 }            
-                price += internationalZone1Minutes * 3.6;            
+                price += userInfo.internationalZone1Minutes * 3.6;            
                 break;
             }
 
             case 1000: {
-                mobileMinutes -= 700;
-                internationalZone1Minutes -= 200;
+                userInfo.mobileMinutes -= 700;
+                userInfo.internationalZone1Minutes -= 200;
 
-                if (mobileMinutes > 0) {
-                    price += mobileMinutes * 2.5;
+                if (userInfo.mobileMinutes > 0) {
+                    price += userInfo.mobileMinutes * 2.5;
                 }            
-                if (internationalZone1Minutes > 0) {
-                    price += internationalZone1Minutes * 3.6;
+                if (userInfo.internationalZone1Minutes > 0) {
+                    price += userInfo.internationalZone1Minutes * 3.6;
                 }            
                 break;
             }
 
             case 3000: {
-                mobileMinutes -= 2000;
-                internationalZone1Minutes -= 200;
+                userInfo.mobileMinutes -= 2000;
+                userInfo.internationalZone1Minutes -= 200;
 
-                if (mobileMinutes > 0) {
-                    price += mobileMinutes * 2.5;
+                if (userInfo.mobileMinutes > 0) {
+                    price += userInfo.mobileMinutes * 2.5;
                 }
-                if (internationalZone1Minutes > 0) {
-                    price += internationalZone1Minutes * 3.6;
+                if (userInfo.internationalZone1Minutes > 0) {
+                    price += userInfo.internationalZone1Minutes * 3.6;
                 }            
                 break;
             }
 
             case 5000: {
-                mobileMinutes -= 4000;
-                internationalZone1Minutes -= 400;
+                userInfo.mobileMinutes -= 4000;
+                userInfo.internationalZone1Minutes -= 400;
 
-                if (mobileMinutes > 0) {
-                    price += mobileMinutes * 2.5;
+                if (userInfo.mobileMinutes > 0) {
+                    price += userInfo.mobileMinutes * 2.5;
                 }            
-                if (internationalZone1Minutes > 0) {
-                    price += internationalZone1Minutes * 3.6;
+                if (userInfo.internationalZone1Minutes > 0) {
+                    price += userInfo.internationalZone1Minutes * 3.6;
                 }            
                 break;
             }
 
             case 8000: {
-                mobileMinutes -= 8000;
-                internationalZone1Minutes -= 800;
+                userInfo.mobileMinutes -= 8000;
+                userInfo.internationalZone1Minutes -= 800;
 
-                if (mobileMinutes > 0) {
-                    price += mobileMinutes * 2.5;
+                if (userInfo.mobileMinutes > 0) {
+                    price += userInfo.mobileMinutes * 2.5;
                 }            
-                if (internationalZone1Minutes > 0) {
-                    price += internationalZone1Minutes * 3.6;
+                if (userInfo.internationalZone1Minutes > 0) {
+                    price += userInfo.internationalZone1Minutes * 3.6;
                 }            
                 break;
             }
@@ -210,7 +211,7 @@ void PTCLPriceCalculator(int packageLandline, int packageBroadband, char package
     
     
 
-    switch (packageBroadband) {
+    switch (userInfo.packageBroadband) {
         case 0: {
             break;
         }
@@ -250,36 +251,36 @@ void PTCLPriceCalculator(int packageLandline, int packageBroadband, char package
         }
     }
 
-    switch (packageTV) {
+    switch (userInfo.packageTV) {
         case 'N': {
             break;
         }
         
         case 'T': {
-            if (packageBroadband == 0) {
+            if (userInfo.packageBroadband == 0) {
                 price += 799;
             }
 
-            if (packageBroadband == 6) {
+            if (userInfo.packageBroadband == 6) {
                 price += 525;
             }
             break;
         }
 
         case 'A': {
-            if (packageBroadband == 0 || packageBroadband == 6) {
+            if (userInfo.packageBroadband == 0 || userInfo.packageBroadband == 6) {
                 price += 99;   
             }            
             break;
         }
 
         case 'B': {
-            if (packageBroadband == 0) {
+            if (userInfo.packageBroadband == 0) {
                 price += 799;
                 price += 99;
             }
 
-            if (packageBroadband == 6) {
+            if (userInfo.packageBroadband == 6) {
                 price += 525;
                 price += 99;
             }
@@ -290,7 +291,7 @@ void PTCLPriceCalculator(int packageLandline, int packageBroadband, char package
             break;
     }
 
-    switch (packageCharji) {
+    switch (userInfo.packageCharji) {
         case 'U': {
             price += 1999;
             break;
@@ -322,12 +323,12 @@ void PTCLPriceCalculator(int packageLandline, int packageBroadband, char package
         withholdingTax += price * 0.1;
     }
 
-    if (packageBroadband != 0 || packageCharji != 'N') {
+    if (userInfo.packageBroadband != 0 || userInfo.packageCharji != 'N') {
         serviceTax += price * 0.195;
         withholdingTax += price * 0.125;
     }
 
-    if (packageTV != 'N') {
+    if (userInfo.packageTV != 'N') {
         serviceTax += price * 0.1;
     }
 
