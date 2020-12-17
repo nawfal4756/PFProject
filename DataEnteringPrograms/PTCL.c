@@ -261,7 +261,7 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
     int counter1;
     float price = 0, tempRate = 0, telephoneBill = 0, serviceTax = 0, withholdingTax = 0;
 
-    srand(time(0));
+    // srand(time(0));
     do {
         tempRate = rand() % 41;
     } while (tempRate >= 35 && tempRate <= 40);
