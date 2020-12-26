@@ -22,17 +22,35 @@ struct KElectricData {
     bool timePayment[12];
 };
 
+struct PTCLData {
+    unsigned long long int accountID;
+    char name[30];
+    char address[70];
+    unsigned long long int contactNumber;
+    int packageLandline;
+    int packageBroadband;
+    char packageTV;
+    char packageCharji;
+    int onNetMinutes[12];
+    int mobileMinutes[12];
+    int otherMinutes[12];
+    int internationalZone1Minutes[12];
+    int internationalOtherZoneMinutes[12];
+    // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
+    float payments[6][12];
+};
+
 int ArraySize(FILE* pointer, int structSize);
 
 int main() {
     FILE* pointer;
     int size;
 
-    pointer = fopen("KElectricData.txt", "rb");
+    pointer = fopen("PTCLData.txt", "rb");
 
     if (pointer != NULL) {
         printf("File opened successfully!\n");
-        size = ArraySize(pointer, sizeof(struct KElectricData));
+        size = ArraySize(pointer, sizeof(struct PTCLData));
         printf("%d", size);
     }
     else {
