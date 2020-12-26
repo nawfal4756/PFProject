@@ -77,13 +77,13 @@ int CreditCardVerification(struct CreditCard data) {
     int sizeFromFile, counter1 = 0, found = 0;
 
     // 1 = Verified, 0 = Not Verified, -1 = Error
-    printf("in function\n");
+    
     pointer = fopen("CreditCardData.txt", "rb");
 
     if (pointer == NULL) {
         return -1;
     }
-    printf("file open\n");
+    
     sizeFromFile = ArraySize(pointer, sizeof(struct CreditCard));
 
     while (counter1 < sizeFromFile) {
@@ -93,8 +93,7 @@ int CreditCardVerification(struct CreditCard data) {
             break;
         }
         counter1++;
-    }
-    printf("card loop exited\n");
+    }    
 
     if (found == 0) {
         return 0;
@@ -103,17 +102,20 @@ int CreditCardVerification(struct CreditCard data) {
     time(&currentTime);
     time1 = localtime(&currentTime);
 
-    printf("time found\n");
+    if (time1->tm_year + 1900 > data.expiryDate.year) {
+        return 0;
+    }
+    
+    if (time1->tm_year + 1900 == data.expiryDate.year) {
+        if (time1->tm_mon + 1 <= data.expiryDate.month) {
+            return 0;
+        }
+    }    
 
-    if (time1->tm_mon + 1 >= data.expiryDate.month && time1->tm_year + 1900 >= data.expiryDate.year) {
-        printf("Date greater\n");
-        if (originalData.expiryDate.month == data.expiryDate.month && originalData.expiryDate.year == data.expiryDate.year) {
-            printf("Date verifies\n");
-            if (strcmp(originalData.name, data.name) == 0) {
-                printf("name verified");
-                if (originalData.cvc == data.cvc) {
-                    return 1;
-                }
+    if (originalData.expiryDate.month == data.expiryDate.month && originalData.expiryDate.year == data.expiryDate.year) {
+        if (strcmp(originalData.name, data.name) == 0) {        
+            if (originalData.cvc == data.cvc) {
+                return 1;
             }
         }
     }
