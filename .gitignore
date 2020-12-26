@@ -1,1 +1,3 @@
 *.exe
+/DataEnteringPrograms/*.txt
+/Testing/*.txt
