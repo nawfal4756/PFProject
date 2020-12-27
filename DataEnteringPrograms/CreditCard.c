@@ -60,7 +60,7 @@ int main() {
         printf("Enter Credit Card Number %d: ", counter1 + 1);
         scanf("%llu", &data.cardNumber);
         fflush(stdin);
-        while (data.cardNumber < 100000000000 || data.cardNumber > 999999999999) {
+        while (data.cardNumber < 1000000000000000 || data.cardNumber > 9999999999999999) {
             printf("Incorrect numbern\n");
             printf("Enter Credit Card Number %d again: ", counter1 + 1);
             scanf("%llu", &data.cardNumber);

@@ -107,7 +107,7 @@ int CreditCardVerification(struct CreditCard data) {
     }
     
     if (time1->tm_year + 1900 == data.expiryDate.year) {
-        if (time1->tm_mon + 1 <= data.expiryDate.month) {
+        if (time1->tm_mon + 1 >= data.expiryDate.month) {
             return 0;
         }
     }    
