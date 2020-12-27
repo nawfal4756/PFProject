@@ -21,7 +21,7 @@ int main() {
     struct CreditCard data;
     FILE* pointer;
 
-    pointer = fopen("CreditCardData.txt", "rb");
+    pointer = fopen("../DataFiles/CreditCardData.txt", "rb");
     if (pointer == NULL) {
         printf("Cannot open file or file does not exist! Exiting Program...\nPress enter to continue...");
         getch();

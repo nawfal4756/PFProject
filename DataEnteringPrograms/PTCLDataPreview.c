@@ -27,7 +27,7 @@ int main() {
     struct PTCLData userData[125];
     int counter1, counter2, counter3, sizeFromFile;
 
-    pointer = fopen("PTCLData.txt", "rb");
+    pointer = fopen("../DataFiles/PTCLData.txt", "rb");
 
     if (pointer == NULL) {
         printf("Unable to open file! Exiting program...\nPress enter to continue...");

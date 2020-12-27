@@ -23,7 +23,7 @@ int main() {
     FILE* pointer;
     struct KElectricData userData[125];
 
-    pointer = fopen("KElectricData.txt", "rb");
+    pointer = fopen("../DataFiles/KElectricData.txt", "rb");
 
     if (pointer != NULL) {
         size = ArraySize(pointer, sizeof(struct KElectricData));

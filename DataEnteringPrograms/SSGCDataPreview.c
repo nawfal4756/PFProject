@@ -19,7 +19,7 @@ int main() {
     FILE* pointer;
     struct SSGCData userData[125];
 
-    pointer = fopen("SSGCData.txt", "rb");
+    pointer = fopen("../DataFiles/SSGCData.txt", "rb");
 
     if (pointer != NULL) {
         size = ArraySize(pointer, sizeof(struct SSGCData));
