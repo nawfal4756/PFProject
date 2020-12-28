@@ -40,6 +40,8 @@ int main() {
 }
 
 struct KElectricData SearchKElectricID(unsigned long long int id) {
+    // 0 = Not Found, 404 = Error
+    
     FILE* pointer;
     struct KElectricData data;
     int sizeFromFile, counter1 = 0, found = 0;
