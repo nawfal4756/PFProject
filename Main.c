@@ -203,7 +203,7 @@ int Client() {
             printf("\n\nEnter 1 to preview complete bill\n");
             printf("Enter 2 to print the bill\n");
             printf("Enter 3 to pay the bill\n");
-            printf("Enter 4 to enter another account number\n");
+            printf("Enter 4 to enter different account number\n");
             printf("Enter 5 to go to company selection\n");
             printf("Enter 6 to go to switch panel change");
             printf("Enter the selected option: ");

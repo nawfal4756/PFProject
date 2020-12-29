@@ -16,7 +16,7 @@ struct SSGCData {
 };
 
 int ArraySize(FILE* pointer, int structSize);
-struct SSGCData SearchSSGCID(unsigned long long int id);
+struct SSGCData SSGCIDSearch(unsigned long long int id);
 
 int main() {
     unsigned long long int consumerId;
@@ -25,7 +25,7 @@ int main() {
     printf("Enter the consumer ID: ");
     scanf("%llu", &consumerId);
 
-    data = SearchSSGCID(consumerId);
+    data = SSGCIDSearch(consumerId);
     printf("\n\n");
 
     printf("Name: ");
@@ -36,7 +36,7 @@ int main() {
     getch();
 }
 
-struct SSGCData SearchSSGCID(unsigned long long int id) {
+struct SSGCData SSGCIDSearch(unsigned long long int id) {
     // 0 = Not Found, 404 = Error
     
     FILE* pointer;

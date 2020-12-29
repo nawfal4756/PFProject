@@ -19,7 +19,7 @@ struct KElectricData {
 };
 
 int ArraySize(FILE* pointer, int structSize);
-struct KElectricData SearchKElectricID(unsigned long long int id);
+struct KElectricData KElectricIDSearch(unsigned long long int id);
 
 int main() {
     unsigned long long int accountNumber;
@@ -28,7 +28,7 @@ int main() {
     printf("Enter the account number: ");
     scanf("%llu", &accountNumber);
 
-    data = SearchKElectricID(accountNumber);
+    data = KElectricIDSearch(accountNumber);
     printf("\n\n");
 
     printf("Name: ");
@@ -39,7 +39,7 @@ int main() {
     getch();
 }
 
-struct KElectricData SearchKElectricID(unsigned long long int id) {
+struct KElectricData KElectricIDSearch(unsigned long long int id) {
     // 0 = Not Found, 404 = Error
     
     FILE* pointer;
