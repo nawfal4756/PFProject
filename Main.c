@@ -5,6 +5,7 @@
 #include <conio.h>
 
 struct KElectricData {
+    //New Structure
     unsigned long long int accountNumber;
     char name[30];
     char address[70];
@@ -14,10 +15,13 @@ struct KElectricData {
     int numberOfTV;
     // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
     float unitsAndPayment[9][12];
+    int billYear[12];
     bool timePayment[12];
+    float total;
 };
 
 struct SSGCData {
+    // New Structure
     unsigned long long int consumerId;
     char name[30];
     char address[70];
@@ -25,9 +29,12 @@ struct SSGCData {
     char usageType;
     // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
     float unitsAndPayment[6][12];
+    int billYear[12];
+    float total;
 };
 
 struct PTCLData {
+    // New Structure
     unsigned long long int accountID;
     char name[30];
     char address[70];
@@ -43,6 +50,8 @@ struct PTCLData {
     int internationalOtherZoneMinutes[12];
     // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
     float payments[6][12];
+    int billYear[12];
+    float total;
 };
 
 void Header(char id);
@@ -146,7 +155,7 @@ int Client() {
     switch (userInput1) {
         case 1: {
             keAccountNum:
-            printf("K-Electric: \n");
+            printf("\n\nK-Electric: \n");
             printf("Enter account number to get the data\n");
             printf("Enter 1 to go to company selection\n");
             printf("Enter 2 to go to switch panel page\n");

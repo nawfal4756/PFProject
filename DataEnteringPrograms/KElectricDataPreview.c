@@ -3,7 +3,21 @@
 #include <conio.h>
 #include <stdbool.h>
 
+// struct KElectricData {
+//     unsigned long long int accountNumber;
+//     char name[30];
+//     char address[70];
+//     unsigned long long int contactNumber;
+//     char usageType;
+//     float allotedLoad;
+//     int numberOfTV;
+//     // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
+//     float unitsAndPayment[9][12];
+//     bool timePayment[12];
+// };
+
 struct KElectricData {
+    //New Structure
     unsigned long long int accountNumber;
     char name[30];
     char address[70];
@@ -13,7 +27,9 @@ struct KElectricData {
     int numberOfTV;
     // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
     float unitsAndPayment[9][12];
+    int billYear[12];
     bool timePayment[12];
+    float total;
 };
 
 int ArraySize(FILE* pointer, int structSize);
@@ -40,8 +56,10 @@ int main() {
                 for (counter3 = 0; counter3 < 9; counter3++) {
                     printf("%.2f\t", userData[counter].unitsAndPayment[counter3][counter2]);
                 }
+                printf("%d\t", userData[counter].billYear[counter2]);
                 printf("%s\n", userData[counter].timePayment[counter2] ? "True" : "False");
             }
+            printf("%.2f", userData[counter].total);
             
             printf("\n\n");
         }

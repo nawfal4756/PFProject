@@ -2,7 +2,18 @@
 #include <stdlib.h>
 #include <conio.h>
 
+// struct SSGCData {
+//     unsigned long long int consumerId;
+//     char name[30];
+//     char address[70];
+//     unsigned long long int contactNumber;
+//     char usageType;
+//     // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
+//     float unitsAndPayment[6][12];
+// };
+
 struct SSGCData {
+    // New Structure
     unsigned long long int consumerId;
     char name[30];
     char address[70];
@@ -10,6 +21,8 @@ struct SSGCData {
     char usageType;
     // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
     float unitsAndPayment[6][12];
+    int billYear[12];
+    float total;
 };
 
 int ArraySize(FILE* pointer, int structSize);
@@ -35,8 +48,10 @@ int main() {
                 for (counter3 = 0; counter3 < 6; counter3++) {
                     printf("%.2f\t", userData[counter].unitsAndPayment[counter3][counter2]);
                 }
-                printf("\n");
+                printf("%d\n", userData[counter].billYear[counter2]);
             }
+
+            printf("%.2f\n", userData[counter].total);
             
             printf("\n\n");
         }

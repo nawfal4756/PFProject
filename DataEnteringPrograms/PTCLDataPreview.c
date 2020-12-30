@@ -2,7 +2,26 @@
 #include <stdlib.h>
 #include <conio.h>
 
+// struct PTCLData {
+//     unsigned long long int accountID;
+//     char name[30];
+//     char address[70];
+//     unsigned long long int contactNumber;
+//     int packageLandline;
+//     int packageBroadband;
+//     char packageTV;
+//     char packageCharji;
+//     int onNetMinutes[12];
+//     int mobileMinutes[12];
+//     int otherMinutes[12];
+//     int internationalZone1Minutes[12];
+//     int internationalOtherZoneMinutes[12];
+//     // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
+//     float payments[6][12];
+// };
+
 struct PTCLData {
+    // New Structure
     unsigned long long int accountID;
     char name[30];
     char address[70];
@@ -18,6 +37,8 @@ struct PTCLData {
     int internationalOtherZoneMinutes[12];
     // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
     float payments[6][12];
+    int billYear[12];
+    float total;
 };
 
 int ArraySize(FILE* pointer, int structSize);
@@ -76,9 +97,16 @@ int main() {
         for (counter2 = 0; counter2 < 6; counter2++) {
             for ( counter3 = 0; counter3 < 12; counter3++) {
                 printf("%.2f\t", userData[counter1].payments[counter2][counter3]);
-            }
+            }            
             printf("\n");
         }
+
+        for (counter2 = 0; counter2 < 12; counter2++) {
+            printf("%d\t", userData[counter1].billYear[counter2]);
+        }
+        printf("\n");
+
+        printf("%.2f\n", userData[counter1].total);
 
         printf("\n\n");
     }
