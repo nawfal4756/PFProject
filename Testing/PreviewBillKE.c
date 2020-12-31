@@ -21,7 +21,7 @@ struct KElectricData {
     float total;
 };
 int ArraySize(FILE* pointer, int structSize);
-void BillPreviewKE(struct KElectricData KE);
+void KElectricBillPreview(struct KElectricData KE);
 struct KElectricData KElectricIDSearch(unsigned long long int id);
 int main()
 {
@@ -32,9 +32,9 @@ int main()
     scanf("%llu", &accountNumber);
 
     data = KElectricIDSearch(accountNumber);
-    BillPreviewKE(data);
+    KElectricBillPreview(data);
 }
-void BillPreviewKE(struct KElectricData KE)
+void KElectricBillPreview(struct KElectricData KE)
 {
     int counter2,counter3,counter;
     printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
@@ -46,7 +46,7 @@ void BillPreviewKE(struct KElectricData KE)
     printf("Address: %s\n", KE.address);
     printf("Account number: %llu\n", KE.accountNumber);
     printf("Contact number: %llu\n",KE.contactNumber);
-    printf("Usage type: %c\n",KE.usageType);
+    printf("Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
     printf("Alloted load: %f\n",KE.allotedLoad);
     printf("Number of TV: %d\n",KE.numberOfTV);
     printf("Total Bill: %d",KE.total);
