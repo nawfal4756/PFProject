@@ -49,7 +49,7 @@ void KElectricBillPreview(struct KElectricData KE)
     printf("Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
     printf("Alloted load: %f\n",KE.allotedLoad);
     printf("Number of TV: %d\n",KE.numberOfTV);
-    printf("Total Bill: %d",KE.total);
+    printf("Pending Payment: %.2f",KE.total);
     printf("\n");
     printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
     printf("%13s%14s%11s%13s%17s%11s%13s%14s%9s","Month/","Off Peak","On Peak","Amount of","Electricity","Sales","Income","TV License","Amount","Amount");
