@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include <conio.h>
 #include "Functions.c"
 
@@ -67,6 +68,17 @@ bool PTCLAccountIDVerification(unsigned long long int accountID);
 struct KElectricData KElectricIDSearch(unsigned long long int id);
 struct SSGCData SSGCIDSearch(unsigned long long int id);
 struct PTCLData PTCLIDSearch(unsigned long long int id);
+void KElectricBillPreview(struct KElectricData KE);
+void SSGCBillPreview(struct SSGCData SSGC);
+void PTCLBillPreview(struct PTCLData PTCL);
+int CreditCardVerification(struct CreditCard data);
+int Payment(float amount);
+int KElectricRecordUpdate(struct KElectricData dataNew);
+int SSGCRecordUpdate(struct SSGCData dataNew);
+int PTCLRecordUpdate(struct PTCLData dataNew);
+int KElectricPrintBill(struct KElectricData KE);
+int SSGCPrintBill(struct SSGCData SSGC);
+int PTCLPrintBill(struct PTCLData PTCL);
 
 int main() {
     char userInputClient, exitSelection;
@@ -167,12 +179,57 @@ void Header(char id) {
 }
 
 int Admin() {
+    int userInput1;
+
+    adminTop:
     Header('m');
     Header('a');
+    printf("Select any one company to proceed\n");
+    printf("Enter 1 for K-Electric\n");
+    printf("Enter 2 for SSGC\n");
+    printf("Enter 3 for PTCL\n");
+    printf("Enter 4 to go to switch panel\n");
+    printf("enter 5 to exit the program\n");
+    printf("Enter desired option: ");
+    scanf("%d", &userInput1);
+    fflush(stdin);
+
+    switch (userInput1) {
+        case 1: {
+            printf("\n\nK-Electric: \n");
+            printf("Enter 1 to add a new customer\n");
+        }
+
+        case 2: {
+            
+        }
+
+        case 3: {
+            
+        }
+
+        case 4: {
+            return 1;
+            break;
+        }
+
+        case 5: {
+            return 0;
+            break;
+        }
+
+        default: {
+            printf("Incorrect option selected!\n");
+            system("cls");
+            goto adminTop;
+            break;
+        }
+    }
 }
 
 int Client() {
-    int userInput1, userInput2, selection;
+    int userInput1, userInput2, selection, selection2;
+    float amount;
     unsigned long long int accountNumber;
     struct KElectricData dataKe;
     struct SSGCData dataSsgc;
@@ -182,9 +239,11 @@ int Client() {
     Header('m');
     Header('c');
     printf("Select any one company to proceed\n");
-    printf("Press 1 for K-Electric\n");
-    printf("Press 2 for SSGC\n");
-    printf("Press 3 for PTCL\n");
+    printf("Enter 1 for K-Electric\n");
+    printf("Enter 2 for SSGC\n");
+    printf("Enter 3 for PTCL\n");
+    printf("Enter 4 to go to switch panel\n");
+    printf("enter 5 to exit the program\n");
     printf("Enter desired option: ");
     scanf("%d", &userInput1);
     fflush(stdin);
@@ -263,27 +322,46 @@ int Client() {
             scanf("%d", &userInput2);
             fflush(stdin);
 
+            printf("\n\n");
+
             switch (userInput2) {
                 case 1: {
-                    // Preview Function
+                    KElectricBillPreview(dataKe);
+                    system("cls");
+                    goto clientTop;
                     break;
                 }
 
                 case 2: {
-                    // Print Function
+                    selection = KElectricPrintBill(dataKe);
+                    if (selection == 404) {
+                        printf("ERROR!\n");
+                        goto billOptionsKe;
+                    }
                     system("cls");
                     goto clientTop;
                     break;
                 }
 
                 case 3: {
-                    // selection = Pay Function  
+                    printf("Enter amount to pay: ");
+                    scanf("%f", &amount);
+                    selection = Payment(amount);
                     if (selection = 1) {
-                        goto billOptionsKe;
+                        dataKe.total -= amount;
+                        selection2 = KElectricRecordUpdate(dataKe);
+                        if (selection2 == 404 || selection2 == 0) {
+                            printf("ERROR!\n\n");
+                            goto billOptionsKe;
+                        }
+                        else if (selection2 == 1) {
+                            system("cls");
+                            goto clientTop;
+                        }
                     }
                     else if (selection == 0) {
-                        system("cls");
-                        goto clientTop;
+                        printf("\n\n");
+                        goto billOptionsKe;
                     }
                     break;
                 }
@@ -393,25 +471,42 @@ int Client() {
 
             switch (userInput2) {
                 case 1: {
-                    // Preview Function
+                    SSGCBillPreview(dataSsgc);
+                    system("cls");
+                    goto clientTop;
                     break;
                 }
 
                 case 2: {
-                    // Print Function
+                    selection = SSGCPrintBill(dataSsgc);
+                    if (selection == 404) {
+                        printf("ERROR!\n");
+                        goto billOptionsSsgc;
+                    }
                     system("cls");
                     goto clientTop;
                     break;
                 }
 
                 case 3: {
-                    // selection = Pay Function  
+                    printf("Enter amount to pay: ");
+                    scanf("%f", &amount);
+                    selection = Payment(amount);
                     if (selection = 1) {
-                        goto billOptionsSsgc;
+                        dataSsgc.total -= amount;
+                        selection2 = SSGCRecordUpdate(dataSsgc);
+                        if (selection2 == 404 || selection2 == 0) {
+                            printf("ERROR!\n\n");
+                            goto billOptionsSsgc;
+                        }
+                        else if (selection2 == 1) {
+                            system("cls");
+                            goto clientTop;
+                        }
                     }
                     else if (selection == 0) {
-                        system("cls");
-                        goto clientTop;
+                        printf("\n\n");
+                        goto billOptionsSsgc;
                     }
                     break;
                 }
@@ -521,25 +616,40 @@ int Client() {
 
             switch (userInput2) {
                 case 1: {
-                    // Preview Function
+                    PTCLBillPreview(dataPtcl);
                     break;
                 }
 
                 case 2: {
-                    // Print Function
+                    selection = PTCLPrintBill(dataPtcl);
+                    if (selection == 404) {
+                        printf("ERROR!\n");
+                        goto billOptionsPtcl;
+                    }
                     system("cls");
                     goto clientTop;
                     break;
                 }
 
                 case 3: {
-                    // selection = Pay Function  
+                     printf("Enter amount to pay: ");
+                    scanf("%f", &amount);
+                    selection = Payment(amount);
                     if (selection = 1) {
-                        goto billOptionsPtcl;
+                        dataPtcl.total -= amount;
+                        selection2 = PTCLRecordUpdate(dataPtcl);
+                        if (selection2 == 404 || selection2 == 0) {
+                            printf("ERROR!\n\n");
+                            goto billOptionsPtcl;
+                        }
+                        else if (selection2 == 1) {
+                            system("cls");
+                            goto clientTop;
+                        }
                     }
                     else if (selection == 0) {
-                        system("cls");
-                        goto clientTop;
+                        printf("\n\n");
+                        goto billOptionsPtcl;
                     }
                     break;
                 }
@@ -571,6 +681,16 @@ int Client() {
                     break;
                 }
             }
+            break;
+        }
+
+        case 4: {
+            return 1;
+            break;
+        }
+
+        case 5: {
+            return 0;
             break;
         }
 

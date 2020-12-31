@@ -80,12 +80,18 @@ int Payment(float amount) {
     // response = CreditCardVerificationFunction;
 
     if (response == 1) {
+        printf("Payment Successful!\nPress enter to continue...");
+        getch();
         return 1;
     }
     else if (response == 0) {
+        printf("Payment Unsuccessful!\nPress enter to continue...");
+        getch();
         return 0;
     }
     else {
+        printf("ERROR!\nPress enter to continue...");
+        getch();
         return 404;
     }
     

@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
+#include <time.h>
+#include <conio.h>
 
 struct KElectricData {
     //New Structure
@@ -53,6 +55,23 @@ struct PTCLData {
     float total;
 };
 
+struct CardDate {
+    int month;
+    int year;
+};
+
+struct CreditCard {
+    unsigned long long int cardNumber;
+    char name[30];
+    struct CardDate expiryDate;
+    int cvc;
+};
+
+char* keFile = "./DataFiles/KElectricData.txt";
+char* ssgcFile = "./DataFiles/SSGCData.txt";
+char* ptclFile = "./DataFiles/PTCLData.txt";
+char* creditCardFile = "./DataFiles/CreditCardData.txt";
+
 int ArraySize(FILE* pointer, int structSize);
 bool KElectricAccountNumberVerification(unsigned long long int accountNumber);
 bool SSGCConsumerIDVerification(unsigned long long int consumerID);
@@ -60,6 +79,17 @@ bool PTCLAccountIDVerification(unsigned long long int accountID);
 struct KElectricData KElectricIDSearch(unsigned long long int id);
 struct SSGCData SSGCIDSearch(unsigned long long int id);
 struct PTCLData PTCLIDSearch(unsigned long long int id);
+void KElectricBillPreview(struct KElectricData KE);
+void SSGCBillPreview(struct SSGCData SSGC);
+void PTCLBillPreview(struct PTCLData PTCL);
+int CreditCardVerification(struct CreditCard data);
+int Payment(float amount);
+int KElectricRecordUpdate(struct KElectricData dataNew);
+int SSGCRecordUpdate(struct SSGCData dataNew);
+int PTCLRecordUpdate(struct PTCLData dataNew);
+int KElectricPrintBill(struct KElectricData KE);
+int SSGCPrintBill(struct SSGCData SSGC);
+int PTCLPrintBill(struct PTCLData PTCL);
 
 int ArraySize(FILE* pointer, int structSize) {
     int size;
@@ -106,7 +136,7 @@ struct KElectricData KElectricIDSearch(unsigned long long int id) {
     struct KElectricData data;
     int sizeFromFile, counter1 = 0, found = 0;
 
-    pointer = fopen("./DataFiles/KElectricData.txt", "rb");
+    pointer = fopen(keFile, "rb");
 
     if (pointer == NULL) {        
         data.accountNumber = 404;
@@ -138,7 +168,7 @@ struct SSGCData SSGCIDSearch(unsigned long long int id) {
     struct SSGCData data;
     int sizeFromFile, counter1 = 0, found = 0;
 
-    pointer = fopen("./DataFiles/SSGCData.txt", "rb");
+    pointer = fopen(ssgcFile, "rb");
 
     if (pointer == NULL) {        
         data.consumerId = 404;
@@ -170,7 +200,7 @@ struct PTCLData PTCLIDSearch(unsigned long long int id) {
     struct PTCLData data;
     int sizeFromFile, counter1 = 0, found = 0;
 
-    pointer = fopen("./DataFiles/PTCLData.txt", "rb");
+    pointer = fopen(ptclFile, "rb");
 
     if (pointer == NULL) {        
         data.accountID = 404;
@@ -193,4 +223,1124 @@ struct PTCLData PTCLIDSearch(unsigned long long int id) {
     }
 
     return data;
+
+
 }
+
+void KElectricBillPreview(struct KElectricData KE) {
+    int counter2,counter3,counter;
+    printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("\t\t\t\t\t\t\tKELECTRIC\t\t\n");
+    printf("\t\t\t\t\t\tEnergy That Moves Life\t\n");
+    printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("Name: ");
+    puts(KE.name);
+    printf("Address: %s\n", KE.address);
+    printf("Account number: %llu\n", KE.accountNumber);
+    printf("Contact number: %llu\n",KE.contactNumber);
+    printf("Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
+    printf("Alloted load: %f\n",KE.allotedLoad);
+    printf("Number of TV: %d\n",KE.numberOfTV);
+    printf("Pending Payment: %.2f",KE.total);
+    printf("\n");
+    printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("%13s%14s%11s%13s%17s%11s%13s%14s%9s","Month/","Off Peak","On Peak","Amount of","Electricity","Sales","Income","TV License","Amount","Amount");
+    printf("%12s\n","Amount");
+    printf("%11s%14s%12s%15s%12s%14s%13s%12s%11s%12s\n","Year","Units","Units","Electricity","Duty","Tax","Tax","Fee","Due","Paid");
+    printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
+    for (counter2 = 0; counter2 < 12; counter2++) {
+        switch(counter2)
+        {
+            case 0:
+            printf("%11s %d","January",KE.billYear[counter2]);
+            break;
+
+            case 1:
+            printf("%11s %d","February",KE.billYear[counter2]);
+            break;
+
+            case 2:
+            printf("%11s %d","March",KE.billYear[counter2]);
+            break;
+
+            case 3:
+            printf("%11s %d","April",KE.billYear[counter2]);
+            break;
+
+            case 4:
+            printf("%11s %d","May",KE.billYear[counter2]);
+            break;
+
+            case 5:
+            printf("%11s %d","June",KE.billYear[counter2]);
+            break;
+
+            case 6:
+            printf("%11s %d","July",KE.billYear[counter2]);
+            break;
+
+            case 7:
+            printf("%11s %d","August",KE.billYear[counter2]);
+            break;
+
+            case 8:
+            printf("%11s %d","September",KE.billYear[counter2]);
+            break;
+
+            case 9:
+            printf("%11s %d","October",KE.billYear[counter2]);
+            break;
+
+            case 10:
+            printf("%11s %d","November",KE.billYear[counter2]);
+            break;
+
+            case 11:
+            printf("%11s %d","December",KE.billYear[counter2]);
+            break;
+        }
+        for (counter3 = 0; counter3 < 9; counter3++) {
+            switch(counter3){
+                case 0:
+                printf("%11.2f", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 1:
+                printf("%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 2:
+                printf("%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 3:
+                printf("%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 4:
+                printf("%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 5:
+                printf("%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 6:
+                printf("%7.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 7:
+                printf("%9.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 8:
+                printf("%9.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+
+            }
+            
+        }
+        printf("\n");
+    }
+    printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("\nPress enter to continue...");
+    getch();
+}
+
+void SSGCBillPreview(struct SSGCData SSGC) {
+    int counter2,counter3,counter;
+    printf("-----------------------------------------------------------------------------------------------------------------\n");
+    printf("\t\t\t\t\tSui Southern Gas Company Limited\t\t\n");
+    printf("-----------------------------------------------------------------------------------------------------------------\n");
+    printf("Name: ");
+    puts(SSGC.name);
+    printf("Address: %s\n", SSGC.address);
+    printf("Consumer ID: %llu\n", SSGC.consumerId);
+    printf("Contact number: %llu\n",SSGC.contactNumber);
+    printf("Usage type: %s\n", SSGC.usageType == 'R' ? "Residential" : "Commercial");
+    printf("Pending Payment: %.2f",SSGC.total);
+    printf("\n");
+    printf("------------------------------------------------------------------------------------------------------------------\n");
+    printf("%13s%14s%14s%10s%14s%13s","Month/","Units","Bill Without","Sales","Income","Amount");
+    printf("%15s\n","Amount");
+    printf("%11s%15s%10s%14s%13s%13s%16s\n","Year","Used","Tax","Tax","Tax","Due","Paid");
+    printf("------------------------------------------------------------------------------------------------------------------\n");
+    for (counter2 = 0; counter2 < 12; counter2++) {
+        switch(counter2)
+        {
+            case 0:
+            printf("%11s %d","January",SSGC.billYear[counter2]);
+            break;
+
+            case 1:
+            printf("%11s %d","February",SSGC.billYear[counter2]);
+            break;
+
+            case 2:
+            printf("%11s %d","March",SSGC.billYear[counter2]);
+            break;
+
+            case 3:
+            printf("%11s %d","April",SSGC.billYear[counter2]);
+            break;
+
+            case 4:
+            printf("%11s %d","May",SSGC.billYear[counter2]);
+            break;
+
+            case 5:
+            printf("%11s %d","June",SSGC.billYear[counter2]);
+            break;
+
+            case 6:
+            printf("%11s %d","July",SSGC.billYear[counter2]);
+            break;
+
+            case 7:
+            printf("%11s %d","August",SSGC.billYear[counter2]);
+            break;
+
+            case 8:
+            printf("%11s %d","September",SSGC.billYear[counter2]);
+            break;
+
+            case 9:
+            printf("%11s %d","October",SSGC.billYear[counter2]);
+            break;
+
+            case 10:
+            printf("%11s %d","November",SSGC.billYear[counter2]);
+            break;
+
+            case 11:
+            printf("%11s %d","December",SSGC.billYear[counter2]);
+            break;
+        }
+        for (counter3 = 0; counter3 < 6; counter3++) {
+            switch(counter3){
+                case 0:
+                printf("%11.2f", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 1:
+                printf("%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 2:
+                printf("%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 3:
+                printf("%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 4:
+                printf("%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 5:
+                printf("%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+            }
+            
+        }
+        printf("\n");
+    }
+    printf("------------------------------------------------------------------------------------------------------------------\n");
+    printf("\nPress enter to continue...");
+    getch();
+}
+
+void PTCLBillPreview(struct PTCLData PTCL) {
+    int counter2,counter3,counter;
+    printf("-----------------------------------------------------------------------------------------------------------------\n");
+    printf("\t\t\t\t\t\t\t\tPTCL\t\t\n");
+    printf("\t\t\t\t\t\tHello to the Future\t\n");
+    printf("-----------------------------------------------------------------------------------------------------------------\n");
+    printf("Name: ");
+    puts(PTCL.name);
+    printf("Address: %s\n", PTCL.address);
+    printf("Consumer ID: %llu\n", PTCL.accountID);
+    printf("Contact number: %llu\n",PTCL.contactNumber);
+    switch(PTCL.packageLandline)
+    {
+        case 500:
+        printf("Landline Package: Freedom 500\n");
+        break;
+
+        case 1000:
+        printf("Landline Package: Freedom 1000\n");
+        break;
+
+        case 3000:
+        printf("Landline Package: Freedom 3000\n");
+        break;
+
+        case 5000:
+        printf("Landline Package: Freedom 5000\n");
+        break;
+
+        case 8000:
+        printf("Landline Package: Freedom 8000\n");
+        break;
+
+        case 1:
+        printf("Landline Package: Basic Package\n");
+        break;
+    }
+    switch(PTCL.packageBroadband)
+    {
+        case 6:
+        printf("Broadband Package: 6Mbps Broadband Package\n");
+        break;
+
+        case 8:
+        printf("Broadband Package: 8Mbps Broadband Package\n");
+        break;
+
+        case 15:
+        printf("Broadband Package: 15Mbps Broadband Package\n");
+        break;
+
+        case 25:
+        printf("Broadband Package: 25Mbps Broadband Package\n");
+        break;
+
+        case 50:
+        printf("Broadband Package: 50Mbps Broadband Package\n");
+        break;
+
+        case 100:
+        printf("Broadband Package: 100Mbps Broadband Package\n");
+        break;
+
+        case 0:
+        printf("No active Broadband Package\n");
+        break;
+    }
+    switch(PTCL.packageTV)
+    {
+        case 'A':
+        printf("Smart TV Package: Smart TV App only\n");
+        break;
+
+        case 'T':
+        printf("Smart TV Package: Smart TV only\n");
+        break;
+
+        case 'B':
+        printf("Smart TV Package: Smart TV and Smart TV App\n");
+        break;
+
+        case 'N':
+        printf("Smart TV Package: No Smart TV Package activated\n");
+        break;
+    }
+    switch(PTCL.packageCharji)
+    {
+        case 'U':
+        printf("Charji Package: Unlimited Data Package on Charji\n");
+        break;
+
+        case 'S':
+        printf("Charji Package: 20 GB Data Package on Charji\n");
+        break;
+
+        case 'M':
+        printf("Charji Package: 30 GB Data Package on Charji\n");
+        break;
+
+        case 'L':
+        printf("Charji Package: 50 GB Data Package on Charji\n");
+        break;
+
+        case 'N':
+        printf("Charji Package: No Data Package on Charji is activated\n");
+        break;
+    }
+    printf("Pending Payment: %.2f",PTCL.total);
+    printf("\n");
+    printf("------------------------------------------------------------------------------------------------------------------\n");
+    printf("%13s%14s%12s%15s%16s%9s","Month/","Bill of","Service","Withholding","Late Payment","Total");
+    printf("%16s\n","Received");
+    printf("%11s%15s%10s%14s%18s%11s%16s\n","Year","PTCL","Tax","Tax","Surcgarge","Bill","Payment");
+    printf("------------------------------------------------------------------------------------------------------------------\n");
+    for (counter2 = 0; counter2 < 12; counter2++) {
+        switch(counter2)
+        {
+            case 0:
+            printf("%11s %d","January",PTCL.billYear[counter2]);
+            break;
+
+            case 1:
+            printf("%11s %d","February",PTCL.billYear[counter2]);
+            break;
+
+            case 2:
+            printf("%11s %d","March",PTCL.billYear[counter2]);
+            break;
+
+            case 3:
+            printf("%11s %d","April",PTCL.billYear[counter2]);
+            break;
+
+            case 4:
+            printf("%11s %d","May",PTCL.billYear[counter2]);
+            break;
+
+            case 5:
+            printf("%11s %d","June",PTCL.billYear[counter2]);
+            break;
+
+            case 6:
+            printf("%11s %d","July",PTCL.billYear[counter2]);
+            break;
+
+            case 7:
+            printf("%11s %d","August",PTCL.billYear[counter2]);
+            break;
+
+            case 8:
+            printf("%11s %d","September",PTCL.billYear[counter2]);
+            break;
+
+            case 9:
+            printf("%11s %d","October",PTCL.billYear[counter2]);
+            break;
+
+            case 10:
+            printf("%11s %d","November",PTCL.billYear[counter2]);
+            break;
+
+            case 11:
+            printf("%11s %d","December",PTCL.billYear[counter2]);
+            break;
+        }
+        for (counter3 = 0; counter3 < 6; counter3++) {
+            switch(counter3){
+                case 0:
+                printf("%11.2f", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 1:
+                printf("%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 2:
+                printf("%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 3:
+                printf("%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 4:
+                printf("%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 5:
+                printf("%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+            } 
+        }
+        printf("\n");
+    }
+    printf("------------------------------------------------------------------------------------------------------------------\n");
+    printf("\nPress enter to continue...");
+    getch();
+}
+
+int CreditCardVerification(struct CreditCard data) {
+    time_t currentTime;
+    struct tm* time1;
+    struct CreditCard originalData;
+    FILE* pointer;
+    int sizeFromFile, counter1 = 0, found = 0;
+
+    // 1 = Verified, 0 = Not Verified, 404 = Error
+    
+    pointer = fopen(creditCardFile, "rb");
+
+    if (pointer == NULL) {
+        return 404;
+    }
+    
+    sizeFromFile = ArraySize(pointer, sizeof(struct CreditCard));
+
+    while (counter1 < sizeFromFile) {
+        fread(&originalData, sizeof(struct CreditCard), 1, pointer);
+        if (originalData.cardNumber == data.cardNumber) {
+            found = 1;
+            break;
+        }
+        counter1++;
+    }    
+
+    if (found == 0) {
+        return 0;
+    }
+
+    time(&currentTime);
+    time1 = localtime(&currentTime);
+
+    if (time1->tm_year + 1900 > data.expiryDate.year) {
+        return 0;
+    }
+    
+    if (time1->tm_year + 1900 == data.expiryDate.year) {
+        if (time1->tm_mon + 1 >= data.expiryDate.month) {
+            return 0;
+        }
+    }    
+
+    if (originalData.expiryDate.month == data.expiryDate.month && originalData.expiryDate.year == data.expiryDate.year) {
+        if (strcmp(originalData.name, data.name) == 0) {        
+            if (originalData.cvc == data.cvc) {
+                return 1;
+            }
+        }
+    }
+    
+    return 0;
+}
+
+int Payment(float amount) {
+    struct CreditCard data;
+    int length, counter1, response;
+
+    printf("\t\t\t\t\t\t\tPayment\n");
+    printf("--------------------------------------------------------------------------------------------------------------------\n\n");
+
+    printf("Enter Card Number: ");
+    scanf("%llu", data.cardNumber);
+    fflush(stdin);
+    while (data.cardNumber < 1000000000000000 || data.cardNumber > 9999999999999999) {
+        printf("Incorrect Card Number\n");
+        printf("Enter Card Number Again: ");
+        scanf("%llu", data.cardNumber);
+        fflush(stdin);
+    }
+
+    printf("Enter Card Holder Name: ");
+    gets(data.name);
+    fflush(stdin);
+
+    printf("Enter Card Expiry Month (mm): ");
+    scanf("%d", data.expiryDate.month);
+    fflush(stdin);
+    while (data.expiryDate.month < 1 || data.expiryDate.month > 12) {
+        printf("Incorrect Month Entered!\n");
+        printf("Enter Card Expiry Month Again (mm): ");
+        scanf("%d", data.expiryDate.month);
+        fflush(stdin);
+    }
+
+    printf("Enter Card Expiry Year (yyyy): ");
+    scanf("%d", data.expiryDate.year);
+    fflush(stdin);
+    while (data.expiryDate.year < 1000 || data.expiryDate.year > 9999) {
+        printf("Incorrect Year Entered!\n");
+        printf("Enter Card Expiry Year Again (yyyy): ");
+        scanf("%d", data.expiryDate.year);
+        fflush(stdin);
+    }
+
+    printf("Enter Card CVC: ");
+    scanf("%d", data.cvc);
+    fflush(stdin);
+    while (data.cvc < 100 || data.cvc > 999) {
+        printf("Incorrect CVC Entered!\n");
+        printf("Enter Card CVC: ");
+        scanf("%d", data.cvc);
+        fflush(stdin);
+    } 
+
+    length = strlen(data.name);
+    for(counter1 = 0; counter1 < length; counter1++) {
+        if (data.name[counter1] >= 'A' && data.name[counter1] <= 'Z') {
+            data.name[counter1] += 32;
+        }
+    }
+
+    response = CreditCardVerification(data);
+
+    if (response == 1) {
+        printf("Payment Successful!\nPress enter to continue...");
+        getch();
+        return 1;
+    }
+    else if (response == 0) {
+        printf("Payment Unsuccessful!\nPress enter to continue...");
+        getch();
+        return 0;
+    }
+    else {
+        printf("ERROR!\nPress enter to continue...");
+        getch();
+        return 404;
+    }
+    
+}
+
+int KElectricRecordUpdate(struct KElectricData dataNew) {
+    struct KElectricData dataFromFile;
+    FILE* pointer;
+    int counter1, sizeFromFile, size, found = 0;
+
+    pointer = fopen(keFile, "rb+");
+
+    if (pointer == NULL) {
+        return 404;
+    }
+
+    sizeFromFile = ArraySize(pointer, sizeof(struct KElectricData));    
+
+    for (counter1 = 0; counter1 < sizeFromFile; counter1) {
+        fread(&dataFromFile, sizeof(struct KElectricData), 1, pointer);
+        if (dataFromFile.accountNumber == dataNew.accountNumber) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (found == 0) {
+        return 404;
+    }
+
+    fseek(pointer, -(sizeof(struct KElectricData)), SEEK_CUR);
+    fseek(pointer, 0L, SEEK_CUR);
+
+    fwrite(&dataNew, sizeof(struct KElectricData), 1, pointer);
+
+    fclose(pointer);
+
+    return 1;
+}
+
+int SSGCRecordUpdate(struct SSGCData dataNew) {
+    struct SSGCData dataFromFile;
+    FILE* pointer;
+    int counter1, sizeFromFile, size, found = 0;
+
+    pointer = fopen(ssgcFile, "rb+");
+
+    if (pointer == NULL) {
+        return 404;
+    }
+
+    sizeFromFile = ArraySize(pointer, sizeof(struct SSGCData));    
+
+    for (counter1 = 0; counter1 < sizeFromFile; counter1) {
+        fread(&dataFromFile, sizeof(struct SSGCData), 1, pointer);
+        if (dataFromFile.consumerId == dataNew.consumerId) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (found == 0) {
+        return 404;
+    }
+
+    fseek(pointer, -(sizeof(struct SSGCData)), SEEK_CUR);
+    fseek(pointer, 0L, SEEK_CUR);
+
+    fwrite(&dataNew, sizeof(struct SSGCData), 1, pointer);
+
+    fclose(pointer);
+
+    return 1;
+}
+
+int PTCLRecordUpdate(struct PTCLData dataNew) {
+    struct PTCLData dataFromFile;
+    FILE* pointer;
+    int counter1, sizeFromFile, size, found = 0;
+
+    pointer = fopen(ptclFile, "rb+");
+
+    if (pointer == NULL) {
+        return 404;
+    }
+
+    sizeFromFile = ArraySize(pointer, sizeof(struct PTCLData));    
+
+    for (counter1 = 0; counter1 < sizeFromFile; counter1) {
+        fread(&dataFromFile, sizeof(struct PTCLData), 1, pointer);
+        if (dataFromFile.accountID == dataNew.accountID) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (found == 0) {
+        return 404;
+    }
+
+    fseek(pointer, -(sizeof(struct PTCLData)), SEEK_CUR);
+    fseek(pointer, 0L, SEEK_CUR);
+
+    fwrite(&dataNew, sizeof(struct PTCLData), 1, pointer);
+
+    fclose(pointer);
+
+    return 1;
+}
+
+int KElectricPrintBill(struct KElectricData KE) {
+    FILE* pointer;
+    char accountNumber[15], fileName[50] = "KElectricBill-";
+    int counter2, counter3;
+
+    snprintf(accountNumber, sizeof(accountNumber), "%llu", KE.accountNumber);
+    strcat(fileName, accountNumber);
+    strcat(fileName, ".txt");
+
+    pointer = fopen(fileName, "w");
+
+    if (pointer == NULL) {
+        return 404;
+    }
+
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "\t\t\t\t\t\t\tKELECTRIC\t\t\n");
+    fprintf(pointer, "\t\t\t\t\t\tEnergy That Moves Life\t\n");
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "Name: %s\n", KE.name);    
+    fprintf(pointer, "Address: %s\n", KE.address);
+    fprintf(pointer, "Account number: %llu\n", KE.accountNumber);
+    fprintf(pointer, "Contact number: %llu\n",KE.contactNumber);
+    fprintf(pointer, "Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
+    fprintf(pointer, "Alloted load: %f\n",KE.allotedLoad);
+    fprintf(pointer, "Number of TV: %d\n",KE.numberOfTV);
+    fprintf(pointer, "Total Bill: %d\n",KE.total);    
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "%13s%14s%11s%13s%17s%11s%13s%14s%9s","Month/","Off Peak","On Peak","Amount of","Electricity","Sales","Income","TV License","Amount","Amount");
+    fprintf(pointer, "%12s\n","Amount");
+    fprintf(pointer, "%11s%14s%12s%15s%12s%14s%13s%12s%11s%12s\n","Year","Units","Units","Electricity","Duty","Tax","Tax","Fee","Due","Paid");
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------------------------\n");
+    for (counter2 = 0; counter2 < 12; counter2++) {
+        switch(counter2)
+        {
+            case 0:
+            fprintf(pointer, "%11s %d","January",KE.billYear[counter2]);
+            break;
+
+            case 1:
+            fprintf(pointer, "%11s %d","February",KE.billYear[counter2]);
+            break;
+
+            case 2:
+            fprintf(pointer, "%11s %d","March",KE.billYear[counter2]);
+            break;
+
+            case 3:
+            fprintf(pointer, "%11s %d","April",KE.billYear[counter2]);
+            break;
+
+            case 4:
+            fprintf(pointer, "%11s %d","May",KE.billYear[counter2]);
+            break;
+
+            case 5:
+            fprintf(pointer, "%11s %d","June",KE.billYear[counter2]);
+            break;
+
+            case 6:
+            fprintf(pointer, "%11s %d","July",KE.billYear[counter2]);
+            break;
+
+            case 7:
+            fprintf(pointer, "%11s %d","August",KE.billYear[counter2]);
+            break;
+
+            case 8:
+            fprintf(pointer, "%11s %d","September",KE.billYear[counter2]);
+            break;
+
+            case 9:
+            fprintf(pointer, "%11s %d","October",KE.billYear[counter2]);
+            break;
+
+            case 10:
+            fprintf(pointer, "%11s %d","November",KE.billYear[counter2]);
+            break;
+
+            case 11:
+            fprintf(pointer, "%11s %d","December",KE.billYear[counter2]);
+            break;
+        }
+        for (counter3 = 0; counter3 < 9; counter3++) {
+            switch(counter3){
+                case 0:
+                fprintf(pointer, "%11.2f", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 1:
+                fprintf(pointer, "%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 2:
+                fprintf(pointer, "%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 3:
+                fprintf(pointer, "%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 4:
+                fprintf(pointer, "%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 5:
+                fprintf(pointer, "%11.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 6:
+                fprintf(pointer, "%7.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 7:
+                fprintf(pointer, "%9.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 8:
+                fprintf(pointer, "%9.2f   ", KE.unitsAndPayment[counter3][counter2]);
+                break;
+
+
+            }
+            
+        }
+        fprintf(pointer, "\n");
+    }
+
+    fclose(pointer);
+}
+
+int SSGCPrintBill(struct SSGCData SSGC) {
+    int counter2, counter3;
+    FILE* pointer;
+    char consumerId[15], fileName[50] = "SSGCBill-";
+
+    snprintf(consumerId, sizeof(consumerId), "%llu", SSGC.consumerId);
+    strcat(fileName, consumerId);
+    strcat(fileName, ".txt");
+
+    pointer = fopen(fileName, "w");
+
+    if (pointer == NULL) {
+        return 404;
+    }
+
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "\t\t\t\t\tSui Southern Gas Company Limited\t\t\n");
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "Consumer ID: %llu\n", SSGC.consumerId);
+    fprintf(pointer, "Name: %s\n", SSGC.name);    
+    fprintf(pointer, "Address: %s\n", SSGC.address);
+    fprintf(pointer, "Contact number: %llu\n",SSGC.contactNumber);
+    fprintf(pointer, "Usage type: %s\n", SSGC.usageType == 'R' ? "Residential" : "Commercial");
+    fprintf(pointer, "Total Bill: %.2f\n",SSGC.total);    
+    fprintf(pointer, "------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "%13s%14s%14s%10s%14s%13s","Month/","Units","Bill Without","Sales","Income","Amount");
+    fprintf(pointer, "%15s\n","Amount");
+    fprintf(pointer, "%11s%15s%10s%14s%13s%13s%16s\n","Year","Used","Tax","Tax","Tax","Due","Paid");
+    fprintf(pointer, "------------------------------------------------------------------------------------------------------------------\n");
+    for (counter2 = 0; counter2 < 12; counter2++) {
+        switch(counter2)
+        {
+            case 0:
+            fprintf(pointer, "%11s %d","January",SSGC.billYear[counter2]);
+            break;
+
+            case 1:
+            fprintf(pointer, "%11s %d","February",SSGC.billYear[counter2]);
+            break;
+
+            case 2:
+            fprintf(pointer, "%11s %d","March",SSGC.billYear[counter2]);
+            break;
+
+            case 3:
+            fprintf(pointer, "%11s %d","April",SSGC.billYear[counter2]);
+            break;
+
+            case 4:
+            fprintf(pointer, "%11s %d","May",SSGC.billYear[counter2]);
+            break;
+
+            case 5:
+            fprintf(pointer, "%11s %d","June",SSGC.billYear[counter2]);
+            break;
+
+            case 6:
+            fprintf(pointer, "%11s %d","July",SSGC.billYear[counter2]);
+            break;
+
+            case 7:
+            fprintf(pointer, "%11s %d","August",SSGC.billYear[counter2]);
+            break;
+
+            case 8:
+            fprintf(pointer, "%11s %d","September",SSGC.billYear[counter2]);
+            break;
+
+            case 9:
+            fprintf(pointer, "%11s %d","October",SSGC.billYear[counter2]);
+            break;
+
+            case 10:
+            fprintf(pointer, "%11s %d","November",SSGC.billYear[counter2]);
+            break;
+
+            case 11:
+            fprintf(pointer, "%11s %d","December",SSGC.billYear[counter2]);
+            break;
+        }
+        for (counter3 = 0; counter3 < 6; counter3++) {
+            switch(counter3){
+                case 0:
+                fprintf(pointer, "%11.2f", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 1:
+                fprintf(pointer, "%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 2:
+                fprintf(pointer, "%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 3:
+                fprintf(pointer, "%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 4:
+                fprintf(pointer, "%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+
+                case 5:
+                fprintf(pointer, "%11.2f   ", SSGC.unitsAndPayment[counter3][counter2]);
+                break;
+            }
+            
+        }
+        fprintf(pointer, "\n");
+    }
+
+    fclose(pointer);
+    return 1;
+}
+
+int PTCLPrintBill(struct PTCLData PTCL) {
+    FILE* pointer;
+    int counter2, counter3;
+    char accountId[15], fileName[50] = "PTCLBill-";
+
+    snprintf(accountId, sizeof(accountId), "%llu", PTCL.accountID);
+    strcat(fileName, accountId);
+    strcat(fileName, ".txt");
+
+    pointer = fopen(fileName, "w");
+
+    if (pointer == NULL) {
+        return 404;
+    }
+
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "\t\t\t\t\t\t\t\tPTCL\t\t\n");
+    fprintf(pointer, "\t\t\t\t\t\tHello to the Future\t\n");
+    fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "Account ID: %llu\n", PTCL.accountID);
+    fprintf(pointer, "Name: %s\n", PTCL.name);    
+    fprintf(pointer, "Address: %s\n", PTCL.address);    
+    fprintf(pointer, "Contact number: %llu\n",PTCL.contactNumber);
+    switch(PTCL.packageLandline)
+    {
+        case 500:
+        fprintf(pointer, "Landline Package: Freedom 500\n");
+        break;
+
+        case 1000:
+        fprintf(pointer, "Landline Package: Freedom 1000\n");
+        break;
+
+        case 3000:
+        fprintf(pointer, "Landline Package: Freedom 3000\n");
+        break;
+
+        case 5000:
+        fprintf(pointer, "Landline Package: Freedom 5000\n");
+        break;
+
+        case 8000:
+        fprintf(pointer, "Landline Package: Freedom 8000\n");
+        break;
+
+        case 1:
+        fprintf(pointer, "Landline Package: Basic Package\n");
+        break;
+    }
+    switch(PTCL.packageBroadband)
+    {
+        case 6:
+        fprintf(pointer, "Broadband Package: 6Mbps Broadband Package\n");
+        break;
+
+        case 8:
+        fprintf(pointer, "Broadband Package: 8Mbps Broadband Package\n");
+        break;
+
+        case 15:
+        fprintf(pointer, "Broadband Package: 15Mbps Broadband Package\n");
+        break;
+
+        case 25:
+        fprintf(pointer, "Broadband Package: 25Mbps Broadband Package\n");
+        break;
+
+        case 50:
+        fprintf(pointer, "Broadband Package: 50Mbps Broadband Package\n");
+        break;
+
+        case 100:
+        fprintf(pointer, "Broadband Package: 100Mbps Broadband Package\n");
+        break;
+
+        case 0:
+        fprintf(pointer, "No active Broadband Package\n");
+        break;
+    }
+    switch(PTCL.packageTV)
+    {
+        case 'A':
+        fprintf(pointer, "Smart TV Package: Smart TV App only\n");
+        break;
+
+        case 'T':
+        fprintf(pointer, "Smart TV Package: Smart TV only\n");
+        break;
+
+        case 'B':
+        fprintf(pointer, "Smart TV Package: Smart TV and Smart TV App\n");
+        break;
+
+        case 'N':
+        fprintf(pointer, "Smart TV Package: No Smart TV Package activated\n");
+        break;
+    }
+    switch(PTCL.packageCharji)
+    {
+        case 'U':
+        fprintf(pointer, "Charji Package: Unlimited Data Package on Charji\n");
+        break;
+
+        case 'S':
+        fprintf(pointer, "Charji Package: 20 GB Data Package on Charji\n");
+        break;
+
+        case 'M':
+        fprintf(pointer, "Charji Package: 30 GB Data Package on Charji\n");
+        break;
+
+        case 'L':
+        fprintf(pointer, "Charji Package: 50 GB Data Package on Charji\n");
+        break;
+
+        case 'N':
+        fprintf(pointer, "Charji Package: No Data Package on Charji is activated\n");
+        break;
+    }
+    fprintf(pointer, "Pending Payment: %.2f\n",PTCL.total);    
+    fprintf(pointer, "------------------------------------------------------------------------------------------------------------------\n");
+    fprintf(pointer, "%13s%14s%12s%15s%16s%9s","Month/","Bill of","Service","Withholding","Late Payment","Total");
+    fprintf(pointer, "%16s\n","Received");
+    fprintf(pointer, "%11s%15s%10s%14s%18s%11s%16s\n","Year","PTCL","Tax","Tax","Surcgarge","Bill","Payment");
+    fprintf(pointer, "------------------------------------------------------------------------------------------------------------------\n");
+    for (counter2 = 0; counter2 < 12; counter2++) {
+        switch(counter2)
+        {
+            case 0:
+            fprintf(pointer, "%11s %d","January",PTCL.billYear[counter2]);
+            break;
+
+            case 1:
+            fprintf(pointer, "%11s %d","February",PTCL.billYear[counter2]);
+            break;
+
+            case 2:
+            fprintf(pointer, "%11s %d","March",PTCL.billYear[counter2]);
+            break;
+
+            case 3:
+            fprintf(pointer, "%11s %d","April",PTCL.billYear[counter2]);
+            break;
+
+            case 4:
+            fprintf(pointer, "%11s %d","May",PTCL.billYear[counter2]);
+            break;
+
+            case 5:
+            fprintf(pointer, "%11s %d","June",PTCL.billYear[counter2]);
+            break;
+
+            case 6:
+            fprintf(pointer, "%11s %d","July",PTCL.billYear[counter2]);
+            break;
+
+            case 7:
+            fprintf(pointer, "%11s %d","August",PTCL.billYear[counter2]);
+            break;
+
+            case 8:
+            fprintf(pointer, "%11s %d","September",PTCL.billYear[counter2]);
+            break;
+
+            case 9:
+            fprintf(pointer, "%11s %d","October",PTCL.billYear[counter2]);
+            break;
+
+            case 10:
+            fprintf(pointer, "%11s %d","November",PTCL.billYear[counter2]);
+            break;
+
+            case 11:
+            fprintf(pointer, "%11s %d","December",PTCL.billYear[counter2]);
+            break;
+        }
+        for (counter3 = 0; counter3 < 6; counter3++) {
+            switch(counter3){
+                case 0:
+                fprintf(pointer, "%11.2f", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 1:
+                fprintf(pointer, "%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 2:
+                fprintf(pointer, "%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 3:
+                fprintf(pointer, "%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 4:
+                fprintf(pointer, "%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+
+                case 5:
+                fprintf(pointer, "%11.2f   ", PTCL.payments[counter3][counter2]);
+                break;
+            } 
+        }
+        fprintf(pointer, "\n");
+    }
+
+    fclose(pointer);
+    return 1;
+}
+

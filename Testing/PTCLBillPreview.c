@@ -45,7 +45,7 @@ void PTCLBillPreview(struct PTCLData PTCL)
 {
     int counter2,counter3,counter;
     printf("-----------------------------------------------------------------------------------------------------------------\n");
-    printf("\t\t\t\t\t\t\tOptel\t\t\n");
+    printf("\t\t\t\t\t\t\t\tPTCL\t\t\n");
     printf("\t\t\t\t\t\tHello to the Future\t\n");
     printf("-----------------------------------------------------------------------------------------------------------------\n");
     printf("Name: ");

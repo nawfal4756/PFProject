@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct SSGCData {
     // New Structure
@@ -17,11 +18,13 @@ struct SSGCData {
 int SSGCPrintBill(struct SSGCData SSGC);
 
 int main() {
-
+    struct SSGCData data;
+    data.consumerId = 256561651;
+    SSGCPrintBill(data);
 }
 
 int SSGCPrintBill(struct SSGCData SSGC) {
-    int counter2,counter3,counter;
+    int counter2, counter3;
     FILE* pointer;
     char consumerId[15], fileName[50] = "SSGCBill-";
 
