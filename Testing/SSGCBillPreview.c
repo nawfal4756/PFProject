@@ -46,7 +46,7 @@ void SSGCBillPreview(struct SSGCData SSGC)
     printf("Consumer ID: %llu\n", SSGC.consumerId);
     printf("Contact number: %llu\n",SSGC.contactNumber);
     printf("Usage type: %s\n", SSGC.usageType == 'R' ? "Residential" : "Commercial");
-    printf("Total Bill: %.2f",SSGC.total);
+    printf("Pending Payment: %.2f",SSGC.total);
     printf("\n");
     printf("------------------------------------------------------------------------------------------------------------------\n");
     printf("%13s%14s%14s%10s%14s%13s","Month/","Units","Bill Without","Sales","Income","Amount");
