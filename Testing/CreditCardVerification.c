@@ -76,12 +76,12 @@ int CreditCardVerification(struct CreditCard data) {
     FILE* pointer;
     int sizeFromFile, counter1 = 0, found = 0;
 
-    // 1 = Verified, 0 = Not Verified, -1 = Error
+    // 1 = Verified, 0 = Not Verified, 404 = Error
     
     pointer = fopen("CreditCardData.txt", "rb");
 
     if (pointer == NULL) {
-        return -1;
+        return 404;
     }
     
     sizeFromFile = ArraySize(pointer, sizeof(struct CreditCard));
