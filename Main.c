@@ -3,63 +3,73 @@
 #include <stdbool.h>
 #include <string.h>
 #include <conio.h>
+#include "Functions.c"
 
-struct KElectricData {
-    //New Structure
-    unsigned long long int accountNumber;
-    char name[30];
-    char address[70];
-    unsigned long long int contactNumber;
-    char usageType;
-    float allotedLoad;
-    int numberOfTV;
-    // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
-    float unitsAndPayment[9][12];
-    int billYear[12];
-    bool timePayment[12];
-    float total;
-};
+// struct KElectricData {
+//     //New Structure
+//     unsigned long long int accountNumber;
+//     char name[30];
+//     char address[70];
+//     unsigned long long int contactNumber;
+//     char usageType;
+//     float allotedLoad;
+//     int numberOfTV;
+//     // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
+//     float unitsAndPayment[9][12];
+//     int billYear[12];
+//     bool timePayment[12];
+//     float total;
+// };
 
-struct SSGCData {
-    // New Structure
-    unsigned long long int consumerId;
-    char name[30];
-    char address[70];
-    unsigned long long int contactNumber;
-    char usageType;
-    // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
-    float unitsAndPayment[6][12];
-    int billYear[12];
-    float total;
-};
+// struct SSGCData {
+//     // New Structure
+//     unsigned long long int consumerId;
+//     char name[30];
+//     char address[70];
+//     unsigned long long int contactNumber;
+//     char usageType;
+//     // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
+//     float unitsAndPayment[6][12];
+//     int billYear[12];
+//     float total;
+// };
 
-struct PTCLData {
-    // New Structure
-    unsigned long long int accountID;
-    char name[30];
-    char address[70];
-    unsigned long long int contactNumber;
-    int packageLandline;
-    int packageBroadband;
-    char packageTV;
-    char packageCharji;
-    int onNetMinutes[12];
-    int mobileMinutes[12];
-    int otherMinutes[12];
-    int internationalZone1Minutes[12];
-    int internationalOtherZoneMinutes[12];
-    // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
-    float payments[6][12];
-    int billYear[12];
-    float total;
-};
+// struct PTCLData {
+//     // New Structure
+//     unsigned long long int accountID;
+//     char name[30];
+//     char address[70];
+//     unsigned long long int contactNumber;
+//     int packageLandline;
+//     int packageBroadband;
+//     char packageTV;
+//     char packageCharji;
+//     int onNetMinutes[12];
+//     int mobileMinutes[12];
+//     int otherMinutes[12];
+//     int internationalZone1Minutes[12];
+//     int internationalOtherZoneMinutes[12];
+//     // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
+//     float payments[6][12];
+//     int billYear[12];
+//     float total;
+// };
 
 void Header(char id);
 int Admin();
 int Client();
 
+// From Functions.c
+int ArraySize(FILE* pointer, int structSize);
+bool KElectricAccountNumberVerification(unsigned long long int accountNumber);
+bool SSGCConsumerIDVerification(unsigned long long int consumerID);
+bool PTCLAccountIDVerification(unsigned long long int accountID);
+struct KElectricData KElectricIDSearch(unsigned long long int id);
+struct SSGCData SSGCIDSearch(unsigned long long int id);
+struct PTCLData PTCLIDSearch(unsigned long long int id);
+
 int main() {
-    char userInputClient;
+    char userInputClient, exitSelection;
     int selection;
 
     clientSelection:
@@ -104,7 +114,34 @@ int main() {
         }
     }
 
-    getch();
+    exit:
+    printf("Are you sure you want to exit the program? (Yes or No)\n");
+    scanf("%c", &exitSelection);
+
+    switch (exitSelection) {
+        case 'y':
+        case 'Y': {
+            printf("The programs is exiting...\nPress enter to continue...");
+            getch();
+            exit(1);
+            break;
+        }
+
+        case 'n':
+        case 'N': {
+            system("cls");
+            goto clientSelection;
+            break;
+        }
+
+        default: {
+            printf("Incorrect option entered!\n\n");
+            goto exit;
+            break;
+        }
+    }
+
+    
 }
 
 void Header(char id) {
@@ -120,7 +157,7 @@ void Header(char id) {
         }
 
         case 'c': {
-            printf("\t\t\t\t\t\tClient Panel\n");
+            printf("\t\t\t\t\t\t\tClient Panel\n");
             break;
         }
     }
@@ -159,6 +196,7 @@ int Client() {
             printf("Enter account number to get the data\n");
             printf("Enter 1 to go to company selection\n");
             printf("Enter 2 to go to switch panel page\n");
+            printf("Enter 3 to exit the program\n");
             scanf("%llu", &accountNumber);
             fflush(stdin);
 
@@ -169,14 +207,19 @@ int Client() {
             else if (accountNumber == 2) {
                 return 1;
             }
+            else if (accountNumber == 3) {
+                return 0;
+            }
 
-            // if (verification function) {
-            //     printf("Incorrect account number entered!\n");
-            //     printf("\n\n");
-            //     goto keAccountNum;
-            // }
+            if (!KElectricAccountNumberVerification(accountNumber)) {
+                printf("Incorrect account number entered!\n");
+                printf("\n\n");
+                goto keAccountNum;
+            }
 
-            //dataKe = Search Function call
+            printf("\n\n");
+
+            dataKe = KElectricIDSearch(accountNumber);
 
             if (dataKe.accountNumber != accountNumber) {
                 if (dataKe.accountNumber == 0) {
@@ -206,15 +249,16 @@ int Client() {
             printf("Name: %s\n", dataKe.name);
             printf("Address: %s\n", dataKe.address);
             printf("Contact Number: %llu\n", dataKe.contactNumber);
-            printf("Current Payable amount: %.2f\n" /*Amount variable to be entered*/);
+            printf("Current Payable amount: %.2f\n", dataKe.total);
 
-            billOptions:
+            billOptionsKe:
             printf("\n\nEnter 1 to preview complete bill\n");
-            printf("Enter 2 to print the bill\n");
+            printf("Enter 2 to print the bill\n");            
             printf("Enter 3 to pay the bill\n");
             printf("Enter 4 to enter different account number\n");
             printf("Enter 5 to go to company selection\n");
-            printf("Enter 6 to go to switch panel change");
+            printf("Enter 6 to go to switch panel change\n");
+            printf("Enter 7 to exit the program\n");
             printf("Enter the selected option: ");
             scanf("%d", &userInput2);
             fflush(stdin);
@@ -235,7 +279,7 @@ int Client() {
                 case 3: {
                     // selection = Pay Function  
                     if (selection = 1) {
-                        goto billOptions;
+                        goto billOptionsKe;
                     }
                     else if (selection == 0) {
                         system("cls");
@@ -257,11 +301,17 @@ int Client() {
 
                 case 6: {
                     return 1;
+                    break;
+                }
+
+                case 7: {
+                    return 0;
+                    break;
                 }
 
                 default: {
                     printf("Incorrect option selected!\n");
-                    goto billOptions;
+                    goto billOptionsKe;
                     break;
                 }
             }
@@ -269,11 +319,259 @@ int Client() {
         }
 
         case 2: {
-            
+            ssgcConsumerId:
+            printf("\n\nSSGC: \n");
+            printf("Enter consumer ID to get the data\n");
+            printf("Enter 1 to go to company selection\n");
+            printf("Enter 2 to go to switch panel page\n");
+            printf("Enter 3 to exit the program\n");
+            scanf("%llu", &accountNumber);
+            fflush(stdin);
+
+            if (accountNumber == 1) {
+                system("cls");
+                goto clientTop;
+            }
+            else if (accountNumber == 2) {
+                return 1;
+            }
+            else if (accountNumber == 3) {
+                return 0;
+            }
+
+            if (!SSGCConsumerIDVerification(accountNumber)) {
+                printf("\nIncorrect account number entered!\n");
+                printf("\n\n");
+                goto ssgcConsumerId;
+            }
+
+            printf("\n\n");
+
+            dataSsgc = SSGCIDSearch(accountNumber);
+
+            if (dataSsgc.consumerId != accountNumber) {
+                if (dataSsgc.consumerId == 0) {
+                    printf("\n\nNo record found of the account number entered\n");
+                    printf("Press Enter to continue...");
+                    getch();
+                    system("cls");
+                    goto clientTop;
+                }
+                else if (dataSsgc.consumerId == 404) {
+                    printf("\n\nProgram Error with file\n");
+                    printf("Press Enter to continue...");
+                    getch();
+                    system("cls");
+                    goto clientTop;
+                }
+                else {
+                    printf("\n\nOH NOO!! We crashed!\n");
+                    printf("Press Enter to continue...");
+                    getch();
+                    system("cls");
+                    goto clientTop;
+                }
+            }
+
+            printf("Consumer ID: %llu\n", dataSsgc.consumerId);
+            printf("Name: %s\n", dataSsgc.name);
+            printf("Address: %s\n", dataSsgc.address);
+            printf("Contact Number: %llu\n", dataSsgc.contactNumber);
+            printf("Current Payable amount: %.2f\n", dataSsgc.total);
+
+            billOptionsSsgc:
+            printf("\n\nEnter 1 to preview complete bill\n");
+            printf("Enter 2 to print the bill\n");
+            printf("Enter 3 to pay the bill\n");
+            printf("Enter 4 to enter different account number\n");
+            printf("Enter 5 to go to company selection\n");
+            printf("Enter 6 to go to switch panel change\n");
+            printf("Enter 7 to exit the program\n");
+            printf("Enter the selected option: ");
+            scanf("%d", &userInput2);
+            fflush(stdin);
+
+            switch (userInput2) {
+                case 1: {
+                    // Preview Function
+                    break;
+                }
+
+                case 2: {
+                    // Print Function
+                    system("cls");
+                    goto clientTop;
+                    break;
+                }
+
+                case 3: {
+                    // selection = Pay Function  
+                    if (selection = 1) {
+                        goto billOptionsSsgc;
+                    }
+                    else if (selection == 0) {
+                        system("cls");
+                        goto clientTop;
+                    }
+                    break;
+                }
+
+                case 4: {
+                    goto ssgcConsumerId;
+                    break;
+                }
+
+                case 5: {
+                    system("cls");
+                    goto clientTop;
+                    break;
+                }
+
+                case 6: {
+                    return 1;
+                    break;
+                }
+
+                case 7: {
+                    return 0;
+                    break;
+                }
+
+                default: {
+                    printf("Incorrect option selected!\n");
+                    goto billOptionsSsgc;
+                    break;
+                }
+            }
+            break;
         }
 
         case 3: {
-            
+            ptclAccountId:
+            printf("\n\nPTCL: \n");
+            printf("Enter account ID to get the data\n");
+            printf("Enter 1 to go to company selection\n");
+            printf("Enter 2 to go to switch panel page\n");
+            printf("Enter 3 to exit the program\n");
+            scanf("%llu", &accountNumber);
+            fflush(stdin);
+
+            if (accountNumber == 1) {
+                system("cls");
+                goto clientTop;
+            }
+            else if (accountNumber == 2) {
+                return 1;
+            }
+            else if (accountNumber == 3) {
+                return 0;
+            }
+
+            if (!PTCLAccountIDVerification(accountNumber)) {
+                printf("\nIncorrect account number entered!\n");
+                printf("\n\n");
+                goto ptclAccountId;
+            }
+
+            printf("\n\n");
+
+            dataPtcl = PTCLIDSearch(accountNumber);
+
+            if (dataPtcl.accountID != accountNumber) {
+                if (dataPtcl.accountID == 0) {
+                    printf("\n\nNo record found of the account number entered\n");
+                    printf("Press Enter to continue...");
+                    getch();
+                    system("cls");
+                    goto clientTop;
+                }
+                else if (dataPtcl.accountID == 404) {
+                    printf("\n\nProgram Error with file\n");
+                    printf("Press Enter to continue...");
+                    getch();
+                    system("cls");
+                    goto clientTop;
+                }
+                else {
+                    printf("\n\nOH NOO!! We crashed!\n");
+                    printf("Press Enter to continue...");
+                    getch();
+                    system("cls");
+                    goto clientTop;
+                }
+            }
+
+            printf("Account ID: %llu\n", dataPtcl.accountID);
+            printf("Name: %s\n", dataPtcl.name);
+            printf("Address: %s\n", dataPtcl.address);
+            printf("Contact Number: %llu\n", dataPtcl.contactNumber);
+            printf("Current Payable amount: %.2f\n", dataPtcl.total);
+
+            billOptionsPtcl:
+            printf("\n\nEnter 1 to preview complete bill\n");
+            printf("Enter 2 to print the bill\n");
+            printf("Enter 3 to pay the bill\n");
+            printf("Enter 4 to enter different account number\n");
+            printf("Enter 5 to go to company selection\n");
+            printf("Enter 6 to go to switch panel change\n");
+            printf("Enter 7 to exit the program\n");
+            printf("Enter the selected option: ");
+            scanf("%d", &userInput2);
+            fflush(stdin);
+
+            switch (userInput2) {
+                case 1: {
+                    // Preview Function
+                    break;
+                }
+
+                case 2: {
+                    // Print Function
+                    system("cls");
+                    goto clientTop;
+                    break;
+                }
+
+                case 3: {
+                    // selection = Pay Function  
+                    if (selection = 1) {
+                        goto billOptionsPtcl;
+                    }
+                    else if (selection == 0) {
+                        system("cls");
+                        goto clientTop;
+                    }
+                    break;
+                }
+
+                case 4: {
+                    goto ptclAccountId;
+                    break;
+                }
+
+                case 5: {
+                    system("cls");
+                    goto clientTop;
+                    break;
+                }
+
+                case 6: {
+                    return 1;
+                    break;
+                }
+
+                case 7: {
+                    return 0;
+                    break;
+                }
+
+                default: {
+                    printf("Incorrect option selected!\n");
+                    goto billOptionsPtcl;
+                    break;
+                }
+            }
+            break;
         }
 
         default: {
