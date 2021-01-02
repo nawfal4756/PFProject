@@ -79,6 +79,7 @@ int PTCLRecordUpdate(struct PTCLData dataNew);
 int KElectricPrintBill(struct KElectricData KE);
 int SSGCPrintBill(struct SSGCData SSGC);
 int PTCLPrintBill(struct PTCLData PTCL);
+bool StarConsumer(bool timePayment[12]);
 
 int main() {
     char userInputClient, exitSelection;
@@ -308,6 +309,9 @@ int Client() {
             printf("Name: %s\n", dataKe.name);
             printf("Address: %s\n", dataKe.address);
             printf("Contact Number: %llu\n", dataKe.contactNumber);
+            if (StarConsumer(dataKe.timePayment)) {
+                printf("\nYou are a star consumer!\n\n");
+            }
             printf("Current Payable amount: %.2f\n", dataKe.total);
 
             billOptionsKe:

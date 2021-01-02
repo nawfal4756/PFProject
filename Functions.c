@@ -90,6 +90,7 @@ int PTCLRecordUpdate(struct PTCLData dataNew);
 int KElectricPrintBill(struct KElectricData KE);
 int SSGCPrintBill(struct SSGCData SSGC);
 int PTCLPrintBill(struct PTCLData PTCL);
+bool StarConsumer(bool timePayment[12]);
 
 int ArraySize(FILE* pointer, int structSize) {
     int size;
@@ -238,6 +239,9 @@ void KElectricBillPreview(struct KElectricData KE) {
     printf("Address: %s\n", KE.address);
     printf("Account number: %llu\n", KE.accountNumber);
     printf("Contact number: %llu\n",KE.contactNumber);
+    if (StarConsumer(KE.timePayment)) {
+        printf("\nYou are a star consumer!\n\n");
+    }
     printf("Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
     printf("Alloted load: %f\n",KE.allotedLoad);
     printf("Number of TV: %d\n",KE.numberOfTV);
@@ -911,6 +915,9 @@ int KElectricPrintBill(struct KElectricData KE) {
     fprintf(pointer, "Address: %s\n", KE.address);
     fprintf(pointer, "Account number: %llu\n", KE.accountNumber);
     fprintf(pointer, "Contact number: %llu\n",KE.contactNumber);
+    if (StarConsumer(KE.timePayment)) {
+        fprintf(pointer, "\nYou are a star consumer!\n\n");
+    }
     fprintf(pointer, "Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
     fprintf(pointer, "Alloted load: %f\n",KE.allotedLoad);
     fprintf(pointer, "Number of TV: %d\n",KE.numberOfTV);
@@ -1342,5 +1349,22 @@ int PTCLPrintBill(struct PTCLData PTCL) {
 
     fclose(pointer);
     return 1;
+}
+
+bool StarConsumer(bool timePayment[12]) {
+    int counter1, falseData = 0;
+    
+    for (counter1 = 0; counter1 < 12; counter1++) {
+        if (timePayment[counter1] == false) {
+            falseData = 1;
+            break;
+        }
+    }
+
+    if (falseData == 1) {
+        return false;
+    }
+
+    return true;
 }
 
