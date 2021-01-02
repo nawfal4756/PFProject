@@ -1,6 +1,23 @@
 #include <stdio.h>
+#include <stdbool.h>
 
-float KElectricPriceCalculator(float unitsOffPeak, float unitsOnPeak, float allotedKW, char usageType);
+struct KElectricData {
+    //New Structure
+    unsigned long long int accountNumber;
+    char name[30];
+    char address[70];
+    unsigned long long int contactNumber;
+    char usageType;
+    float allotedLoad;
+    int numberOfTV;
+    // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
+    float unitsAndPayment[9][12];
+    int billYear[12];
+    bool timePayment[12];
+    float total;
+};
+
+void KElectricPriceCalculator(struct KElectricData* data, int month);
 
 int main() {
     float temp, temp1, temp2, price1, price2, price3, price4;
@@ -14,23 +31,16 @@ int main() {
         printf("%f\n", temp2);
     } while (temp < 0 || temp > 2501);
 
-    price1 = KElectricPriceCalculator(temp1, temp2, 4, 'R');
-    price2 = KElectricPriceCalculator(temp1, temp2, 8, 'R');
-    price3 = KElectricPriceCalculator(temp1, temp2, 4, 'C');
-    price4 = KElectricPriceCalculator(temp1, temp2, 8, 'C');
-    printf("Less than 5kw R = %.2f\n", price1);
-    printf("More than 5kw R = %.2f\n", price2);
-    printf("Less than 5kw R = %.2f\n", price3);
-    printf("More than 5kw R = %.2f\n", price4);
 }
 
-float KElectricPriceCalculator(float unitsOffPeak, float unitsOnPeak, float allotedKW, char usageType) {
+void KElectricPriceCalculator(struct KElectricData* data, int month) {
+    int counter;
     float price = 0, units = 0;
-    units = unitsOffPeak + unitsOnPeak;
+    units = data->unitsAndPayment[0][month] + data->unitsAndPayment[1][month];
 
-    switch (usageType) {
+    switch (data->usageType) {
         case 'R': {
-            if (allotedKW < 5) {
+            if (data->allotedLoad < 5) {
                 if (units <= 50) {
                     price = units * 2;
                 }
@@ -67,8 +77,8 @@ float KElectricPriceCalculator(float unitsOffPeak, float unitsOnPeak, float allo
                 }
             }
             else {
-                price += unitsOnPeak * 22.35;
-                price += unitsOffPeak * 16.03;
+                price += data->unitsAndPayment[1][month] * 22.35;
+                price += data->unitsAndPayment[0][month] * 16.03;
             }
 
             if (price < 150) {
@@ -79,12 +89,12 @@ float KElectricPriceCalculator(float unitsOffPeak, float unitsOnPeak, float allo
         }
 
         case 'C': {
-            if (allotedKW < 5) {
+            if (data->allotedLoad < 5) {
                 price = units * 19.09;
             }
             else {
-                price += unitsOffPeak * 18.52;
-                price += unitsOnPeak * 24.49;
+                price += data->unitsAndPayment[0][month] * 18.52;
+                price += data->unitsAndPayment[1][month] * 24.49;
             }
             
             if (price < 350) {
@@ -93,5 +103,31 @@ float KElectricPriceCalculator(float unitsOffPeak, float unitsOnPeak, float allo
         }
     }
 
-    return price;
+    data->unitsAndPayment[2][month] = price;
+
+    switch (data->usageType) {
+        case 'R': {            
+            data->unitsAndPayment[3][month] = price * 0.015;
+            data->unitsAndPayment[4][month] = price * 0.17;
+            data->unitsAndPayment[5][month] = price * 0.04;
+            data->unitsAndPayment[6][month] = data->numberOfTV * 35;
+            break;
+        }
+
+        case 'C': {
+            data->unitsAndPayment[3][month] = price * 0.02;
+            data->unitsAndPayment[4][month] = price * 0.17;
+            data->unitsAndPayment[5][month] = price * 0.08;
+            data->unitsAndPayment[6][month] = data->numberOfTV * 60;
+            break;
+        }
+    }
+
+    data->unitsAndPayment[7][month] = 0;
+
+    for (counter = 2; counter < 7; counter++) {
+        data->unitsAndPayment[7][month] += data->unitsAndPayment[counter][month];
+    }
+
+    data->unitsAndPayment[8][month] = 0;                
 }
