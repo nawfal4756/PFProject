@@ -222,6 +222,11 @@ int PTCLAddCustomer() {
 
     userData.billYear[month] = time1->tm_year + 1900;
     userData.total = userData.payments[4][month];
+
+    fwrite(&userData, sizeof(struct PTCLData), 1, pointer);
+    fclose(pointer);
+
+    return 1;
 }
 
 int ArraySize(FILE* pointer, int structSize) {
