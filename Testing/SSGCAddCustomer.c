@@ -59,8 +59,8 @@ int SSGCAddCustomer() {
     scanf("%llu", &userData.consumerId);
     fflush(stdin);
     while (!SSGCConsumerIDVerification(userData.consumerId)) {
-        printf("Incorrect value!\n");
-        printf("Enter account number of customer again: ");
+        printf("\nIncorrect value!\n");
+        printf("Enter consumer ID of customer again: ");
         scanf("%llu", &userData.consumerId);
         fflush(stdin);
     }
@@ -87,7 +87,7 @@ int SSGCAddCustomer() {
     scanf("%llu", &userData.contactNumber);
     fflush(stdin);
     while (!ContactNumberVerification(userData.contactNumber)) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter contact number of customer again: ");
         scanf("%llu", &userData.contactNumber);
         fflush(stdin);
@@ -97,7 +97,7 @@ int SSGCAddCustomer() {
     scanf("%c", &userData.usageType);
     fflush(stdin);
     while (userData.usageType != 'R' && userData.usageType != 'I' && userData.usageType != 'r' && userData.usageType != 'i') {
-        printf("Incorrect option entered! Enter either R or I only\n");
+        printf("\nIncorrect option entered! Enter either R or I only\n");
         printf("Enter usage type (R - Residential, I - Industrial) again: ");
         scanf("%c", &userData.usageType);
         fflush(stdin);
@@ -115,13 +115,13 @@ int SSGCAddCustomer() {
     scanf("%f", &userData.unitsAndPayment[0][month]);
     fflush(stdin);
     while(userData.unitsAndPayment[0][month] < 0) {
-        printf("Incorrect amount entered!\n");
+        printf("\nIncorrect amount entered!\n");
         printf("Enter number of units used again: ");
         scanf("%f", &userData.unitsAndPayment[0][month]);
         fflush(stdin);
     }
 
-    // Price Function Call
+    SSGCPriceCalculator();
 
     userData.billYear[month] = time1->tm_year + 1900;
     userData.total = userData.unitsAndPayment[4][month];
