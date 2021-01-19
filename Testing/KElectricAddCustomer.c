@@ -64,7 +64,7 @@ int KElectricAddCustomer() {
     scanf("%llu", &userData.accountNumber);
     fflush(stdin);
     while (!KElectricAccountNumberVerification(userData.accountNumber)) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter account number of customer again: ");
         scanf("%llu", &userData.accountNumber);
         fflush(stdin);
@@ -92,7 +92,7 @@ int KElectricAddCustomer() {
     scanf("%llu", &userData.contactNumber);
     fflush(stdin);
     while (!ContactNumberVerification(userData.contactNumber)) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter contact number of customer again: ");
         scanf("%llu", &userData.contactNumber);
         fflush(stdin);
@@ -102,7 +102,7 @@ int KElectricAddCustomer() {
     scanf("%c", &userData.usageType);
     fflush(stdin);
     while (userData.usageType != 'R' && userData.usageType != 'C' && userData.usageType != 'r' && userData.usageType != 'c') {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter usage type of customer again (R - Residential, C - Commercial): ");
         scanf("%c", &userData.usageType);
         fflush(stdin);
@@ -119,7 +119,7 @@ int KElectricAddCustomer() {
     scanf("%f", &userData.allotedLoad);
     fflush(stdin);
     while (userData.allotedLoad <= 0) {
-        printf("Incorrect amount!\n");
+        printf("\nIncorrect amount!\n");
         printf("Enter alloted load of customer again: ");
         scanf("%f", &userData.allotedLoad);
         fflush(stdin);
@@ -129,7 +129,7 @@ int KElectricAddCustomer() {
     scanf("%d", &userData.numberOfTV);
     fflush(stdin);
     while (userData.numberOfTV <= 0) {
-        printf("Incorrect amount of TVs!\n");
+        printf("\nIncorrect amount of TVs!\n");
         printf("Enter number of TV's for customer again: ");
         scanf("%d", &userData.numberOfTV);
         fflush(stdin);
@@ -139,7 +139,7 @@ int KElectricAddCustomer() {
     scanf("%f", &userData.unitsAndPayment[0][month]);
     fflush(stdin);
     while (userData.unitsAndPayment[0][month] < 0) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter number of units used in off peak timing again: ");
         scanf("%f", &userData.unitsAndPayment[0][month]);
         fflush(stdin);
@@ -149,13 +149,13 @@ int KElectricAddCustomer() {
     scanf("%f", &userData.unitsAndPayment[1][month]);
     fflush(stdin);
     while (userData.unitsAndPayment[1][month] < 0) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter number of units used in on peak timing again: ");
         scanf("%f", &userData.unitsAndPayment[1][month]);
         fflush(stdin);
     }
 
-    //Price Function call
+    KElectricPriceCalculator();
 
     userData.billYear[month] = time1->tm_year + 1900;
     userData.total = userData.unitsAndPayment[7][month];
