@@ -59,7 +59,7 @@ int KElectricAddCustomer() {
 
     sizeFromFile = ArraySize(pointer, sizeof(struct KElectricData));
 
-    consumerID:
+    accountNumber:
     printf("Enter account number of customer: ");
     scanf("%llu", &userData.accountNumber);
     fflush(stdin);
@@ -73,8 +73,8 @@ int KElectricAddCustomer() {
     for (counter1 = 0; counter1 < sizeFromFile; counter1++) {
         fread(&userDataFile, sizeof(struct KElectricData), 1, pointer);
         if(userData.accountNumber == userDataFile.accountNumber) {
-            printf("\nUser already exist with this consumer ID. Enter another ID\n");
-            goto consumerID;
+            printf("\nUser already exist with this aacount number. Enter another ID\n");
+            goto accountNumber;
         }
     }
     
@@ -159,6 +159,11 @@ int KElectricAddCustomer() {
 
     userData.billYear[month] = time1->tm_year + 1900;
     userData.total = userData.unitsAndPayment[7][month];
+
+    fwrite(&userData, sizeof(struct KElectricData), 1, pointer);
+
+    fclose(pointer);
+    return 1;
 }
 
 int ArraySize(FILE* pointer, int structSize) {
