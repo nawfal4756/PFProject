@@ -12,7 +12,7 @@ int main() {
     FILE* pointer;
     struct AdminControl userData;
 
-    pointer = fopen(adminFile, "wb");
+    pointer = fopen(adminFile, "ab");
 
     printf("Enter the username: ");
     gets(userData.username);
@@ -22,7 +22,9 @@ int main() {
     gets(userData.password);
     fflush(stdin);
 
+    fwrite(&userData, sizeof(struct AdminControl), 1, pointer);
+    fclose(pointer);
+
     printf("\n\nUsername: %s\n", userData.username);
     printf("Password: %s", userData.password);
-
 }
