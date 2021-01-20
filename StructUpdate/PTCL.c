@@ -92,7 +92,7 @@ int main() {
             dataNew.internationalZone1Minutes[counter2] = dataOld.internationalZone1Minutes[counter2];
             dataNew.internationalOtherZoneMinutes[counter2] = dataOld.internationalOtherZoneMinutes[counter2];
             
-            dataNew.billYear[counter2] = 2019;
+            dataNew.billYear[counter2] = 2020;
 
             diff = dataOld.payments[4][counter2] - dataOld.payments[5][counter2];
             dataNew.total += diff;
@@ -104,7 +104,7 @@ int main() {
             }
         }
         
-        
+        dataNew.billYear[0] = 2021;
 
         fwrite(&dataNew, sizeof(struct PTCLDataNew), 1, pointerNew);
     }

@@ -73,11 +73,13 @@ int main() {
         }
 
         for (counter2 = 0; counter2 < 12; counter2++) {
-            dataNew.billYear[counter2] = 2019;                        
+            dataNew.billYear[counter2] = 2020;                        
 
             diff = dataOld.unitsAndPayment[4][counter2] - dataOld.unitsAndPayment[5][counter2];
             dataNew.total += diff;
         }
+
+        dataNew.billYear[0] = 2021;
 
         fwrite(&dataNew, sizeof(struct SSGCDataNew), 1, pointerNew);
     }
