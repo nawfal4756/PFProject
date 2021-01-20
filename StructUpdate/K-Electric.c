@@ -82,13 +82,15 @@ int main() {
         }
         
         for (counter2 = 0; counter2 < 12; counter2++) {
-            dataNew.billYear[counter2] = 2019;
+            dataNew.billYear[counter2] = 2020;
             
             dataNew.timePayment[counter2] = dataOld.timePayment[counter2];
 
             diff = dataOld.unitsAndPayment[7][counter2] - dataOld.unitsAndPayment[8][counter2];
             dataNew.total += diff;
         }
+
+        dataNew.billYear[0] = 2021;
 
         fwrite(&dataNew, sizeof(struct KElectricDataNew), 1, pointerNew);
     }

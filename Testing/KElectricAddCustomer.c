@@ -59,12 +59,12 @@ int KElectricAddCustomer() {
 
     sizeFromFile = ArraySize(pointer, sizeof(struct KElectricData));
 
-    consumerID:
+    accountNumber:
     printf("Enter account number of customer: ");
     scanf("%llu", &userData.accountNumber);
     fflush(stdin);
     while (!KElectricAccountNumberVerification(userData.accountNumber)) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter account number of customer again: ");
         scanf("%llu", &userData.accountNumber);
         fflush(stdin);
@@ -73,8 +73,8 @@ int KElectricAddCustomer() {
     for (counter1 = 0; counter1 < sizeFromFile; counter1++) {
         fread(&userDataFile, sizeof(struct KElectricData), 1, pointer);
         if(userData.accountNumber == userDataFile.accountNumber) {
-            printf("\nUser already exist with this consumer ID. Enter another ID\n");
-            goto consumerID;
+            printf("\nUser already exist with this aacount number. Enter another ID\n");
+            goto accountNumber;
         }
     }
     
@@ -83,16 +83,28 @@ int KElectricAddCustomer() {
     printf("Enter name of customer: ");
     gets(userData.name);
     fflush(stdin);
+    while(strlen(userData.name) <= 0) {
+        printf("\nName is required!\n");
+        printf("Enter name of customer again: ");
+        gets(userData.name);
+        fflush(stdin);
+    }
 
     printf("Enter address of customer: ");
     gets(userData.address);
     fflush(stdin);
+    while(strlen(userData.address) <= 0) {
+        printf("\nAddress is required!\n");
+        printf("Enter address of customer again: ");
+        gets(userData.address);
+        fflush(stdin);
+    }
 
     printf("Enter contact number of customer: ");
     scanf("%llu", &userData.contactNumber);
     fflush(stdin);
     while (!ContactNumberVerification(userData.contactNumber)) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter contact number of customer again: ");
         scanf("%llu", &userData.contactNumber);
         fflush(stdin);
@@ -102,7 +114,7 @@ int KElectricAddCustomer() {
     scanf("%c", &userData.usageType);
     fflush(stdin);
     while (userData.usageType != 'R' && userData.usageType != 'C' && userData.usageType != 'r' && userData.usageType != 'c') {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter usage type of customer again (R - Residential, C - Commercial): ");
         scanf("%c", &userData.usageType);
         fflush(stdin);
@@ -119,7 +131,7 @@ int KElectricAddCustomer() {
     scanf("%f", &userData.allotedLoad);
     fflush(stdin);
     while (userData.allotedLoad <= 0) {
-        printf("Incorrect amount!\n");
+        printf("\nIncorrect amount!\n");
         printf("Enter alloted load of customer again: ");
         scanf("%f", &userData.allotedLoad);
         fflush(stdin);
@@ -129,7 +141,7 @@ int KElectricAddCustomer() {
     scanf("%d", &userData.numberOfTV);
     fflush(stdin);
     while (userData.numberOfTV <= 0) {
-        printf("Incorrect amount of TVs!\n");
+        printf("\nIncorrect amount of TVs!\n");
         printf("Enter number of TV's for customer again: ");
         scanf("%d", &userData.numberOfTV);
         fflush(stdin);
@@ -139,7 +151,7 @@ int KElectricAddCustomer() {
     scanf("%f", &userData.unitsAndPayment[0][month]);
     fflush(stdin);
     while (userData.unitsAndPayment[0][month] < 0) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter number of units used in off peak timing again: ");
         scanf("%f", &userData.unitsAndPayment[0][month]);
         fflush(stdin);
@@ -149,16 +161,21 @@ int KElectricAddCustomer() {
     scanf("%f", &userData.unitsAndPayment[1][month]);
     fflush(stdin);
     while (userData.unitsAndPayment[1][month] < 0) {
-        printf("Incorrect value!\n");
+        printf("\nIncorrect value!\n");
         printf("Enter number of units used in on peak timing again: ");
         scanf("%f", &userData.unitsAndPayment[1][month]);
         fflush(stdin);
     }
 
-    //Price Function call
+    KElectricPriceCalculator();
 
     userData.billYear[month] = time1->tm_year + 1900;
     userData.total = userData.unitsAndPayment[7][month];
+
+    fwrite(&userData, sizeof(struct KElectricData), 1, pointer);
+
+    fclose(pointer);
+    return 1;
 }
 
 int ArraySize(FILE* pointer, int structSize) {
