@@ -83,10 +83,22 @@ int KElectricAddCustomer() {
     printf("Enter name of customer: ");
     gets(userData.name);
     fflush(stdin);
+    while(strlen(userData.name) <= 0) {
+        printf("\nName is required!\n");
+        printf("Enter name of customer again: ");
+        gets(userData.name);
+        fflush(stdin);
+    }
 
     printf("Enter address of customer: ");
     gets(userData.address);
     fflush(stdin);
+    while(strlen(userData.address) <= 0) {
+        printf("\nAddress is required!\n");
+        printf("Enter address of customer again: ");
+        gets(userData.address);
+        fflush(stdin);
+    }
 
     printf("Enter contact number of customer: ");
     scanf("%llu", &userData.contactNumber);
