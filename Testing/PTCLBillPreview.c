@@ -43,15 +43,75 @@ int main()
 
 void PTCLBillPreview(struct PTCLData PTCL)
 {
-    int counter2,counter3,counter;
+    int counter2,counter3,counter,maximum,index=0;
+    for(counter=0;counter<12;counter++) {
+        maximum=PTCL.billYear[0];
+        if(PTCL.billYear[counter]>=maximum) {
+            maximum=PTCL.billYear[counter];
+            index=counter+1;
+        }
+    }
+
     printf("-----------------------------------------------------------------------------------------------------------------\n");
     printf("\t\t\t\t\t\t\t\tPTCL\t\t\n");
     printf("\t\t\t\t\t\tHello to the Future\t\n");
     printf("-----------------------------------------------------------------------------------------------------------------\n");
+
+    switch(index) {
+        case 1:
+        printf("Current Month and Year: January,%d\n",maximum);
+        break;
+
+        case 2:
+        printf("Current Month and Year: February,%d\n",maximum);
+        break;
+
+        case 3:
+        printf("Current Month and Year: March,%d\n",maximum);
+        break;
+
+        case 4:
+        printf("Current Month and Year: April,%d\n",maximum);
+        break;
+
+        case 5:
+        printf("Current Month and Year: May,%d\n",maximum);
+        break;
+
+        case 6:
+        printf("Current Month and Year: June,%d\n",maximum);
+        break;
+
+        case 7:
+        printf("Current Month and Year: July,%d\n",maximum);
+        break;
+
+        case 8:
+        printf("Current Month and Year: August,%d\n",maximum);
+        break;
+
+        case 9:
+        printf("Current Month and Year: September,%d\n",maximum);
+        break;
+
+        case 10:
+        printf("Current Month and Year: October,%d\n",maximum);
+        break;
+
+        case 11:
+        printf("Current Month and Year: November,%d\n",maximum);
+        break;
+
+        case 12:
+        printf("Current Month and Year: December,%d\n",maximum);
+        break;
+
+    }
+    
+    printf("Consumer ID: %llu\n", PTCL.accountID);
     printf("Name: ");
     puts(PTCL.name);
     printf("Address: %s\n", PTCL.address);
-    printf("Consumer ID: %llu\n", PTCL.accountID);
     printf("Contact number: %llu\n",PTCL.contactNumber);
     switch(PTCL.packageLandline)
     {
