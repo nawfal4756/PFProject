@@ -62,7 +62,7 @@ int main()
             response=SSGCRecordUpdate(ModifiedData);
         }
         
-        else if (answer=='N'||answer=='n')
+        else if (answer=='N'&&answer=='n')
         {
             printf("Programme has been exited!");
             exit(0);
