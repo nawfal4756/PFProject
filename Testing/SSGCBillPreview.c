@@ -36,14 +36,74 @@ int main()
 
 void SSGCBillPreview(struct SSGCData SSGC)
 {
-    int counter2,counter3,counter;
+    int counter2,counter3,counter,maximum,index=0;
+    for(counter=0;counter<12;counter++) {
+        maximum=SSGC.billYear[0];
+        if(SSGC.billYear[counter]>=maximum) {
+            maximum=SSGC.billYear[counter];
+            index=counter+1;
+        }
+    }
+
     printf("-----------------------------------------------------------------------------------------------------------------\n");
     printf("\t\t\t\t\tSui Southern Gas Company Limited\t\t\n");
     printf("-----------------------------------------------------------------------------------------------------------------\n");
+
+    switch(index) {
+        case 1:
+        printf("Current Month and Year: January,%d\n",maximum);
+        break;
+
+        case 2:
+        printf("Current Month and Year: February,%d\n",maximum);
+        break;
+
+        case 3:
+        printf("Current Month and Year: March,%d\n",maximum);
+        break;
+
+        case 4:
+        printf("Current Month and Year: April,%d\n",maximum);
+        break;
+
+        case 5:
+        printf("Current Month and Year: May,%d\n",maximum);
+        break;
+
+        case 6:
+        printf("Current Month and Year: June,%d\n",maximum);
+        break;
+
+        case 7:
+        printf("Current Month and Year: July,%d\n",maximum);
+        break;
+
+        case 8:
+        printf("Current Month and Year: August,%d\n",maximum);
+        break;
+
+        case 9:
+        printf("Current Month and Year: September,%d\n",maximum);
+        break;
+
+        case 10:
+        printf("Current Month and Year: October,%d\n",maximum);
+        break;
+
+        case 11:
+        printf("Current Month and Year: November,%d\n",maximum);
+        break;
+
+        case 12:
+        printf("Current Month and Year: December,%d\n",maximum);
+        break;
+
+    }
+
+    printf("Consumer ID: %llu\n", SSGC.consumerId);
     printf("Name: ");
     puts(SSGC.name);
     printf("Address: %s\n", SSGC.address);
-    printf("Consumer ID: %llu\n", SSGC.consumerId);
     printf("Contact number: %llu\n",SSGC.contactNumber);
     printf("Usage type: %s\n", SSGC.usageType == 'R' ? "Residential" : "Commercial");
     printf("Pending Payment: %.2f",SSGC.total);
