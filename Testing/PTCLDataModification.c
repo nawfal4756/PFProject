@@ -47,6 +47,7 @@ int main()
     ModifiedData=PTCLDataModification(data);
     response=PTCLRecordUpdate(ModifiedData);
 
+    response:
     if (response == 404) {
         printf("Error");
     }
@@ -65,6 +66,7 @@ int main()
             data = PTCLIDSearch(accountNumber);
             ModifiedData=PTCLDataModification(data);
             response=PTCLRecordUpdate(ModifiedData);
+            goto response;
         }
         
         else if (answer=='N'||answer=='n')
@@ -150,14 +152,14 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL)
         }
 
         case 2: {
-           printf("Enter the new contact number: ");
-           scanf("%llu", &PTCL.contactNumber);
-           fflush(stdin);
-            while (!ContactNumberVerification(PTCL.contactNumber)) {
-            printf("Incorrect value!\n");
-            printf("Enter the new contact number again: ");
+            printf("Enter the new contact number: ");
             scanf("%llu", &PTCL.contactNumber);
             fflush(stdin);
+            while (!ContactNumberVerification(PTCL.contactNumber)) {
+                printf("Incorrect value!\n");
+                printf("Enter the new contact number again: ");
+                scanf("%llu", &PTCL.contactNumber);
+                fflush(stdin);
             }
             break;
         }
@@ -236,78 +238,78 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL)
             break;
         }
     
-    case 7:{
-        printf("Enter the month of the bill:\n");
-        printf("Enter 1 for january, 2 for february and so on...\n");
-        scanf("%d",&month);
-        while(month < 0 && month > 12) {
-            printf("Incorrect month!\n");
-            printf("Enter the month of the bill again:");
+        case 7:{
+            printf("Enter the month of the bill:\n");
+            printf("Enter 1 for january, 2 for february and so on...\n");
             scanf("%d",&month);
-        }
-
-        printf("Enter the year of bill:");
-        scanf("%d",&year);
-        if(year != PTCL.billYear[month-1]) {
-            printf("The record for %d year does not exist!\n", year);
-            goto jump1;
-        }
-        
-        jump2:
-        printf("Which minutes you want to change?\n");
-        printf("Press 1 to change the On Net Minutes\n");
-        printf("Press 2 to change the Mobile Minutes\n");
-        printf("Press 3 to change the Other Minutes\n");
-        printf("Press 4 to change the International Zone 1 Minutes\n");
-        printf("Press 5 to change the International Other Zone Minutes\n");
-        printf("Your choice:");
-        scanf("%d",&ch);
-        
-        switch(ch)
-        {
-            case 1: {
-                printf("Enter the new On Net Minutes:");
-                scanf("%d",&PTCL.onNetMinutes[month-1]);
-                break;
-            }
-            case 2: {
-                printf("Enter the new Mobile Minutes:");
-                scanf("%d",&PTCL.mobileMinutes[month-1]);
-                break;
+            while(month < 0 && month > 12) {
+                printf("Incorrect month!\n");
+                printf("Enter the month of the bill again:");
+                scanf("%d",&month);
             }
 
-            case 3: {
-                printf("Enter the new Other Minutes:");
-                scanf("%d",&PTCL.otherMinutes[month-1]);
-                break;
-            }
-
-            case 4: {
-                printf("Enter the new International Zone 1 Minutes:");
-                scanf("%d",&PTCL.internationalZone1Minutes[month-1]);
-                break;
-            }
-
-            case 5:{
-                printf("Enter the new International Other Zone Minutes:");
-                scanf("%d",&PTCL.internationalOtherZoneMinutes[month-1]);
-                break;
-            }
-
-            default: {
-                printf("\nIncorrect choice!\n");
-                goto jump2;
-                break;
+            printf("Enter the year of bill:");
+            scanf("%d",&year);
+            if(year != PTCL.billYear[month-1]) {
+                printf("The record for %d year does not exist!\n", year);
+                goto jump1;
             }
             
-        }
-    }
+            jump2:
+            printf("Which minutes you want to change?\n");
+            printf("Press 1 to change the On Net Minutes\n");
+            printf("Press 2 to change the Mobile Minutes\n");
+            printf("Press 3 to change the Other Minutes\n");
+            printf("Press 4 to change the International Zone 1 Minutes\n");
+            printf("Press 5 to change the International Other Zone Minutes\n");
+            printf("Your choice:");
+            scanf("%d",&ch);
+            
+            switch(ch)
+            {
+                case 1: {
+                    printf("Enter the new On Net Minutes:");
+                    scanf("%d",&PTCL.onNetMinutes[month-1]);
+                    break;
+                }
+                case 2: {
+                    printf("Enter the new Mobile Minutes:");
+                    scanf("%d",&PTCL.mobileMinutes[month-1]);
+                    break;
+                }
 
-    default: {
-        printf("\nIncorrect option selected!\n");
-        goto jump2;
-        break;
-    }
+                case 3: {
+                    printf("Enter the new Other Minutes:");
+                    scanf("%d",&PTCL.otherMinutes[month-1]);
+                    break;
+                }
+
+                case 4: {
+                    printf("Enter the new International Zone 1 Minutes:");
+                    scanf("%d",&PTCL.internationalZone1Minutes[month-1]);
+                    break;
+                }
+
+                case 5:{
+                    printf("Enter the new International Other Zone Minutes:");
+                    scanf("%d",&PTCL.internationalOtherZoneMinutes[month-1]);
+                    break;
+                }
+
+                default: {
+                    printf("\nIncorrect choice!\n");
+                    goto jump2;
+                    break;
+                }
+                
+            }
+        }
+
+        default: {
+            printf("\nIncorrect option selected!\n");
+            goto jump2;
+            break;
+        }
 
     }
     return PTCL;     
