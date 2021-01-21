@@ -164,7 +164,5 @@ void KElectricPriceCalculator(struct KElectricData* data, int month) {
     for (counter = 2; counter < 7; counter++) {
         data->unitsAndPayment[7][month] += data->unitsAndPayment[counter][month];
     }
-
-    
-    data->unitsAndPayment[8][month] = 0;                
+               
 }

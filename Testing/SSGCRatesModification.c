@@ -9,8 +9,12 @@ struct SSGCRates {
     float upTo450;
     float moreThan450;
     float minR;
+    float salesTaxR;
+    float incomeTaxR;
     float unitPriceC;
     float minC;
+    float salesTaxC;
+    float incomeTaxC;
 };
 
 char* ssgcRates = "../DataFiles/SSGCRates.txt";
@@ -45,8 +49,10 @@ int SSGCRatesModification(char category) {
             printf("Enter 4 to change the unit price for up to 350 units: \n");
             printf("Enter 5 to change the unit price for up to 450 units: \n");
             printf("Enter 6 to change the unit price for more than 450 units: \n");
-            printf("enter 7 to chnage the minimum price\n");
-            printf("Enter 8 to go back\n");
+            printf("Enter 7 to chnage the minimum price\n");
+            printf("Enter 8 to change the sales tax percentage\n");
+            printf("Enter 9 to change the income tax percentage\n");
+            printf("Enter 10 to go back\n");
             printf("Enter you desired option: ");
             scan("%d", &option1);
             fflush(stdin);
@@ -59,7 +65,7 @@ int SSGCRatesModification(char category) {
                     fflush(stdin);
                     while (temp1 < 0) {
                         printf("\nIncorrect amount entered!\n");
-                        printf("Enter unit price for up to 50 units: ");
+                        printf("Enter unit price for up to 50 units again: ");
                         scanf("%f", &temp1);
                         fflush(stdin);
                     }
@@ -84,7 +90,7 @@ int SSGCRatesModification(char category) {
                     fflush(stdin);
                     while (temp1 < 0) {
                         printf("\nIncorrect amount entered!\n");
-                        printf("Enter unit price for up to 150 units: ");
+                        printf("Enter unit price for up to 150 units again: ");
                         scanf("%f", &temp1);
                         fflush(stdin);
                     }
@@ -109,7 +115,7 @@ int SSGCRatesModification(char category) {
                     fflush(stdin);
                     while (temp1 < 0) {
                         printf("\nIncorrect amount entered!\n");
-                        printf("Enter unit price for up to 250 units: ");
+                        printf("Enter unit price for up to 250 units again: ");
                         scanf("%f", &temp1);
                         fflush(stdin);
                     }
@@ -134,7 +140,7 @@ int SSGCRatesModification(char category) {
                     fflush(stdin);
                     while (temp1 < 0) {
                         printf("\nIncorrect amount entered!\n");
-                        printf("Enter unit price for up to 350 units: ");
+                        printf("Enter unit price for up to 350 units again: ");
                         scanf("%f", &temp1);
                         fflush(stdin);
                     }
@@ -159,7 +165,7 @@ int SSGCRatesModification(char category) {
                     fflush(stdin);
                     while (temp1 < 0) {
                         printf("\nIncorrect amount entered!\n");
-                        printf("Enter unit price for up to 450 units: ");
+                        printf("Enter unit price for up to 450 units again: ");
                         scanf("%f", &temp1);
                         fflush(stdin);
                     }
@@ -184,7 +190,7 @@ int SSGCRatesModification(char category) {
                     fflush(stdin);
                     while (temp1 < 0) {
                         printf("\nIncorrect amount entered!\n");
-                        printf("Enter unit price for more than 450 units: ");
+                        printf("Enter unit price for more than 450 units again: ");
                         scanf("%f", &temp1);
                         fflush(stdin);
                     }
@@ -229,6 +235,58 @@ int SSGCRatesModification(char category) {
                 }
 
                 case 8: {
+                    case8:
+                    printf("Enter the sales tax in percentage: ");
+                    scanf("%f", &temp1);
+                    fflush(stdin);
+                    while (temp1 < 0) {
+                        printf("\nIncorrect percentage entered!\n");
+                        printf("Enter the sales tax in percentage again: ");
+                        scanf("%f", &temp1);
+                        fflush(stdin);
+                    }
+
+                    printf("Enter the sales tax in percentage for confirmation: ");
+                    scanf("%f", &temp2);
+                    fflush(stdin);
+
+                    if (temp1 == temp2) {
+                        data.salesTaxR = temp2 / 100;                        
+                    }
+                    else {
+                        printf("\nRates entered does not match!\n");
+                        goto case8;
+                    }
+                    break;
+                }
+
+                case 9: {
+                    case9:
+                    printf("Enter the income tax in percentage: ");
+                    scanf("%f", &temp1);
+                    fflush(stdin);
+                    while (temp1 < 0) {
+                        printf("\nIncorrect percentage entered!\n");
+                        printf("Enter the income tax in percentage again: ");
+                        scanf("%f", &temp1);
+                        fflush(stdin);
+                    }
+
+                    printf("Enter the income tax in percentage for confirmation: ");
+                    scanf("%f", &temp2);
+                    fflush(stdin);
+
+                    if (temp1 == temp2) {
+                        data.incomeTaxR = temp2 / 100;                        
+                    }
+                    else {
+                        printf("\nRates entered does not match!\n");
+                        goto case9;
+                    }
+                    break;
+                }
+
+                case 10: {
                     return 2;
                     break;
                 }
@@ -246,7 +304,9 @@ int SSGCRatesModification(char category) {
             printf("\n\nCommercial:\n");
             printf("Enter 1 to change the unit price: \n");
             printf("enter 2 to chnage the minimum price\n");
-            printf("Enter 3 to go back\n");
+            printf("Enter 3 to change the sales tax percentage\n");
+            printf("Enter 4 to change the income tax percentage\n");
+            printf("Enter 5 to go back\n");
             printf("Enter you desired option: ");
             scan("%d", &option1);
             fflush(stdin);
@@ -304,6 +364,58 @@ int SSGCRatesModification(char category) {
                 }
 
                 case 3: {
+                    case3C:
+                    printf("Enter the sales tax in percentage: ");
+                    scanf("%f", &temp1);
+                    fflush(stdin);
+                    while (temp1 < 0) {
+                        printf("\nIncorrect percentage entered!\n");
+                        printf("Enter the sales tax in percentage again: ");
+                        scanf("%f", &temp1);
+                        fflush(stdin);
+                    }
+
+                    printf("Enter the sales tax in percentage for confirmation: ");
+                    scanf("%f", &temp2);
+                    fflush(stdin);
+
+                    if (temp1 == temp2) {
+                        data.salesTaxC = temp2 / 100;                        
+                    }
+                    else {
+                        printf("\nRates entered does not match!\n");
+                        goto case3C;
+                    }
+                    break;
+                }
+
+                case 4: {
+                    case4C:
+                    printf("Enter the income tax in percentage: ");
+                    scanf("%f", &temp1);
+                    fflush(stdin);
+                    while (temp1 < 0) {
+                        printf("\nIncorrect percentage entered!\n");
+                        printf("Enter the income tax in percentage again: ");
+                        scanf("%f", &temp1);
+                        fflush(stdin);
+                    }
+
+                    printf("Enter the income tax in percentage for confirmation: ");
+                    scanf("%f", &temp2);
+                    fflush(stdin);
+
+                    if (temp1 == temp2) {
+                        data.incomeTaxC = temp2 / 100;                        
+                    }
+                    else {
+                        printf("\nRates entered does not match!\n");
+                        goto case4C;
+                    }
+                    break;
+                }
+
+                case 5: {
                     return 2;
                     break;
                 }
