@@ -68,6 +68,7 @@ void KElectricPriceCalculator(struct KElectricData* data, int month) {
     pointer = fopen(kelectricRates, "rb");
     if (pointer == NULL) {
         printf("\nUnable to open file\n\n");
+        return;
     }
     fread(&rates, sizeof(struct KElectricRates), 1, pointer);
     fclose(pointer);

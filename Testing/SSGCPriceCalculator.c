@@ -61,7 +61,10 @@ void SSGCPriceCalculator(struct SSGCData* data, int month) {
     int counter1;
 
     pointer = fopen(ssgcRates, "rb");
-    printf("\nUnable to open file\n\n");
+    if (pointer == NULL) {
+        printf("\nUnable to open file\n\n");
+        return;
+    }
     fread(&prices, sizeof(struct SSGCData), 1, pointer);
     fclose(pointer);
     

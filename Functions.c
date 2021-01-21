@@ -108,6 +108,35 @@ struct SSGCRates {
     float minC;
 };
 
+struct PTCLRates {
+    float freedom500L;
+    float freedom1000L;
+    float freedom3000L;
+    float freedom5000L;
+    float freedom8000L;
+    float mb6B;
+    float mb8B;
+    float mb15B;
+    float mb25B;
+    float mb50B;
+    float mb100B;
+    float smartTVWOB;
+    float smartTVWB;
+    float smartTVApp;
+    float dataUC;
+    float data20C;
+    float data30C;
+    float data50C;
+    float mobile;
+    float other;
+    float internationalZone1;
+    float withholdingTaxMoreThan1000L;
+    float withholdingTaxB;
+    float serviceTaxB;
+    float serviceTaxTV;
+    float overallServiceTax;
+};
+
 char* keFile = "./DataFiles/KElectricData.txt";
 char* ssgcFile = "./DataFiles/SSGCData.txt";
 char* ptclFile = "./DataFiles/PTCLData.txt";
@@ -115,6 +144,7 @@ char* creditCardFile = "./DataFiles/CreditCardData.txt";
 char* adminFile = "./DataFiles/AdminFile.txt";
 char* kelectricRates = "./DataFiles/KElectricRates.txt";
 char* ssgcRates = "./DataFiles/SSGCRates.txt";
+char* ptclRates = "./DataFiles/PTCLRates.txt";
 
 int ArraySize(FILE* pointer, int structSize);
 bool KElectricAccountNumberVerification(unsigned long long int accountNumber);

@@ -17,7 +17,38 @@ struct PTCLData {
     float payments[6][12];
 };
 
-void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[6][12]);
+struct PTCLRates {
+    float freedom500L;
+    float freedom1000L;
+    float freedom3000L;
+    float freedom5000L;
+    float freedom8000L;
+    float mb6B;
+    float mb8B;
+    float mb15B;
+    float mb25B;
+    float mb50B;
+    float mb100B;
+    float smartTVWOB;
+    float smartTVWB;
+    float smartTVApp;
+    float dataUC;
+    float data20C;
+    float data30C;
+    float data50C;
+    float mobile;
+    float other;
+    float internationalZone1;
+    float withholdingTaxMoreThan1000L;
+    float withholdingTaxB;
+    float serviceTaxB;
+    float serviceTaxTV;
+    float overallServiceTax;
+};
+
+char* ptclRates = "../DataFiles/PTCLRates.txt";
+
+void PTCLPriceCalculator(struct PTCLData* data, int month);
 
 
 int main() {
@@ -108,7 +139,7 @@ int main() {
         userData.internationalOtherZoneMinutes = rand() % 151;
     } while (userData.internationalOtherZoneMinutes < 0 || userData.internationalOtherZoneMinutes > 150);
 
-    PTCLPriceCalculator(userData, counter, userData.payments);
+    PTCLPriceCalculator(&userData, counter);
 
     for (counter = 0; counter < 6; counter++) {
         printf("%.2f\n", userData.payments[counter][0]);
@@ -118,9 +149,23 @@ int main() {
     
 }
 
-void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[6][12]) {
+void PTCLPriceCalculator(struct PTCLData* data, int month) {
     int counter1;
     float price = 0, tempRate = 0, telephoneBill = 0, serviceTax = 0, withholdingTax = 0;
+    struct PTCLData userInfo;
+    struct PTCLRates rates;
+    FILE* pointer;
+
+    pointer = fopen(ptclRates, "rb");
+
+    if (pointer == NULL) {
+        printf("\nFile could not open\n\n");
+        return;
+    }
+    fread(&rates, sizeof(struct PTCLRates), 1, pointer);
+    fclose(pointer);
+
+    userInfo = *data;
 
     srand(time(0));
     do {
@@ -128,15 +173,15 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
     } while (tempRate >= 35 && tempRate <= 40);
     // tempRate = 37.5;
 
-    price += userInfo.otherMinutes * 2;
+    price += userInfo.otherMinutes * rates.other;
     price += userInfo.internationalOtherZoneMinutes * tempRate;
 
     if (userInfo.packageLandline != 1 && userInfo.packageBroadband == 0) {
         switch (userInfo.packageLandline) {
             case 1: {
                 price += userInfo.onNetMinutes * 0;
-                price += userInfo.mobileMinutes * 2.5;
-                price += userInfo.internationalZone1Minutes * 3.6;            
+                price += userInfo.mobileMinutes * rates.mobile;
+                price += userInfo.internationalZone1Minutes * rates.internationalZone1;                            
                 break;
             }
 
@@ -144,9 +189,10 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
                 userInfo.mobileMinutes -= 200;
                 
                 if (userInfo.mobileMinutes > 0) {
-                    price += userInfo.mobileMinutes * 2.5;
+                    price += userInfo.mobileMinutes * rates.mobile;
                 }            
-                price += userInfo.internationalZone1Minutes * 3.6;            
+                price += userInfo.internationalZone1Minutes * rates.internationalZone1; 
+                price += rates.freedom500L;          
                 break;
             }
 
@@ -155,11 +201,12 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
                 userInfo.internationalZone1Minutes -= 200;
 
                 if (userInfo.mobileMinutes > 0) {
-                    price += userInfo.mobileMinutes * 2.5;
+                    price += userInfo.mobileMinutes * rates.mobile;
                 }            
                 if (userInfo.internationalZone1Minutes > 0) {
-                    price += userInfo.internationalZone1Minutes * 3.6;
-                }            
+                    price += userInfo.internationalZone1Minutes * rates.internationalZone1;
+                }
+                price += rates.freedom1000L;
                 break;
             }
 
@@ -168,11 +215,12 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
                 userInfo.internationalZone1Minutes -= 200;
 
                 if (userInfo.mobileMinutes > 0) {
-                    price += userInfo.mobileMinutes * 2.5;
+                    price += userInfo.mobileMinutes * rates.mobile;
                 }
                 if (userInfo.internationalZone1Minutes > 0) {
-                    price += userInfo.internationalZone1Minutes * 3.6;
-                }            
+                    price += userInfo.internationalZone1Minutes * rates.internationalZone1;
+                }
+                price += rates.freedom3000L;     
                 break;
             }
 
@@ -181,11 +229,12 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
                 userInfo.internationalZone1Minutes -= 400;
 
                 if (userInfo.mobileMinutes > 0) {
-                    price += userInfo.mobileMinutes * 2.5;
+                    price += userInfo.mobileMinutes * rates.mobile;
                 }            
                 if (userInfo.internationalZone1Minutes > 0) {
-                    price += userInfo.internationalZone1Minutes * 3.6;
-                }            
+                    price += userInfo.internationalZone1Minutes * rates.internationalZone1;
+                }
+                price += rates.freedom5000L;
                 break;
             }
 
@@ -194,11 +243,12 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
                 userInfo.internationalZone1Minutes -= 800;
 
                 if (userInfo.mobileMinutes > 0) {
-                    price += userInfo.mobileMinutes * 2.5;
+                    price += userInfo.mobileMinutes * rates.mobile;
                 }            
                 if (userInfo.internationalZone1Minutes > 0) {
-                    price += userInfo.internationalZone1Minutes * 3.6;
-                }            
+                    price += userInfo.internationalZone1Minutes * rates.internationalZone1;
+                }
+                price += rates.freedom8000L;    
                 break;
             }
             
@@ -217,32 +267,32 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
         }
 
         case 6: {
-            price += 1799;
+            price += rates.mb6B;
             break;
         }
 
         case 8: {
-            price += 2249;
+            price += rates.mb8B;
             break;
         }
 
         case 15: {
-            price += 2749;
+            price += rates.mb15B;
             break;
         }
 
         case 25: {
-            price += 3299;
+            price += rates.mb25B;
             break;
         }
 
         case 50: {
-            price += 5099;
+            price += rates.mb50B;
             break;
         }
 
         case 100: {
-            price += 7599;
+            price += rates.mb100B;
             break;
         }
         
@@ -258,31 +308,31 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
         
         case 'T': {
             if (userInfo.packageBroadband == 0) {
-                price += 799;
+                price += rates.smartTVWOB;
             }
 
             if (userInfo.packageBroadband == 6) {
-                price += 525;
+                price += rates.smartTVWB;
             }
             break;
         }
 
         case 'A': {
             if (userInfo.packageBroadband == 0 || userInfo.packageBroadband == 6) {
-                price += 99;   
+                price += rates.smartTVApp;   
             }            
             break;
         }
 
         case 'B': {
             if (userInfo.packageBroadband == 0) {
-                price += 799;
-                price += 99;
+                price += rates.smartTVWOB;
+                price += rates.smartTVApp;
             }
 
             if (userInfo.packageBroadband == 6) {
-                price += 525;
-                price += 99;
+                price += rates.smartTVWB;
+                price += rates.smartTVApp;
             }
 
         }
@@ -293,22 +343,22 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
 
     switch (userInfo.packageCharji) {
         case 'U': {
-            price += 1999;
+            price += rates.dataUC;
             break;
         }
 
         case 'S': {
-            price += 1000;
+            price += rates.data20C;
             break;
         }
 
         case 'M': {
-            price += 1250;
+            price += rates.data30C;
             break;
         }
 
         case 'L': {
-            price += 1500;
+            price += rates.data50C;
             break;
         }
 
@@ -317,28 +367,28 @@ void PTCLPriceCalculator(struct PTCLData userInfo, int counter2, float payments[
         }
     }
 
-    serviceTax += price * 0.195;
+    serviceTax += price * rates.overallServiceTax;
 
     if (telephoneBill > 1000) {
-        withholdingTax += price * 0.1;
+        withholdingTax += price * rates.withholdingTaxMoreThan1000L;
     }
 
     if (userInfo.packageBroadband != 0 || userInfo.packageCharji != 'N') {
-        serviceTax += price * 0.195;
-        withholdingTax += price * 0.125;
+        serviceTax += price * rates.serviceTaxB;
+        withholdingTax += price * rates.withholdingTaxB;
     }
 
     if (userInfo.packageTV != 'N') {
-        serviceTax += price * 0.1;
+        serviceTax += price * rates.serviceTaxTV;
     }
 
-    *(*(payments + 0) + counter2) = price;
-    *(*(payments + 1) + counter2) = serviceTax;
-    *(*(payments + 2) + counter2) = withholdingTax;
-    *(*(payments + 3) + counter2) = 0;
-    *(*(payments + 4) + counter2) = 0;
+    data->payments[0][month] = price;
+    data->payments[1][month] = serviceTax;
+    data->payments[2][month] = withholdingTax;
+    data->payments[3][month] = 0;
+    data->payments[4][month] = 0;
     
     for ( counter1 = 0; counter1 < 4; counter1++) {
-        *(*(payments + 4) + counter2) += *(*(payments + counter1) + counter2);
+        data->payments[4][month] += data->payments[counter1][month];
     }
 }

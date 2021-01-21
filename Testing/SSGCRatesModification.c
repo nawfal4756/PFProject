@@ -43,12 +43,12 @@ int SSGCRatesModification(char category) {
         case 'R': {
             options1:
             printf("\n\nResidential:\n");
-            printf("Enter 1 to change the unit price for up to 50 units: \n");
-            printf("Enter 2 to change the unit price for up to 150 units: \n");
-            printf("Enter 3 to change the unit price for up to 250 units: \n");
-            printf("Enter 4 to change the unit price for up to 350 units: \n");
-            printf("Enter 5 to change the unit price for up to 450 units: \n");
-            printf("Enter 6 to change the unit price for more than 450 units: \n");
+            printf("Enter 1 to change the unit price for up to 50 units\n");
+            printf("Enter 2 to change the unit price for up to 150 units\n");
+            printf("Enter 3 to change the unit price for up to 250 units\n");
+            printf("Enter 4 to change the unit price for up to 350 units\n");
+            printf("Enter 5 to change the unit price for up to 450 units\n");
+            printf("Enter 6 to change the unit price for more than 450 units\n");
             printf("Enter 7 to chnage the minimum price\n");
             printf("Enter 8 to change the sales tax percentage\n");
             printf("Enter 9 to change the income tax percentage\n");
@@ -81,6 +81,7 @@ int SSGCRatesModification(char category) {
                         printf("\nRates entered does not match!\n");
                         goto case1;
                     }
+                    break;
                 }
 
                 case 2: {
@@ -106,6 +107,7 @@ int SSGCRatesModification(char category) {
                         printf("\nRates entered does not match!\n");
                         goto case2;
                     }
+                    break;
                 }
 
                 case 3: {
@@ -131,6 +133,7 @@ int SSGCRatesModification(char category) {
                         printf("\nRates entered does not match!\n");
                         goto case3;
                     }
+                    break;
                 }
 
                 case 4: {
@@ -156,6 +159,7 @@ int SSGCRatesModification(char category) {
                         printf("\nRates entered does not match!\n");
                         goto case4;
                     }
+                    break;
                 }
 
                 case 5: {
@@ -181,6 +185,7 @@ int SSGCRatesModification(char category) {
                         printf("\nRates entered does not match!\n");
                         goto case5;
                     }
+                    break;
                 }
 
                 case 6: {
@@ -206,6 +211,7 @@ int SSGCRatesModification(char category) {
                         printf("\nRates entered does not match!\n");
                         goto case6;
                     }
+                    break;
                 }
 
                 case 7: {
@@ -302,7 +308,7 @@ int SSGCRatesModification(char category) {
         case 'C': {
             options2:
             printf("\n\nCommercial:\n");
-            printf("Enter 1 to change the unit price: \n");
+            printf("Enter 1 to change the unit price\n");
             printf("enter 2 to chnage the minimum price\n");
             printf("Enter 3 to change the sales tax percentage\n");
             printf("Enter 4 to change the income tax percentage\n");
@@ -335,6 +341,7 @@ int SSGCRatesModification(char category) {
                         printf("\nRates entered does not match!\n");
                         goto case1C;
                     }
+                    break;
                 }
 
                 case 2: {
