@@ -67,10 +67,41 @@ struct CreditCard {
     int cvc;
 };
 
+struct AdminControl {
+    char username[40];
+    char password[40];
+};
+
+struct KElectricRates {
+    float offPeakUnitsLessThan5KW;
+    float onPeakUnitsLessThan5KW;
+    float unitsUpto50;
+    float unitsUpto100;
+    float unitsUpto200;
+    float unitsUpto300;
+    float unitsUpto700;
+    float unitsAbove700;
+    float minR;
+    float electricityDutyR;
+    float salesTaxR;
+    float incomeTaxR;
+    float tvLicenseFeeR;
+    float unitsLessThan5KWC;
+    float offPeakUnitsMoreThan5KWC;
+    float onPeakUnitsMoreThan5KWC;
+    float minC;
+    float electricityDutyC;
+    float salesTaxC;
+    float incomeTaxC;
+    float tvLicenseFeeC;
+};
+
 char* keFile = "./DataFiles/KElectricData.txt";
 char* ssgcFile = "./DataFiles/SSGCData.txt";
 char* ptclFile = "./DataFiles/PTCLData.txt";
 char* creditCardFile = "./DataFiles/CreditCardData.txt";
+char* adminFile = "./DataFiles/AdminFile.txt";
+char* kelectricRates = "../DataFiles/KElectricRates.txt";
 
 int ArraySize(FILE* pointer, int structSize);
 bool KElectricAccountNumberVerification(unsigned long long int accountNumber);
