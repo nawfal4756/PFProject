@@ -56,7 +56,7 @@ int main()
         printf("Do you want to modify another one?\n");
         printf("Press Y for yes and press N for no\n");
         printf("Your answer:");
-        scanf("%c",&answer);
+        scanf("%c ",&answer);
         
         if(answer=='Y'||answer=='y')
         {
@@ -242,14 +242,17 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL)
             printf("Enter the month of the bill:\n");
             printf("Enter 1 for january, 2 for february and so on...\n");
             scanf("%d",&month);
+            fflush(stdin);
             while(month < 0 && month > 12) {
                 printf("Incorrect month!\n");
                 printf("Enter the month of the bill again:");
                 scanf("%d",&month);
+                fflush(stdin);
             }
 
             printf("Enter the year of bill:");
             scanf("%d",&year);
+            fflush(stdin);
             if(year != PTCL.billYear[month-1]) {
                 printf("The record for %d year does not exist!\n", year);
                 goto jump1;
@@ -264,35 +267,41 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL)
             printf("Press 5 to change the International Other Zone Minutes\n");
             printf("Your choice:");
             scanf("%d",&ch);
+            fflush(stdin);
             
             switch(ch)
             {
                 case 1: {
                     printf("Enter the new On Net Minutes:");
                     scanf("%d",&PTCL.onNetMinutes[month-1]);
+                    fflush(stdin);
                     break;
                 }
                 case 2: {
                     printf("Enter the new Mobile Minutes:");
                     scanf("%d",&PTCL.mobileMinutes[month-1]);
+                    fflush(stdin);
                     break;
                 }
 
                 case 3: {
                     printf("Enter the new Other Minutes:");
                     scanf("%d",&PTCL.otherMinutes[month-1]);
+                    fflush(stdin);
                     break;
                 }
 
                 case 4: {
                     printf("Enter the new International Zone 1 Minutes:");
                     scanf("%d",&PTCL.internationalZone1Minutes[month-1]);
+                    fflush(stdin);
                     break;
                 }
 
                 case 5:{
                     printf("Enter the new International Other Zone Minutes:");
                     scanf("%d",&PTCL.internationalOtherZoneMinutes[month-1]);
+                    fflush(stdin);
                     break;
                 }
 
@@ -303,6 +312,7 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL)
                 }
                 
             }
+            break;
         }
 
         default: {
