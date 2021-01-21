@@ -190,7 +190,7 @@ struct KElectricData KElectricDataModification(struct KElectricData KE)
             printf("Enter 1 for january, 2 for february and so on...\n");
             scanf("%d",&month);
             fflush(stdin);
-            while(month < 0 && month > 12) {
+            while(month < 1 || month > 12) {
                 printf("Incorrect month!\n");
                 printf("Enter the month of the bill again:");
                 scanf("%d",&month);
