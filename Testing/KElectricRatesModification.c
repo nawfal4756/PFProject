@@ -34,7 +34,8 @@ int main() {
 }
 
 int KElectricRatesModification(char category) {
-    int option1,temp1, temp2;
+    int option1;
+    float temp1, temp2;
     FILE* pointer;
     struct KElectricRates data;
     char selection1;
