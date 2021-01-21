@@ -24,19 +24,29 @@ int KElectricPrintBill(struct KElectricData data);
 
 int main() {
     struct KElectricData data;
+    int response;
     data.accountNumber = 2534567898;
-    KElectricPrintBill(data);
+    response = KElectricPrintBill(data);
+    if (response == 404) {
+        printf("404");
+    }
+    else if (response == 1) {
+        printf("1");
+    }
+    else {
+        printf("Unknown");
+    }
 }
 
 int KElectricPrintBill(struct KElectricData KE) {
     FILE* pointer;
     char accountNumber[15], fileName[50] = "KElectricBill-";
-    int counter2,counter3,counter,maximum,index=0;
+    int counter2, counter3, counter, maximum, index = 0;
 
     snprintf(accountNumber, sizeof(accountNumber), "%llu", KE.accountNumber);
     strcat(fileName, accountNumber);
     strcat(fileName, ".txt");
-
+    
     pointer = fopen(fileName, "w");
 
     if (pointer == NULL) {
@@ -44,7 +54,9 @@ int KElectricPrintBill(struct KElectricData KE) {
     }
 
     for(counter=0;counter<12;counter++) {
-        maximum=KE.billYear[0];
+        if (counter == 0) {
+            maximum=KE.billYear[0];
+        }        
         if(KE.billYear[counter]>=maximum) {
             maximum=KE.billYear[counter];
             index=counter+1;
@@ -57,54 +69,65 @@ int KElectricPrintBill(struct KElectricData KE) {
     fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------------------------\n");
 
     switch(index) {
-        case 1:
-        fprintf(pointer, "Current Month and Year: January,%d\n", maximum);
-        break;
+        case 1: {
+            fprintf(pointer, "Current Month and Year: January,%d\n", maximum);
+            break;
+        }
 
-        case 2:
-        fprintf(pointer, "Current Month and Year: February,%d\n", maximum);
-        break;
+        case 2: {
+            fprintf(pointer, "Current Month and Year: February,%d\n", maximum);
+            break;
+        }
+        case 3: {
+            fprintf(pointer, "Current Month and Year: March,%d\n", maximum);
+            break;
+        }        
 
-        case 3:
-        fprintf(pointer, "Current Month and Year: March,%d\n", maximum);
-        break;
+        case 4: {
+            fprintf(pointer, "Current Month and Year: April,%d\n", maximum);
+            break;
+        }
 
-        case 4:
-        fprintf(pointer, "Current Month and Year: April,%d\n", maximum);
-        break;
+        case 5: {
+            fprintf(pointer, "Current Month and Year: May,%d\n", maximum);
+            break;
+        }
 
-        case 5:
-        fprintf(pointer, "Current Month and Year: May,%d\n", maximum);
-        break;
+        case 6: {
+            fprintf(pointer, "Current Month and Year: June,%d\n", maximum);
+            break;
+        }
 
-        case 6:
-        fprintf(pointer, "Current Month and Year: June,%d\n", maximum);
-        break;
+        case 7: {
+            fprintf(pointer, "Current Month and Year: July,%d\n", maximum);
+            break;
+        }
 
-        case 7:
-        fprintf(pointer, "Current Month and Year: July,%d\n", maximum);
-        break;
+        case 8: {
+            fprintf(pointer, "Current Month and Year: August,%d\n", maximum);
+            break;
+        }
 
-        case 8:
-        fprintf(pointer, "Current Month and Year: August,%d\n", maximum);
-        break;
+        case 9: {
+            fprintf(pointer, "Current Month and Year: September,%d\n", maximum);
+            break;
+        }
 
-        case 9:
-        fprintf(pointer, "Current Month and Year: September,%d\n", maximum);
-        break;
+        case 10: {
+            fprintf(pointer, "Current Month and Year: October,%d\n", maximum);
+            break;
+        }
 
-        case 10:
-        fprintf(pointer, "Current Month and Year: October,%d\n", maximum);
-        break;
+        case 11: {
+            fprintf(pointer, "Current Month and Year: November,%d\n", maximum);
+            break;
+        }
 
-        case 11:
-        fprintf(pointer, "Current Month and Year: November,%d\n", maximum);
-        break;
-
-        case 12:
-        fprintf(pointer, "Current Month and Year: December,%d\n", maximum);
-        break;
-
+        case 12: {
+            fprintf(pointer, "Current Month and Year: December,%d\n", maximum);
+            break;
+        }
+        
     }
 
     fprintf(pointer, "Account number: %llu\n", KE.accountNumber);
