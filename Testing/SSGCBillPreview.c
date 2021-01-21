@@ -38,7 +38,9 @@ void SSGCBillPreview(struct SSGCData SSGC)
 {
     int counter2,counter3,counter,maximum,index=0;
     for(counter=0;counter<12;counter++) {
-        maximum=SSGC.billYear[0];
+        if (counter == 0) {
+            maximum=SSGC.billYear[0];
+        }        
         if(SSGC.billYear[counter]>=maximum) {
             maximum=SSGC.billYear[counter];
             index=counter+1;

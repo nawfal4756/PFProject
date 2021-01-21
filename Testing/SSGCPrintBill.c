@@ -44,6 +44,16 @@ int SSGCPrintBill(struct SSGCData SSGC) {
     if (pointer == NULL) {
         return 404;
     }
+    
+    for(counter=0;counter<12;counter++) {
+        if (counter == 0) {
+            maximum=SSGC.billYear[0];
+        }        
+        if(SSGC.billYear[counter]>=maximum) {
+            maximum=SSGC.billYear[counter];
+            index=counter+1;
+        }
+    }
 
     fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------\n");
     fprintf(pointer, "\t\t\t\t\tSui Southern Gas Company Limited\t\t\n");
