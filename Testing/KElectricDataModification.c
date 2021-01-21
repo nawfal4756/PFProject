@@ -115,16 +115,7 @@ struct KElectricData KElectricIDSearch(unsigned long long int id) {
 struct KElectricData KElectricDataModification(struct KElectricData KE)
 {
     int choice, ch, year, month;
-    printf("Person's Details\n");
-    printf("Name: ");
-    puts(KE.name);
-    printf("Address: %s\n", KE.address);
-    printf("Account Number: %llu\n", KE.accountNumber);
-    printf("Contact Number: %llu\n",KE.contactNumber);
-    printf("Usage Type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
-    printf("Alloted Load: %f\n",KE.allotedLoad);
-    printf("Number of TVs: %d\n",KE.numberOfTV);
-
+    
     jump:
     printf("Which one you want to modify?\n");
     printf("Press 1 to modify the Name\n");
@@ -136,23 +127,21 @@ struct KElectricData KElectricDataModification(struct KElectricData KE)
     scanf("%d",&choice);
     fflush(stdin);
 
-    while(choice<1||choice>5)
-    {
-        printf("Incorrect choice!\n");
-        printf("Please enter your choice again!\n");
-        scanf("%d",&choice);
-        fflush(stdin);
-    }
-
-    switch(choice)
-    {
-        case 1:
+    switch (choice) {
+        case 1: {
             printf("Enter the new Name:");
             gets(KE.name);
             fflush(stdin);
+            while (strlen(KE.name) <= 0) {
+                printf("\nName field cannot be empty!\n");
+                printf("Enter the new Name again:");
+                gets(KE.name);
+                fflush(stdin);
+            }
             break;
+        }
 
-        case 2:
+        case 2: {
             printf("Enter the new Contact Number:");
             scanf("%llu", &KE.contactNumber);
             fflush(stdin);
@@ -163,8 +152,9 @@ struct KElectricData KElectricDataModification(struct KElectricData KE)
                 fflush(stdin);
             }
             break;
+        }
 
-        case 3:
+        case 3: {
             printf("Enter the new Alloted Load: ");
             scanf("%f", &KE.allotedLoad);
             fflush(stdin);
@@ -175,34 +165,35 @@ struct KElectricData KElectricDataModification(struct KElectricData KE)
                 fflush(stdin);
             }
             break;
+        }
 
-        case 4:
+        case 4: {
             printf("Enter the new Number of TVs: ");
             scanf("%d", &KE.numberOfTV);
             fflush(stdin);
-            while (KE.numberOfTV <= 0 || KE.numberOfTV > 40) {
-                printf("Incorrect Number of TVs! Range 0 to 40\n");
+            while (KE.numberOfTV < 0) {
+                printf("\nNumber of Tvs is required!\n");
                 printf("Enter the new Number of TVs again: ");
                 scanf("%d", &KE.numberOfTV);
                 fflush(stdin);
             }
             break;
-        
-        case 5:
+        }
+
+        case 5: {
             printf("Enter the month of the bill:\n");
             printf("Enter 1 for january, 2 for february and so on...\n");
             scanf("%d",&month);
-            while(month<0&&month>12)
-            {
+            while(month < 0 && month > 12) {
                 printf("Incorrect month!\n");
                 printf("Enter the month of the bill again:");
                 scanf("%d",&month);
             }
+
             printf("Enter the year of bill:");
             scanf("%d",&year);
-            if(year!=KE.billYear[month-1])
-            {
-                printf("The record for %d year does not exist!\n",year);
+            if(year != KE.billYear[month-1]) {
+                printf("The record for %d year does not exist!\n", year);
                 goto jump;
             }
             
@@ -212,24 +203,27 @@ struct KElectricData KElectricDataModification(struct KElectricData KE)
             printf("Your choice:");
             scanf("%d",&ch);
 
-            while(ch!=0&&ch!=1)
-            {
-                printf("Incorrect choice!\n");
+            while(ch != 0 && ch != 1) {
+                printf("\nIncorrect choice!\n");
                 printf("Enter your choice again:");
                 scanf("%d",&ch);
             }
 
-            if(ch==0)
-            {
+            if(ch == 0) {
                 printf("Enter the new off peak units:");
                 scanf("%f",&KE.unitsAndPayment[0][month-1]);
             }
-            else if(ch==1)
-            {
+            else if(ch==1) {
                 printf("Enter the new on peak units:");
                 scanf("%f",&KE.unitsAndPayment[1][month-1]);
             }
+        }
 
+        default: {
+            printf("\nIncorrect option selected!\n");
+            goto jump;
+            break;
+        }
     }
     return KE;
 }
