@@ -38,7 +38,9 @@ void KElectricBillPreview(struct KElectricData KE)
 {
     int counter2,counter3,counter,maximum,index=0;
     for(counter=0;counter<12;counter++) {
-        maximum=KE.billYear[0];
+        if (counter == 0) {
+            maximum=KE.billYear[0];
+        }        
         if(KE.billYear[counter]>=maximum) {
             maximum=KE.billYear[counter];
             index=counter+1;
