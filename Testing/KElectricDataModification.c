@@ -115,6 +115,7 @@ struct KElectricData KElectricIDSearch(unsigned long long int id) {
 struct KElectricData KElectricDataModification(struct KElectricData KE)
 {
     int choice, ch, year, month;
+    char selection1;
     
     jump:
     printf("Which one you want to modify?\n");
@@ -225,7 +226,32 @@ struct KElectricData KElectricDataModification(struct KElectricData KE)
             break;
         }
     }
-    return KE;
+
+    exit:
+    printf("\n\nDo you want to modify anything else? (Yes or No)\n");
+    scanf("%c", &selection1);
+    fflush(stdin);
+
+    switch (selection1) {
+        case 'Y':
+        case 'y': {
+            printf("\n\n");
+            goto jump;
+            break;
+        }
+
+        case 'N':
+        case 'n': {
+            return KE;
+            break;
+        }
+
+        default: {
+            printf("\nIncorrect option entered!\n");
+            goto exit;
+            break;
+        }
+    }    
 }
 
 int KElectricRecordUpdate(struct KElectricData dataNew) {
