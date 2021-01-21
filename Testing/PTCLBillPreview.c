@@ -45,7 +45,9 @@ void PTCLBillPreview(struct PTCLData PTCL)
 {
     int counter2,counter3,counter,maximum,index=0;
     for(counter=0;counter<12;counter++) {
-        maximum=PTCL.billYear[0];
+        if (counter == 0) {
+            maximum=PTCL.billYear[0];
+        }        
         if(PTCL.billYear[counter]>=maximum) {
             maximum=PTCL.billYear[counter];
             index=counter+1;
