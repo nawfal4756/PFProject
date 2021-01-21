@@ -946,13 +946,10 @@ int KElectricPrintBill(struct KElectricData KE) {
     fprintf(pointer, "Address: %s\n", KE.address);
     fprintf(pointer, "Account number: %llu\n", KE.accountNumber);
     fprintf(pointer, "Contact number: %llu\n",KE.contactNumber);
-    if (StarConsumer(KE.timePayment)) {
-        fprintf(pointer, "\nYou are a star consumer!\n\n");
-    }
     fprintf(pointer, "Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
     fprintf(pointer, "Alloted load: %f\n",KE.allotedLoad);
     fprintf(pointer, "Number of TV: %d\n",KE.numberOfTV);
-    fprintf(pointer, "Total Bill: %d\n",KE.total);    
+    fprintf(pointer, "Pending Amount: %d\n",KE.total);    
     fprintf(pointer, "-----------------------------------------------------------------------------------------------------------------------------------\n");
     fprintf(pointer, "%13s%14s%11s%13s%17s%11s%13s%14s%9s","Month/","Off Peak","On Peak","Amount of","Electricity","Sales","Income","TV License","Amount","Amount");
     fprintf(pointer, "%12s\n","Amount");
@@ -1055,6 +1052,7 @@ int KElectricPrintBill(struct KElectricData KE) {
     }
 
     fclose(pointer);
+    return 1;
 }
 
 int SSGCPrintBill(struct SSGCData SSGC) {
