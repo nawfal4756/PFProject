@@ -42,6 +42,7 @@ int main()
 
     printf("Enter the account number of that person whose data you want to modify: ");
     scanf("%llu", &accountNumber);
+    fflush(stdin);
 
     data = PTCLIDSearch(accountNumber);
     ModifiedData=PTCLDataModification(data);
@@ -57,11 +58,13 @@ int main()
         printf("Press Y for yes and press N for no\n");
         printf("Your answer:");
         scanf("%c ",&answer);
+        fflush(stdin);
         
         if(answer=='Y'||answer=='y')
         {
             printf("Enter the account number of that person whose data you want to modify: ");
             scanf("%llu", &accountNumber);
+            fflush(stdin);
 
             data = PTCLIDSearch(accountNumber);
             ModifiedData=PTCLDataModification(data);
@@ -82,6 +85,7 @@ int main()
             printf("Press Y for yes and press N for no\n");
             printf("Your answer:");
             scanf("%c",&answer);
+            fflush(stdin);
         }
 
     }
