@@ -9,8 +9,12 @@ struct SSGCRates {
     float upTo450;
     float moreThan450;
     float minR;
+    float salesTaxR;
+    float incomeTaxR;
     float unitPriceC;
     float minC;
+    float salesTaxC;
+    float incomeTaxC;
 };
 
 char* ssgcRates = "../DataFiles/SSGCRates.txt";
@@ -41,9 +45,13 @@ void SSGCRatesPreview() {
     printf("Unit price for up to 450 units: %.2f\n", data.upTo450);    
     printf("Unit price for more than 450 units: %.2f\n", data.moreThan450);    
     printf("Minimum price: %.2f\n", data.minR);
+    printf("Sales tax in percentage: %.2f %%\n", data.salesTaxR * 100);
+    printf("Income tax in percentage: %.2f %%\n", data.incomeTaxR * 100);
     printf("\nCommercial:\n");  
     printf("Unit price: %.2f\n", data.unitPriceC);    
     printf("Minimum price: %.2f\n", data.minC);
+    printf("Sales tax in percentage: %.2f %%\n", data.salesTaxC * 100);
+    printf("Income tax in percentage: %.2f %%\n", data.salesTaxC * 100);
     
     fclose(pointer);
 }
