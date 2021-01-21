@@ -17,6 +17,32 @@ struct KElectricData {
     float total;
 };
 
+struct KElectricRates {
+    float offPeakUnitsMoreThan5KW;
+    float onPeakUnitsMoreThan5KW;
+    float unitsUpto50;
+    float unitsUpto100;
+    float unitsUpto200;
+    float unitsUpto300;
+    float unitsUpto700;
+    float unitsAbove700;
+    float minR;
+    float electricityDutyR;
+    float salesTaxR;
+    float incomeTaxR;
+    float tvLicenseFeeR;
+    float unitsLessThan5KWC;
+    float offPeakUnitsMoreThan5KWC;
+    float onPeakUnitsMoreThan5KWC;
+    float minC;
+    float electricityDutyC;
+    float salesTaxC;
+    float incomeTaxC;
+    float tvLicenseFeeC;
+};
+
+char* kelectricRates = "../DataFiles/KElectricRates.txt";
+
 void KElectricPriceCalculator(struct KElectricData* data, int month);
 
 int main() {
@@ -36,53 +62,63 @@ int main() {
 void KElectricPriceCalculator(struct KElectricData* data, int month) {
     int counter;
     float price = 0, units = 0;
+    FILE* pointer;
+    struct KElectricRates rates;
+
+    pointer = fopen(kelectricRates, "rb");
+    if (pointer == NULL) {
+        printf("\nUnable to open file\n\n");
+    }
+    fread(&rates, sizeof(struct KElectricRates), 1, pointer);
+    fclose(pointer);
+
     units = data->unitsAndPayment[0][month] + data->unitsAndPayment[1][month];
 
     switch (data->usageType) {
         case 'R': {
             if (data->allotedLoad < 5) {
                 if (units <= 50) {
-                    price = units * 2;
+                    price = units * rates.unitsUpto50;
                 }
                 if (units > 100) {
                     units -= 100;
-                    price += 100 * 5.79;
+                    price += 100 * rates.unitsUpto100;
                     if (units > 100) {
                         units -= 100;
-                        price += 100 * 8.11;
+                        price += 100 * rates.unitsUpto200;
                         if (units > 100) {
                             units -= 100;
-                            price += 100 * 10.2;
+                            price += 100 * rates.unitsUpto300;
                             if (units > 400) {
                                 units -= 400;
-                                price += 400 * 19.25;
+                                price += 400 * rates.unitsUpto700;
                                 if (units > 0) {
-                                    price += units * 22.35;
+                                    price += units * rates.unitsAbove700;
                                 }
                             }
                             else {
-                                price += units * 19.25;
+                                price += units * rates.unitsUpto700;
                             }
                         }
                         else {
-                            price += units * 10.2;    
+                            price += units * rates.unitsUpto300;    
                         }
                     }
                     else {
-                        price += units * 8.11;
+                        price += units * rates.unitsUpto200;
                     }
                 }
                 else {
-                    price += units * 5.79;
+                    price += units * rates.unitsUpto100;
                 }
             }
             else {
-                price += data->unitsAndPayment[1][month] * 22.35;
-                price += data->unitsAndPayment[0][month] * 16.03;
+                price += data->unitsAndPayment[1][month] * rates.onPeakUnitsMoreThan5KW;
+                price += data->unitsAndPayment[0][month] * rates.offPeakUnitsMoreThan5KW;
             }
 
-            if (price < 150) {
-                price = 150;
+            if (price < rates.minR) {
+                price = rates.minR;
             }
 
             break;
@@ -90,15 +126,15 @@ void KElectricPriceCalculator(struct KElectricData* data, int month) {
 
         case 'C': {
             if (data->allotedLoad < 5) {
-                price = units * 19.09;
+                price = units * rates.unitsLessThan5KWC;
             }
             else {
-                price += data->unitsAndPayment[0][month] * 18.52;
-                price += data->unitsAndPayment[1][month] * 24.49;
+                price += data->unitsAndPayment[0][month] * rates.offPeakUnitsMoreThan5KWC;
+                price += data->unitsAndPayment[1][month] * rates.onPeakUnitsMoreThan5KWC;
             }
             
-            if (price < 350) {
-                price = 350;
+            if (price < rates.minC) {
+                price = rates.minC;
             }
         }
     }
@@ -107,18 +143,18 @@ void KElectricPriceCalculator(struct KElectricData* data, int month) {
 
     switch (data->usageType) {
         case 'R': {            
-            data->unitsAndPayment[3][month] = price * 0.015;
-            data->unitsAndPayment[4][month] = price * 0.17;
-            data->unitsAndPayment[5][month] = price * 0.04;
-            data->unitsAndPayment[6][month] = data->numberOfTV * 35;
+            data->unitsAndPayment[3][month] = price * rates.electricityDutyR;
+            data->unitsAndPayment[4][month] = price * rates.salesTaxR;
+            data->unitsAndPayment[5][month] = price * rates.incomeTaxR;
+            data->unitsAndPayment[6][month] = data->numberOfTV * rates.tvLicenseFeeR;
             break;
         }
 
         case 'C': {
-            data->unitsAndPayment[3][month] = price * 0.02;
-            data->unitsAndPayment[4][month] = price * 0.17;
-            data->unitsAndPayment[5][month] = price * 0.08;
-            data->unitsAndPayment[6][month] = data->numberOfTV * 60;
+            data->unitsAndPayment[3][month] = price * rates.electricityDutyC;
+            data->unitsAndPayment[4][month] = price * rates.salesTaxC;
+            data->unitsAndPayment[5][month] = price * rates.incomeTaxC;
+            data->unitsAndPayment[6][month] = data->numberOfTV * rates.tvLicenseFeeC;
             break;
         }
     }
@@ -129,5 +165,6 @@ void KElectricPriceCalculator(struct KElectricData* data, int month) {
         data->unitsAndPayment[7][month] += data->unitsAndPayment[counter][month];
     }
 
+    
     data->unitsAndPayment[8][month] = 0;                
 }

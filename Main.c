@@ -418,6 +418,11 @@ int Admin() {
                         system("cls");
                         goto adminTop;
                     }
+                    else if (response == 2) {
+                        printf("\n\n");
+                        goto ssgc;
+                        break;
+                    }
                     break;
                 }
 
@@ -644,6 +649,11 @@ int Admin() {
                         system("cls");
                         goto adminTop;
                     }
+                    else if (response == 2) {
+                        printf("\n\n");
+                        goto ssgc;
+                        break;
+                    }
                     break;
                 }
 
@@ -841,6 +851,23 @@ int Admin() {
 
                 case 5: {
                     
+                    if (response == 404) {
+                        printf("\n\nFile could not open!\nPress enter to continue...\n");
+                        getch();
+                        printf("\n\n");
+                        goto ssgc;
+                    }
+                    else if (response == 1) {
+                        printf("\n\nRates updated successfully!\nPress enter to continue...");
+                        getch();
+                        system("cls");
+                        goto adminTop;
+                    }
+                    else if (response == 2) {
+                        printf("\n\n");
+                        goto ssgc;
+                        break;
+                    }
                     break;
                 }
 

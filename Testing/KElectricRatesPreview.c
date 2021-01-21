@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 struct KElectricRates {
-    float offPeakUnitsLessThan5KW;
-    float onPeakUnitsLessThan5KW;
+    float offPeakUnitsMoreThan5KW;
+    float onPeakUnitsMoreThan5KW;
     float unitsUpto50;
     float unitsUpto100;
     float unitsUpto200;
@@ -46,14 +46,14 @@ void KElectricRatesPreview() {
     fread(&data, sizeof(struct KElectricRates), 1, pointer);
 
     printf("\nResidential:\n");
-    printf("Residential off peak units rate for less than 5 KW: %.2f\n", data.offPeakUnitsLessThan5KW);
-    printf("Residential on peak units rate for less than 5 KW: %.2f\n", data.onPeakUnitsLessThan5KW);
-    printf("Residential rate for upto 50 units: %.2f\n", data.unitsUpto50);
-    printf("Residential rate for upto 100 units: %.2f\n", data.unitsUpto100);    
-    printf("Residential rate for upto 200 units: %.2f\n", data.unitsUpto200);    
-    printf("Residential rate for upto 300 units: %.2f\n", data.unitsUpto300);
-    printf("Residential rate for upto 700 units: %.2f\n", data.unitsUpto700);
-    printf("Residential rate for more than 700 units: %.2f\n", data.unitsAbove700);    
+    printf("Residential off peak units rate for more than 5 KW: %.2f\n", data.offPeakUnitsMoreThan5KW);
+    printf("Residential on peak units rate for more than 5 KW: %.2f\n", data.onPeakUnitsMoreThan5KW);
+    printf("Residential rate for upto 50 units less than 5 KW: %.2f\n", data.unitsUpto50);
+    printf("Residential rate for upto 100 units less than 5 KW: %.2f\n", data.unitsUpto100);    
+    printf("Residential rate for upto 200 units less than 5 KW: %.2f\n", data.unitsUpto200);    
+    printf("Residential rate for upto 300 units less than 5 KW: %.2f\n", data.unitsUpto300);
+    printf("Residential rate for upto 700 units less than 5 KW: %.2f\n", data.unitsUpto700);
+    printf("Residential rate for more than 700 units less than 5 KW: %.2f\n", data.unitsAbove700);    
     printf("Residential minimum rate: %.2f\n", data.minR);    
     printf("Electricity duty for Residential in percentage: %.2f %%\n", data.electricityDutyR * 100);    
     printf("Sales tax for Residential in percentage: %.2f %%\n", data.salesTaxR * 100);    
