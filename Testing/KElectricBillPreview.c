@@ -36,15 +36,74 @@ int main()
 }
 void KElectricBillPreview(struct KElectricData KE)
 {
-    int counter2,counter3,counter;
+    int counter2,counter3,counter,maximum,index=0;
+    for(counter=0;counter<12;counter++) {
+        maximum=KE.billYear[0];
+        if(KE.billYear[counter]>=maximum) {
+            maximum=KE.billYear[counter];
+            index=counter+1;
+        }
+    }
+
     printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
     printf("\t\t\t\t\t\t\tKELECTRIC\t\t\n");
     printf("\t\t\t\t\t\tEnergy That Moves Life\t\n");
     printf("-----------------------------------------------------------------------------------------------------------------------------------\n");
+    
+    switch(index) {
+        case 1:
+        printf("Current Month and Year: January,%d\n",maximum);
+        break;
+
+        case 2:
+        printf("Current Month and Year: February,%d\n",maximum);
+        break;
+
+        case 3:
+        printf("Current Month and Year: March,%d\n",maximum);
+        break;
+
+        case 4:
+        printf("Current Month and Year: April,%d\n",maximum);
+        break;
+
+        case 5:
+        printf("Current Month and Year: May,%d\n",maximum);
+        break;
+
+        case 6:
+        printf("Current Month and Year: June,%d\n",maximum);
+        break;
+
+        case 7:
+        printf("Current Month and Year: July,%d\n",maximum);
+        break;
+
+        case 8:
+        printf("Current Month and Year: August,%d\n",maximum);
+        break;
+
+        case 9:
+        printf("Current Month and Year: September,%d\n",maximum);
+        break;
+
+        case 10:
+        printf("Current Month and Year: October,%d\n",maximum);
+        break;
+
+        case 11:
+        printf("Current Month and Year: November,%d\n",maximum);
+        break;
+
+        case 12:
+        printf("Current Month and Year: December,%d\n",maximum);
+        break;
+
+    }
+    printf("Account number: %llu\n", KE.accountNumber);
     printf("Name: ");
     puts(KE.name);
     printf("Address: %s\n", KE.address);
-    printf("Account number: %llu\n", KE.accountNumber);
     printf("Contact number: %llu\n",KE.contactNumber);
     printf("Usage type: %s\n", KE.usageType == 'R' ? "Residential" : "Commercial");
     printf("Alloted load: %f\n",KE.allotedLoad);
