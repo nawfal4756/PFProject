@@ -595,6 +595,8 @@ int Admin() {
                         else if (response == 1) {
                             printf("\n\nPrinted Successfully\nPress enter to continue...");
                             getch();
+                            system("cls");
+                            goto adminTop; 
                         }
                         else {
                             printf("\n\nOH NOO!! We crashed!\n");
@@ -819,6 +821,8 @@ int Admin() {
                         else if (response == 1) {
                             printf("\n\nPrinted Successfully\nPress enter to continue...");
                             getch();
+                            system("cls");
+                            goto adminTop;  
                         }
                         else {
                             printf("\n\nOH NOO!! We crashed!\n");
