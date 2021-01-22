@@ -13,15 +13,16 @@ struct CreditCard {
     int cvc;
 };
 
-int Payment(float amount);
+int Payment(float amount, char company, unsigned long long int id);
 
 int main() {
-    Payment(252.25);
+    Payment(252.25, 'P', 1234567113);;
 }
 
-int Payment(float amount) {
+int Payment(float amount, char company, unsigned long long int id) {
     struct CreditCard data;
     int length, counter1, response;
+    char name[40];
 
     printf("\t\t\t\t\t\t\tPayment\n");
     printf("--------------------------------------------------------------------------------------------------------------------\n\n");
@@ -29,7 +30,7 @@ int Payment(float amount) {
     printf("Enter Card Number: ");
     scanf("%llu", data.cardNumber);
     fflush(stdin);
-    while (data.cardNumber < 1000000000000000 || data.cardNumber > 9999999999999999) {
+    while (data.cardNumber < 1000000000000000 && data.cardNumber > 9999999999999999) {
         printf("Incorrect Card Number\n");
         printf("Enter Card Number Again: ");
         scanf("%llu", data.cardNumber);
@@ -41,32 +42,32 @@ int Payment(float amount) {
     fflush(stdin);
 
     printf("Enter Card Expiry Month (mm): ");
-    scanf("%d", data.expiryDate.month);
+    scanf("%d", &data.expiryDate.month);
     fflush(stdin);
-    while (data.expiryDate.month < 1 || data.expiryDate.month > 12) {
+    while (data.expiryDate.month < 1 && data.expiryDate.month > 12) {
         printf("Incorrect Month Entered!\n");
         printf("Enter Card Expiry Month Again (mm): ");
-        scanf("%d", data.expiryDate.month);
+        scanf("%d", &data.expiryDate.month);
         fflush(stdin);
     }
 
     printf("Enter Card Expiry Year (yyyy): ");
-    scanf("%d", data.expiryDate.year);
+    scanf("%d", &data.expiryDate.year);
     fflush(stdin);
-    while (data.expiryDate.year < 1000 || data.expiryDate.year > 9999) {
+    while (data.expiryDate.year < 1000 && data.expiryDate.year > 9999) {
         printf("Incorrect Year Entered!\n");
         printf("Enter Card Expiry Year Again (yyyy): ");
-        scanf("%d", data.expiryDate.year);
+        scanf("%d", &data.expiryDate.year);
         fflush(stdin);
     }
 
     printf("Enter Card CVC: ");
-    scanf("%d", data.cvc);
+    scanf("%d", &data.cvc);
     fflush(stdin);
-    while (data.cvc < 100 || data.cvc > 999) {
+    while (data.cvc < 100 && data.cvc > 999) {
         printf("Incorrect CVC Entered!\n");
         printf("Enter Card CVC: ");
-        scanf("%d", data.cvc);
+        scanf("%d", &data.cvc);
         fflush(stdin);
     } 
 
@@ -76,10 +77,33 @@ int Payment(float amount) {
             data.name[counter1] += 32;
         }
     }
-
+    
+    printf("\n");
+    
     // response = CreditCardVerificationFunction;
 
-    if (response == 1) {
+    switch (company) {
+        case 'K': {
+            strcpy(name, "K-Electric");
+            break;
+        }
+
+        case 'S': {
+            strcpy(name, "SSGC");
+            break;
+        }
+
+        case 'P': {
+            strcpy(name, "PTCL");
+            break;
+        }
+    }
+
+    printf("Payment to %s\n", name);
+    printf("Payment amount: %.2f\n", amount);
+    printf("Payment against ID: %llu\n", id);
+
+    if (response == 1) {        
         printf("Payment Successful!\nPress enter to continue...");
         getch();
         return 1;

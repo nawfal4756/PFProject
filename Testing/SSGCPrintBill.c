@@ -24,7 +24,10 @@ int main() {
 }
 
 int SSGCPrintBill(struct SSGCData SSGC) {
+    FILE* pointer;
+    char consumerId[15], fileName[50] = "SSGCBill-";
     int counter2,counter3,counter,maximum,index=0;
+
     for(counter=0;counter<12;counter++) {
         maximum=SSGC.billYear[0];
         if(SSGC.billYear[counter]>=maximum) {
@@ -32,8 +35,6 @@ int SSGCPrintBill(struct SSGCData SSGC) {
             index=counter+1;
         }
     }
-    FILE* pointer;
-    char consumerId[15], fileName[50] = "SSGCBill-";
 
     snprintf(consumerId, sizeof(consumerId), "%llu", SSGC.consumerId);
     strcat(fileName, consumerId);
