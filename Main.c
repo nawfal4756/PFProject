@@ -18,6 +18,7 @@ int ArraySize(FILE* pointer, int structSize);
 bool KElectricAccountNumberVerification(unsigned long long int accountNumber);
 bool SSGCConsumerIDVerification(unsigned long long int consumerID);
 bool PTCLAccountIDVerification(unsigned long long int accountID);
+bool ContactNumberVerification(unsigned long long int number);
 struct KElectricData KElectricIDSearch(unsigned long long int id);
 struct SSGCData SSGCIDSearch(unsigned long long int id);
 struct PTCLData PTCLIDSearch(unsigned long long int id);
