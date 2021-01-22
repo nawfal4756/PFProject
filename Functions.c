@@ -1391,9 +1391,7 @@ int Client() {
                             }
                         }
                     }
-                    else if (selection == 0 || selection == 404) {
-                        printf("\nPress enter to continue...");
-                        getch();
+                    else if (selection == 0 || selection == 404) {                        
                         goto billOptionsKe;
                     }
                     else {
@@ -1597,9 +1595,7 @@ int Client() {
                             }
                         }
                     }
-                    else if (selection == 0 || selection == 404) {
-                        printf("\nPress enter to continue...");
-                        getch();
+                    else if (selection == 0 || selection == 404) {                        
                         goto billOptionsSsgc;
                     }
                     else {
@@ -1804,9 +1800,7 @@ int Client() {
                             }
                         }
                     }
-                    else if (selection == 0 || selection == 404) {
-                        printf("\nPress enter to continue...");
-                        getch();
+                    else if (selection == 0 || selection == 404) {                        
                         goto billOptionsPtcl;
                     }
                     else {
