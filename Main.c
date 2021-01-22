@@ -14,11 +14,13 @@ int Client();
 
 // Client Function Prototypes
 
+void Header(char id);
+int Admin();
+int Client();
 int ArraySize(FILE* pointer, int structSize);
 bool KElectricAccountNumberVerification(unsigned long long int accountNumber);
 bool SSGCConsumerIDVerification(unsigned long long int consumerID);
 bool PTCLAccountIDVerification(unsigned long long int accountID);
-bool ContactNumberVerification(unsigned long long int number);
 struct KElectricData KElectricIDSearch(unsigned long long int id);
 struct SSGCData SSGCIDSearch(unsigned long long int id);
 struct PTCLData PTCLIDSearch(unsigned long long int id);
@@ -35,6 +37,7 @@ int SSGCPrintBill(struct SSGCData SSGC);
 int PTCLPrintBill(struct PTCLData PTCL);
 bool StarConsumer(bool timePayment[12]);
 void PaymentSlip(float amount, char company, unsigned long long int id);
+bool ContactNumberVerification(unsigned long long int number);
 
 // Admin Function Prototypes
 
@@ -56,6 +59,9 @@ int PTCLRatesModification();
 int AdminPasswordChange();
 int AdminAdd();
 int AdminVerification(struct AdminControl userData);
+void KElectricRatesPreview();
+void SSGCRatesPreview();
+void PTCLRatesPreview();
 
 // Main Program
 

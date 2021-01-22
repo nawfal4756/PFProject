@@ -179,6 +179,7 @@ int SSGCPrintBill(struct SSGCData SSGC);
 int PTCLPrintBill(struct PTCLData PTCL);
 bool StarConsumer(bool timePayment[12]);
 void PaymentSlip(float amount, char company, unsigned long long int id);
+bool ContactNumberVerification(unsigned long long int number);
 
 // Admin Function Prototypes
 
@@ -200,6 +201,9 @@ int PTCLRatesModification();
 int AdminPasswordChange();
 int AdminAdd();
 int AdminVerification(struct AdminControl userData);
+void KElectricRatesPreview();
+void SSGCRatesPreview();
+void PTCLRatesPreview();
 
 // Client Functions
 
@@ -292,10 +296,11 @@ int Admin() {
             printf("Enter 3 to preview data of a customer\n");
             printf("Enter 4 to print a bill for the customer\n");
             printf("Enter 5 to generate a new bill for the current month\n");
-            printf("Enter 6 to modify the rates\n");
-            printf("Enter 7 to go to company selection\n");
-            printf("Enter 8 to go to panel selection\n");
-            printf("Enter 9 to exit the program\n");
+            printf("Enter 6 to preview the rates\n");
+            printf("Enter 7 to modify the rates\n");
+            printf("Enter 8 to go to company selection\n");
+            printf("Enter 9 to go to panel selection\n");
+            printf("Enter 10 to exit the program\n");
             printf("Enter desired option: ");
             scanf("%d", &userInput2);
             fflush(stdin);
@@ -499,6 +504,14 @@ int Admin() {
                 }                                  
 
                 case 6: {
+                    KElectricRatesPreview();
+                    printf("\n\nPress enter to continue...");
+                    getch();
+                    system("cls");
+                    goto adminTop;
+                }
+
+                case 7: {
                     printf("Enter the category for which the rates are to be changed (R - Residential, C - Commercial): ");
                     scanf("%c", selection1);
                     fflush(stdin);
@@ -531,24 +544,24 @@ int Admin() {
                     }
                     else if (response == 2) {
                         printf("\n\n");
-                        goto ssgc;
+                        goto kelectric;
                         break;
                     }
                     break;
                 }
 
-                case 7: {
+                case 8: {
                     system("cls");
                     goto adminTop;
                     break;
                 }
 
-                case 8: {
+                case 9: {
                     return 1;
                     break;
                 }
 
-                case 9: {
+                case 10: {
                     return 0;
                     break;
                 }
@@ -571,10 +584,11 @@ int Admin() {
             printf("Enter 3 to preview data of a customer\n");
             printf("Enter 4 to print a bill for the customer\n");
             printf("Enter 5 to generate a new bill for the current month\n");
-            printf("Enter 6 to modify the rates\n");
-            printf("Enter 7 to go to company selection\n");
-            printf("Enter 8 to go to panel selection\n");
-            printf("Enter 9 to exit the program\n");
+            printf("Enter 6 to preview the rates\n");
+            printf("Enter 7 to modify the rates\n");
+            printf("Enter 8 to go to company selection\n");
+            printf("Enter 9 to go to panel selection\n");
+            printf("Enter 10 to exit the program\n");
             printf("Enter desired option: ");
             scanf("%d", &userInput2);
             fflush(stdin);
@@ -775,6 +789,14 @@ int Admin() {
                 }
 
                 case 6: {
+                    SSGCRatesPreview();
+                    printf("\n\nPress enter to continue...");
+                    getch();
+                    system("cls");
+                    goto adminTop;
+                }
+
+                case 7: {
                     printf("Enter the category for which the rates are to be changed (R - Residential, I - Industrial): ");
                     scanf("%c", selection1);
                     fflush(stdin);
@@ -813,18 +835,18 @@ int Admin() {
                     break;
                 }
 
-                case 7: {
+                case 8: {
                     system("cls");
                     goto adminTop;
                     break;
                 }
 
-                case 8: {
+                case 9: {
                     return 1;
                     break;
                 }
 
-                case 9: {
+                case 10: {
                     return 0;
                     break;
                 }
@@ -847,10 +869,11 @@ int Admin() {
             printf("Enter 3 to preview data of a customer\n");
             printf("Enter 4 to print a bill for the customer\n");
             printf("Enter 5 to generate a new bill for the current month\n");
-            printf("Enter 6 to modify the rates\n");
-            printf("Enter 7 to go to company selection\n");
-            printf("Enter 8 to go to panel selection\n");
-            printf("Enter 9 to exit the program\n");
+            printf("Enter 6 to preview the rates\n");
+            printf("Enter 7 to modify the rates\n");
+            printf("Enter 8 to go to company selection\n");
+            printf("Enter 9 to go to panel selection\n");
+            printf("Enter 10 to exit the program\n");
             printf("Enter desired option: ");
             scanf("%d", &userInput2);
             fflush(stdin);
@@ -1051,12 +1074,20 @@ int Admin() {
                 }
 
                 case 6: {
-                    
+                    PTCLRatesPreview();
+                    printf("\n\nPress enter to continue...");
+                    getch();
+                    system("cls");
+                    goto adminTop;
+                }
+
+                case 7: {
+                    response = PTCLRatesModification();
                     if (response == 404) {
                         printf("\n\nFile could not open!\nPress enter to continue...\n");
                         getch();
                         printf("\n\n");
-                        goto ssgc;
+                        goto ptcl;
                     }
                     else if (response == 1) {
                         printf("\n\nRates updated successfully!\nPress enter to continue...");
@@ -1066,24 +1097,24 @@ int Admin() {
                     }
                     else if (response == 2) {
                         printf("\n\n");
-                        goto ssgc;
+                        goto ptcl;
                         break;
                     }
                     break;
                 }
 
-                case 7: {
+                case 8: {
                     system("cls");
                     goto adminTop;
                     break;
                 }
 
-                case 8: {
+                case 9: {
                     return 1;
                     break;
                 }
 
-                case 9: {
+                case 10: {
                     return 0;
                     break;
                 }
@@ -3514,6 +3545,19 @@ void PaymentSlip(float amount, char company, unsigned long long int id) {
 
     fclose(pointer);
     
+}
+
+bool ContactNumberVerification(unsigned long long int number) {
+    int temp;
+    temp = number / 1000000000;
+    
+    if (temp == 3) {        
+        if (number >= 3000000000 && number <= 39999999999) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // Admin Functions
@@ -7083,15 +7127,114 @@ int AdminVerification(struct AdminControl userData) {
     }
 }
 
-bool ContactNumberVerification(unsigned long long int number) {
-    int temp;
-    temp = number / 1000000000;
-    
-    if (temp == 3) {        
-        if (number >= 3000000000 && number <= 39999999999) {
-            return true;
-        }
+void KElectricRatesPreview() {
+    struct KElectricRates data;
+    FILE* pointer;
+
+    pointer = fopen(kelectricRates, "rb");
+
+    if (pointer == NULL) {
+        exit(1);
     }
 
-    return false;
+    fread(&data, sizeof(struct KElectricRates), 1, pointer);
+
+    printf("\nResidential:\n");
+    printf("Residential off peak units rate for more than 5 KW: %.2f\n", data.offPeakUnitsMoreThan5KW);
+    printf("Residential on peak units rate for more than 5 KW: %.2f\n", data.onPeakUnitsMoreThan5KW);
+    printf("Residential rate for upto 50 units less than 5 KW: %.2f\n", data.unitsUpto50);
+    printf("Residential rate for upto 100 units less than 5 KW: %.2f\n", data.unitsUpto100);    
+    printf("Residential rate for upto 200 units less than 5 KW: %.2f\n", data.unitsUpto200);    
+    printf("Residential rate for upto 300 units less than 5 KW: %.2f\n", data.unitsUpto300);
+    printf("Residential rate for upto 700 units less than 5 KW: %.2f\n", data.unitsUpto700);
+    printf("Residential rate for more than 700 units less than 5 KW: %.2f\n", data.unitsAbove700);    
+    printf("Residential minimum rate: %.2f\n", data.minR);    
+    printf("Electricity duty for Residential in percentage: %.2f %%\n", data.electricityDutyR * 100);    
+    printf("Sales tax for Residential in percentage: %.2f %%\n", data.salesTaxR * 100);    
+    printf("Income tax for Residential in percentage: %.2f %%\n", data.incomeTaxR * 100);
+    printf("TV License fee for Residential: %.2f\n", data.tvLicenseFeeR);
+    printf("\nCommericial:\n");
+    printf("Commercial rate for units less than 5KW: %.2f\n", data.unitsLessThan5KWC);
+    printf("Commercial off peak units rate for more than 5 KW: %.2f\n", data.offPeakUnitsMoreThan5KWC);
+    printf("Commercial on peak units rate for more than 5 KW: %.2f\n", data.onPeakUnitsMoreThan5KWC);
+    printf("Commercial minimum rate: %.2f\n", data.minC);
+    printf("Electricity duty for Commercial in percentage: %.2f %%\n", data.electricityDutyC * 100);
+    printf("Sales tax for Commercial in percentage: %.2f %%\n", data.salesTaxC * 100);
+    printf("Income tax for Commercial in percentage: %.2f %%\n", data.incomeTaxC * 100);
+    printf("TV License fee for Commercial: %.2f\n", data.tvLicenseFeeC);
+
+    fclose(pointer);
+}
+
+void SSGCRatesPreview() {
+    FILE* pointer;
+    struct SSGCRates data;
+
+    pointer = fopen(ssgcRates, "rb");
+
+    if (pointer == NULL) {
+        exit(1);
+    }
+
+    fread(&data, sizeof(struct SSGCRates), 1, pointer);
+
+    printf("\nResidential:\n");
+    printf("Unit price for up to 50 units: %.2f\n", data.upTo50);    
+    printf("Unit price for up to 150 units: %.2f\n", data.upTo150);    
+    printf("Unit price for up to 250 units: %.2f\n", data.upTo250);
+    printf("Unit price for up to 350 units: %.2f\n", data.upTo350);    
+    printf("Unit price for up to 450 units: %.2f\n", data.upTo450);    
+    printf("Unit price for more than 450 units: %.2f\n", data.moreThan450);    
+    printf("Minimum price: %.2f\n", data.minR);
+    printf("Sales tax in percentage: %.2f %%\n", data.salesTaxR * 100);
+    printf("Income tax in percentage: %.2f %%\n", data.incomeTaxR * 100);
+    printf("\nCommercial:\n");  
+    printf("Unit price: %.2f\n", data.unitPriceC);    
+    printf("Minimum price: %.2f\n", data.minC);
+    printf("Sales tax in percentage: %.2f %%\n", data.salesTaxC * 100);
+    printf("Income tax in percentage: %.2f %%\n", data.salesTaxC * 100);
+    
+    fclose(pointer);
+}
+
+void PTCLRatesPreview() {
+    FILE* pointer;
+    struct PTCLRates data;
+
+    pointer = fopen(ptclRates, "rb");
+
+    if (pointer == NULL) {
+        exit (1);
+    }
+
+    fread(&data, sizeof(struct PTCLRates), 1, pointer);
+
+    printf("Price for Freedom 500 landline package: %.2f\n", data.freedom500L);
+    printf("Price for Freedom 1000 landline package: %.2f\n", data.freedom1000L);
+    printf("Price for Freedom 3000 landline package: %.2f\n", data.freedom3000L);
+    printf("Price for Freedom 5000 landline package: %.2f\n", data.freedom5000L);
+    printf("Price for Freedom 8000 landline package: %.2f\n", data.freedom8000L);
+    printf("Charges for 6 Mbps broadband package: %.2f\n", data.mb6B);
+    printf("Charges for 8 Mbps broadband package: %.2f\n", data.mb8B);
+    printf("Charges for 15 Mbps broadband package: %.2f\n", data.mb15B);
+    printf("Charges for 25 Mbps broadband package: %.2f\n", data.mb25B);
+    printf("Charges for 50 Mbps broadband package: %.2f\n", data.mb50B);
+    printf("Charges for 100 Mbps broadband package: %.2f\n", data.mb100B);
+    printf("Charges for smart TV without broadband: %.2f\n", data.smartTVWOB);
+    printf("Charges for smart TV without broadband: %.2f\n", data.smartTVWB);
+    printf("Charges for smart TV App: %.2f\n", data.smartTVApp);
+    printf("Charges for unlimited package of Charji: %.2f\n", data.dataUC);    
+    printf("Charges for 20GB package of Charji: %.2f\n", data.data20C);
+    printf("Charges for 30GB package of Charji: %.2f\n", data.data30C);
+    printf("Charges for 50GB package of Charji: %.2f\n", data.data50C);
+    printf("Charges of per minute for call on mobile numbers: %.2f\n", data.mobile);
+    printf("Charges of per minute for call on other numbers: %.2f\n", data.other);
+    printf("Charges of per minute for call on international zone 1 numbers: %.2f\n", data.internationalZone1);
+    printf("Withholding tax percentage when telephone bill is greater than 1000: %.2f\n", data.withholdingTaxMoreThan1000L * 100);
+    printf("Withholding tax percentage on broadband: %.2f\n", data.withholdingTaxB * 100);
+    printf("Service tax percentage on broadband: %.2f\n", data.serviceTaxB * 100);
+    printf("Service tax percentage on TV: %.2f\n", data.serviceTaxTV * 100);
+    printf("Service tax percentage: %.2f\n", data.overallServiceTax * 100);
+    
+    fclose(pointer);
 }
