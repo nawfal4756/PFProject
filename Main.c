@@ -107,18 +107,19 @@ int main() {
             getch();
             system("cls");
             goto clientSelection;
-            break;
+            break;  
         }
     }
 
     exit:
-    printf("Are you sure you want to exit the program? (Yes or No)\n");
+    printf("\n\nAre you sure you want to exit the program? (Yes or No)\n");
     scanf("%c", &exitSelection);
+    fflush(stdin);
 
     switch (exitSelection) {
         case 'y':
         case 'Y': {
-            printf("The programs is exiting...\nPress enter to continue...");
+            printf("\nThe programs is exiting...\nPress enter to continue...");
             getch();
             exit(1);
             break;

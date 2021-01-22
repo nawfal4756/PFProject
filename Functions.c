@@ -210,6 +210,7 @@ void PTCLRatesPreview();
 void Header(char id) {
     switch (id) {
         case 'm': {
+            printf("--------------------------------------------------------------------------------------------------------------------\n");
             printf("\t\t\t\t\tWelcome to Utility Bill Management System\n");
             break;
         }
@@ -257,7 +258,7 @@ int Admin() {
         return 1;
     }
     else if (response == 0) {
-        printf("Incoorect username or password\nPress enter to continue...");
+        printf("Incorrect username or password\nPress enter to continue...");
         getch();
         return 1;
     }
@@ -339,6 +340,7 @@ int Admin() {
                     printf("Enter 1 to go to company selection\n");
                     printf("Enter 2 to go to switch panel page\n");
                     printf("Enter 3 to exit the program\n");
+                    printf("Account Number / Option: ");
                     scanf("%llu", &accountNumber);
                     fflush(stdin);
 
@@ -388,6 +390,7 @@ int Admin() {
                     }
 
                     if (userInput2 == 2) {
+                        printf("Account Details:\n");
                         printf("Account Number: %llu\n", dataKe.accountNumber);
                         printf("Name: %s\n", dataKe.name);
                         printf("Address: %s\n", dataKe.address);
@@ -513,7 +516,7 @@ int Admin() {
 
                 case 7: {
                     printf("Enter the category for which the rates are to be changed (R - Residential, C - Commercial): ");
-                    scanf("%c", selection1);
+                    scanf("%c", &selection1);
                     fflush(stdin);
                     while(selection1 != 'R' && selection1 != 'C' && selection1 != 'r' && selection1 != 'c') {
                         printf("\nIncorrect option entered!\n");
@@ -622,12 +625,12 @@ int Admin() {
                 case 3: 
                 case 4:
                 case 5: {
-                    ssgcConsumerId:
-                    printf("\n\nSSGC: \n");
+                    ssgcConsumerId:                    
                     printf("Enter consumer ID to get the data\n");
                     printf("Enter 1 to go to company selection\n");
                     printf("Enter 2 to go to switch panel page\n");
                     printf("Enter 3 to exit the program\n");
+                    printf("Consumer ID / Option: ");
                     scanf("%llu", &accountNumber);
                     fflush(stdin);
 
@@ -677,6 +680,7 @@ int Admin() {
                     }
 
                     if (userInput2 == 2) {
+                        printf("Account Details:\n");
                         printf("Consumer ID: %llu\n", dataSsgc.consumerId);
                         printf("Name: %s\n", dataSsgc.name);
                         printf("Address: %s\n", dataSsgc.address);
@@ -798,7 +802,7 @@ int Admin() {
 
                 case 7: {
                     printf("Enter the category for which the rates are to be changed (R - Residential, I - Industrial): ");
-                    scanf("%c", selection1);
+                    scanf("%c", &selection1);
                     fflush(stdin);
                     while(selection1 != 'R' && selection1 != 'I' && selection1 != 'r' && selection1 != 'i') {
                         printf("\nIncorrect option entered!\n");
@@ -907,12 +911,12 @@ int Admin() {
                 case 3:
                 case 4:
                 case 5: {
-                    ptclAccountId:
-                    printf("\n\nPTCL: \n");
+                    ptclAccountId:                    
                     printf("Enter account ID to get the data\n");
                     printf("Enter 1 to go to company selection\n");
                     printf("Enter 2 to go to switch panel page\n");
                     printf("Enter 3 to exit the program\n");
+                    printf("Account ID / Option: ");
                     scanf("%llu", &accountNumber);
                     fflush(stdin);
 
@@ -962,6 +966,7 @@ int Admin() {
                     }
 
                     if (userInput2 == 2) {
+                        printf("Account Details:\n");
                         printf("Account ID: %llu\n", dataPtcl.accountID);
                         printf("Name: %s\n", dataPtcl.name);
                         printf("Address: %s\n", dataPtcl.address);
@@ -1227,6 +1232,7 @@ int Client() {
             printf("Enter 1 to go to company selection\n");
             printf("Enter 2 to go to switch panel page\n");
             printf("Enter 3 to exit the program\n");
+            printf("Account Number / Option: ");
             scanf("%llu", &accountNumber);
             fflush(stdin);
 
@@ -1275,6 +1281,7 @@ int Client() {
                 }
             }
 
+            printf("Account Details:\n");
             printf("Account Number: %llu\n", dataKe.accountNumber);
             printf("Name: %s\n", dataKe.name);
             printf("Address: %s\n", dataKe.address);
@@ -1309,11 +1316,24 @@ int Client() {
                 case 2: {
                     selection = KElectricPrintBill(dataKe);
                     if (selection == 404) {
-                        printf("ERROR!\n");
-                        goto billOptionsKe;
+                        printf("ERROR!\n\n");
+                        goto keAccountNum;
+                    }
+                    else if (selection == 1) {
+                        printf("\n\nPrinted Successfully\nPress enter to continue...");
+                        getch();
+                        system("cls");
+                        goto clientTop;  
+                    }
+                    else {
+                        printf("\n\nOH NOO!! We crashed!\n");
+                        printf("Press Enter to continue...");
+                        getch();
+                        system("cls");
+                        goto clientTop;
                     }
                     system("cls");
-                    goto clientTop;
+                    goto clientTop;                    
                     break;
                 }
 
@@ -1422,6 +1442,7 @@ int Client() {
             printf("Enter 1 to go to company selection\n");
             printf("Enter 2 to go to switch panel page\n");
             printf("Enter 3 to exit the program\n");
+            printf("Consumer ID / Option: ");
             scanf("%llu", &accountNumber);
             fflush(stdin);
 
@@ -1470,6 +1491,7 @@ int Client() {
                 }
             }
 
+            printf("Account Details:\n");
             printf("Consumer ID: %llu\n", dataSsgc.consumerId);
             printf("Name: %s\n", dataSsgc.name);
             printf("Address: %s\n", dataSsgc.address);
@@ -1499,11 +1521,24 @@ int Client() {
                 case 2: {
                     selection = SSGCPrintBill(dataSsgc);
                     if (selection == 404) {
-                        printf("ERROR!\n");
-                        goto billOptionsSsgc;
+                        printf("ERROR!\n\n");
+                        goto ssgcConsumerId;
+                    }
+                    else if (selection == 1) {
+                        printf("\n\nPrinted Successfully\nPress enter to continue...");
+                        getch();
+                        system("cls");
+                        goto clientTop;  
+                    }
+                    else {
+                        printf("\n\nOH NOO!! We crashed!\n");
+                        printf("Press Enter to continue...");
+                        getch();
+                        system("cls");
+                        goto clientTop;
                     }
                     system("cls");
-                    goto clientTop;
+                    goto clientTop;                    
                     break;
                 }
 
@@ -1612,6 +1647,7 @@ int Client() {
             printf("Enter 1 to go to company selection\n");
             printf("Enter 2 to go to switch panel page\n");
             printf("Enter 3 to exit the program\n");
+            printf("Account ID / Option: ");
             scanf("%llu", &accountNumber);
             fflush(stdin);
 
@@ -1660,6 +1696,7 @@ int Client() {
                 }
             }
 
+            printf("Account Details:\n");
             printf("Account ID: %llu\n", dataPtcl.accountID);
             printf("Name: %s\n", dataPtcl.name);
             printf("Address: %s\n", dataPtcl.address);
@@ -1681,17 +1718,33 @@ int Client() {
             switch (userInput2) {
                 case 1: {
                     PTCLBillPreview(dataPtcl);
+                    system("cls");
+                    goto clientTop;
+                    break;
                     break;
                 }
 
                 case 2: {
                     selection = PTCLPrintBill(dataPtcl);
                     if (selection == 404) {
-                        printf("ERROR!\n");
-                        goto billOptionsPtcl;
+                        printf("ERROR!\n\n");
+                        goto ptclAccountId;
+                    }
+                    else if (selection == 1) {
+                        printf("\n\nPrinted Successfully\nPress enter to continue...");
+                        getch();
+                        system("cls");
+                        goto clientTop;  
+                    }
+                    else {
+                        printf("\n\nOH NOO!! We crashed!\n");
+                        printf("Press Enter to continue...");
+                        getch();
+                        system("cls");
+                        goto clientTop;
                     }
                     system("cls");
-                    goto clientTop;
+                    goto clientTop;                    
                     break;
                 }
 
@@ -2617,16 +2670,17 @@ int Payment(float amount, char company, unsigned long long int id) {
     int length, counter1, response;
     char name[40];
 
+    printf("--------------------------------------------------------------------------------------------------------------------\n");
     printf("\t\t\t\t\t\t\tPayment\n");
     printf("--------------------------------------------------------------------------------------------------------------------\n\n");
 
     printf("Enter Card Number: ");
-    scanf("%llu", data.cardNumber);
+    scanf("%llu", &data.cardNumber);
     fflush(stdin);
     while (data.cardNumber < 1000000000000000 && data.cardNumber > 9999999999999999) {
         printf("Incorrect Card Number\n");
         printf("Enter Card Number Again: ");
-        scanf("%llu", data.cardNumber);
+        scanf("%llu", &data.cardNumber);
         fflush(stdin);
     }
 
@@ -4496,18 +4550,20 @@ struct KElectricData KElectricDataModification(struct KElectricData KE) {
     printf("Press 3 to modify the Alloted Load\n");
     printf("Press 4 to modify the Number of TVs\n");
     printf("Press 5 to modify the Number of Units\n");
-    printf("Your choice:\n");
+    printf("Your choice: ");
     scanf("%d",&choice);
     fflush(stdin);
 
+    printf("\n");
+
     switch (choice) {
         case 1: {
-            printf("Enter the new Name:");
+            printf("Enter the new Name: ");
             gets(KE.name);
             fflush(stdin);
             while (strlen(KE.name) <= 0) {
                 printf("\nName field cannot be empty!\n");
-                printf("Enter the new Name again:");
+                printf("Enter the new Name again: ");
                 gets(KE.name);
                 fflush(stdin);
             }
@@ -4515,7 +4571,7 @@ struct KElectricData KElectricDataModification(struct KElectricData KE) {
         }
 
         case 2: {
-            printf("Enter the new Contact Number:");
+            printf("Enter the new Contact Number: ");
             scanf("%llu", &KE.contactNumber);
             fflush(stdin);
             while (!ContactNumberVerification(KE.contactNumber)) {
@@ -4554,18 +4610,18 @@ struct KElectricData KElectricDataModification(struct KElectricData KE) {
         }
 
         case 5: {
-            printf("Enter the month of the bill:\n");
             printf("Enter 1 for january, 2 for february and so on...\n");
+            printf("Enter the month of the bill: ");
             scanf("%d",&month);
             fflush(stdin);
             while(month < 1 || month > 12) {
                 printf("Incorrect month!\n");
-                printf("Enter the month of the bill again:");
+                printf("Enter the month of the bill again: ");
                 scanf("%d",&month);
                 fflush(stdin);
             }
 
-            printf("Enter the year of bill:");
+            printf("Enter the year of bill: ");
             scanf("%d",&year);
             fflush(stdin);
             if(year != KE.billYear[month-1]) {
@@ -4576,27 +4632,28 @@ struct KElectricData KElectricDataModification(struct KElectricData KE) {
             printf("Which units you want to change?\n");
             printf("press 0 to modify off peak units\n");
             printf("Press 1 to modify on peak units\n");
-            printf("Your choice:");
+            printf("Your choice: ");
             scanf("%d",&ch);
             fflush(stdin);
 
             while(ch != 0 && ch != 1) {
                 printf("\nIncorrect choice!\n");
-                printf("Enter your choice again:");
+                printf("Enter your choice again: ");
                 scanf("%d",&ch);
                 fflush(stdin);
             }
 
             if(ch == 0) {
-                printf("Enter the new off peak units:");
+                printf("Enter the new off peak units: ");
                 scanf("%f",&KE.unitsAndPayment[0][month-1]);
                 fflush(stdin);
             }
             else if(ch==1) {
-                printf("Enter the new on peak units:");
+                printf("Enter the new on peak units: ");
                 scanf("%f",&KE.unitsAndPayment[1][month-1]);
                 fflush(stdin);
             }
+            break;
         }
 
         default: {
@@ -4642,18 +4699,20 @@ struct SSGCData SSGCDataModification(struct SSGCData SSGC) {
     printf("Press 1 to modify the Name\n");
     printf("Press 2 to modify the Contact Number\n");
     printf("Press 3 to modify the units\n");
-    printf("Your choice:\n");
+    printf("Your choice: ");
     scanf("%d",&choice);
     fflush(stdin);
 
+    printf("\n");
+
     switch(choice) {
         case 1: {
-            printf("Enter the new Name:");
+            printf("Enter the new Name: ");
             gets(SSGC.name);
             fflush(stdin);
             while (strlen(SSGC.name) <= 0) {
                 printf("\nName field cannot be empty!\n");
-                printf("Enter the new Name again:");
+                printf("Enter the new Name again: ");
                 gets(SSGC.name);
                 fflush(stdin);
             }
@@ -4674,18 +4733,18 @@ struct SSGCData SSGCDataModification(struct SSGCData SSGC) {
         }
 
         case 3: {
-            printf("Enter the month of the bill:\n");
             printf("Enter 1 for january, 2 for february and so on...\n");
+            printf("Enter the month of the bill: ");
             scanf("%d",&month);
             fflush(stdin);
             while(month < 1 || month > 12) {
                 printf("Incorrect month!\n");
-                printf("Enter the month of the bill again:");
+                printf("Enter the month of the bill again: ");
                 scanf("%d",&month);
                 fflush(stdin);
             }
 
-            printf("Enter the year of bill:");
+            printf("Enter the year of bill: ");
             scanf("%d",&year);
             fflush(stdin);
             if(year != SSGC.billYear[month-1]) {
@@ -4693,11 +4752,17 @@ struct SSGCData SSGCDataModification(struct SSGCData SSGC) {
                 goto jump;
             }
             
-            printf("Enter the new units:");
+            printf("Enter the new units: ");
             scanf("%f",&SSGC.unitsAndPayment[0][month-1]);
             fflush(stdin);
+            break;
+        }        
+
+        default: {
+            printf("\nIncorrect option selected!\n");
+            goto jump;
+            break;
         }
-        break;
     }
     return SSGC;
 }
@@ -4714,18 +4779,20 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL) {
     printf("Press 5 to modify the Smart TV Package\n");
     printf("Press 6 to modify the Charji Package\n");
     printf("Press 7 to modify the minutes\n");
-    printf("Your choice:\n");
+    printf("Your choice: ");
     scanf("%d",&choice);
     fflush(stdin);
+
+    printf("\n");
     
     switch (choice) {
         case 1: {
-            printf("Enter the new Name:");
+            printf("Enter the new Name: ");
             gets(PTCL.name);
             fflush(stdin);
             while (strlen(PTCL.name) <= 0) {
                 printf("\nName field cannot be empty!\n");
-                printf("Enter the new Name again:");
+                printf("Enter the new Name again: ");
                 gets(PTCL.name);
                 fflush(stdin);
             }
@@ -4807,12 +4874,12 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL) {
             printf("Enter M for 30 GB Data package on Charji\n");
             printf("Enter L for 50 GB Data package on Charji\n");
             printf("Enter N for no Data package on Charji\n");
-            printf("Enter Charji Package for person %d: ", 1);
+            printf("Enter Charji Package: ");
             scanf("%c", &PTCL.packageCharji);
             fflush(stdin);
             while (PTCL.packageCharji != 'U' && PTCL.packageCharji != 'S' && PTCL.packageCharji != 'M' && PTCL.packageCharji != 'L' && PTCL.packageCharji != 'N') {
                printf("\nInvaid Option selected\n");
-               printf("Enter Charji Package for person %d again: ", 1);
+               printf("Enter Charji Package again: ");
                scanf("%c", &PTCL.packageCharji);
                fflush(stdin);
             }
@@ -4820,18 +4887,18 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL) {
         }
     
         case 7:{
-            printf("Enter the month of the bill:\n");
             printf("Enter 1 for january, 2 for february and so on...\n");
+            printf("Enter the month of the bill: ");
             scanf("%d",&month);
             fflush(stdin);
             while(month < 1 || month > 12) {
                 printf("Incorrect month!\n");
-                printf("Enter the month of the bill again:");
+                printf("Enter the month of the bill again: ");
                 scanf("%d",&month);
                 fflush(stdin);
             }
 
-            printf("Enter the year of bill:");
+            printf("Enter the year of bill: ");
             scanf("%d",&year);
             fflush(stdin);
             if(year != PTCL.billYear[month-1]) {
@@ -4846,7 +4913,7 @@ struct PTCLData PTCLDataModification(struct PTCLData PTCL) {
             printf("Press 3 to change the Other Minutes\n");
             printf("Press 4 to change the International Zone 1 Minutes\n");
             printf("Press 5 to change the International Other Zone Minutes\n");
-            printf("Your choice:");
+            printf("Your choice: ");
             scanf("%d",&ch);
             fflush(stdin);
             
@@ -4939,6 +5006,8 @@ struct KElectricData KElectricGenerateCurrentBill(struct KElectricData userData)
     KElectricPriceCalculator(&userData, month);
 
     userData.billYear[month] = time1->tm_year + 1900;
+    userData.unitsAndPayment[8][month] = 0;
+    userData.total = userData.unitsAndPayment[7][month];
 
     return userData;
 }
@@ -4966,6 +5035,8 @@ struct SSGCData SSGCGenerateCurrentBill(struct SSGCData userData) {
     SSGCPriceCalculator(&userData, month);
 
     userData.billYear[month] = time1->tm_year + 1900;
+    userData.unitsAndPayment[5][month] = 0;
+    userData.total = userData.unitsAndPayment[4][month];
 
     return userData;
 }
@@ -5095,6 +5166,8 @@ struct PTCLData PTCLGenerateCurrentBill(struct PTCLData userData) {
     PTCLPriceCalculator(&userData, month);
 
     userData.billYear[month] = time1->tm_year + 1900;
+    userData.payments[5][month] = 0;
+    userData.total = userData.payments[4][month];
 
     return userData;
  }
@@ -5136,6 +5209,8 @@ int KElectricRatesModification(char category) {
             printf("Enter you desired option: ");
             scanf("%d", &option1);
             fflush(stdin);
+
+            printf("\n");
 
             switch (option1) {
                 case 1: {
@@ -5504,6 +5579,8 @@ int KElectricRatesModification(char category) {
             scanf("%d", &option1);
             fflush(stdin);
 
+            printf("\n");
+
             switch (option1) {
                 case 1: {
                     case1C:
@@ -5786,6 +5863,8 @@ int SSGCRatesModification(char category) {
             scanf("%d", &option1);
             fflush(stdin);
 
+            printf("\n");
+
             switch (option1) {
                 case 1: {
                     case1:
@@ -6046,6 +6125,8 @@ int SSGCRatesModification(char category) {
             scanf("%d", &option1);
             fflush(stdin);
 
+            printf("\n");
+
             switch (option1) {
                 case 1: {
                     case1C:
@@ -6239,6 +6320,8 @@ int PTCLRatesModification() {
     printf("Enter you desired option: ");
     scanf("%d", &option1);
     fflush(stdin);
+
+    printf("\n");
 
     switch (option1) {
 
@@ -6972,7 +7055,7 @@ int AdminPasswordChange() {
         return 404;
     }
 
-    printf("Enter username: ");
+    printf("\nEnter username: ");
     gets(userData.username);
     fflush(stdin);
 
@@ -7139,7 +7222,7 @@ void KElectricRatesPreview() {
 
     fread(&data, sizeof(struct KElectricRates), 1, pointer);
 
-    printf("\nResidential:\n");
+    printf("Residential:\n");
     printf("Residential off peak units rate for more than 5 KW: %.2f\n", data.offPeakUnitsMoreThan5KW);
     printf("Residential on peak units rate for more than 5 KW: %.2f\n", data.onPeakUnitsMoreThan5KW);
     printf("Residential rate for upto 50 units less than 5 KW: %.2f\n", data.unitsUpto50);
@@ -7178,7 +7261,7 @@ void SSGCRatesPreview() {
 
     fread(&data, sizeof(struct SSGCRates), 1, pointer);
 
-    printf("\nResidential:\n");
+    printf("Residential:\n");
     printf("Unit price for up to 50 units: %.2f\n", data.upTo50);    
     printf("Unit price for up to 150 units: %.2f\n", data.upTo150);    
     printf("Unit price for up to 250 units: %.2f\n", data.upTo250);
