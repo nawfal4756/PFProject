@@ -1341,7 +1341,7 @@ int Client() {
                     printf("Enter amount to pay: ");
                     scanf("%f", &amount);
                     selection = Payment(amount, 'K', dataKe.accountNumber);
-                    if (selection = 1) {
+                    if (selection == 1) {
                         dataKe.total -= amount;
                         selection2 = KElectricRecordUpdate(dataKe);
                         if (selection2 == 404 || selection2 == 0) {
@@ -1350,7 +1350,7 @@ int Client() {
                         }
                         else if (selection2 == 1) {
                             keslip:
-                            printf("Enter 1 to print the payment slip\n");
+                            printf("\n\nEnter 1 to print the payment slip\n");
                             printf("Enter 2 to go to company selection\n");
                             printf("Enter 3 to go to switch panel change\n");
                             printf("Enter 4 to exit the program\n");
@@ -1392,7 +1392,8 @@ int Client() {
                         }
                     }
                     else if (selection == 0 || selection == 404) {
-                        printf("\n\n");
+                        printf("\nPress enter to continue...");
+                        getch();
                         goto billOptionsKe;
                     }
                     else {
@@ -1546,7 +1547,7 @@ int Client() {
                     printf("Enter amount to pay: ");
                     scanf("%f", &amount);
                     selection = Payment(amount, 'S', dataSsgc.consumerId);
-                    if (selection = 1) {
+                    if (selection == 1) {
                         dataSsgc.total -= amount;
                         selection2 = SSGCRecordUpdate(dataSsgc);
                         if (selection2 == 404 || selection2 == 0) {
@@ -1555,7 +1556,7 @@ int Client() {
                         }
                         else if (selection2 == 1) {
                             ssgcslip:
-                            printf("Enter 1 to print the payment slip\n");
+                            printf("\n\nEnter 1 to print the payment slip\n");
                             printf("Enter 2 to go to company selection\n");
                             printf("Enter 3 to go to switch panel change\n");
                             printf("Enter 4 to exit the program\n");
@@ -1597,7 +1598,8 @@ int Client() {
                         }
                     }
                     else if (selection == 0 || selection == 404) {
-                        printf("\n\n");
+                        printf("\nPress enter to continue...");
+                        getch();
                         goto billOptionsSsgc;
                     }
                     else {
@@ -1752,7 +1754,7 @@ int Client() {
                     printf("Enter amount to pay: ");
                     scanf("%f", &amount);
                     selection = Payment(amount, 'P', dataPtcl.accountID);
-                    if (selection = 1) {
+                    if (selection == 1) {
                         dataPtcl.total -= amount;
                         selection2 = PTCLRecordUpdate(dataPtcl);
                         if (selection2 == 404 || selection2 == 0) {
@@ -1761,7 +1763,7 @@ int Client() {
                         }
                         else if (selection2 == 1) {
                             ptclslip:
-                            printf("Enter 1 to print the payment slip\n");
+                            printf("\n\nEnter 1 to print the payment slip\n");
                             printf("Enter 2 to go to company selection\n");
                             printf("Enter 3 to go to switch panel change\n");
                             printf("Enter 4 to exit the program\n");
@@ -1803,7 +1805,8 @@ int Client() {
                         }
                     }
                     else if (selection == 0 || selection == 404) {
-                        printf("\n\n");
+                        printf("\nPress enter to continue...");
+                        getch();
                         goto billOptionsPtcl;
                     }
                     else {
