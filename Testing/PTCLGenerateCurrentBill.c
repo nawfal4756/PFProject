@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 
 struct PTCLData {
@@ -24,100 +23,21 @@ struct PTCLData {
     float total;
 };
 
-int PTCLAddCustomer();
-int ArraySize(FILE* pointer, int structSize);
+ struct PTCLData PTCLGenerateCurrentBill(struct PTCLData userData);
 
-char* ptclFile = "../DataFiles/PTCLData.txt";
+ int main() {
 
-int main() {
+ }
 
-}
-
-int PTCLAddCustomer() {
-    struct PTCLData userData, userDataFile;
-    FILE* pointer;
-    int sizeFromFile, month, counter1, counter2;
+ struct PTCLData PTCLGenerateCurrentBill(struct PTCLData userData) {
     time_t currentTime;
     struct tm* time1;
+    int month;
 
     time(&currentTime);
     time1 = localtime(&currentTime);
 
     month = time1->tm_mon;
-
-    pointer = fopen(ptclFile, "ab+");
-
-    if (pointer == NULL) {
-        return 404;
-    }
-
-    for (counter1 = 0; counter1 < 6; counter1++) {
-        for (counter2 = 0; counter2 < 12; counter2++) {
-            userData.payments[counter1][counter2] = 0;
-        }
-    }
-
-    for (counter1 = 0; counter1 < 12; counter1++) {
-        userData.onNetMinutes[counter1] = 0;
-        userData.mobileMinutes[counter1] = 0;
-        userData.otherMinutes[counter1] = 0;
-        userData.internationalZone1Minutes[counter1] = 0;
-        userData.internationalOtherZoneMinutes[counter1] = 0;
-        userData.billYear[counter1] = 0;        
-    }
-
-    sizeFromFile = ArraySize(pointer, sizeof(struct PTCLData));
-
-    accountID:
-    printf("Enter account ID of customer: ");
-    scanf("%llu", &userData.accountID);
-    fflush(stdin);
-    while (!PTCLAccountIDVerification(userData.accountID)) {
-        printf("Incorrect value!\n");
-        printf("Enter account ID of customer again: ");
-        scanf("%llu", &userData.accountID);
-        fflush(stdin);
-    }
-    
-    for (counter1 = 0; counter1 < sizeFromFile; counter1++) {
-        fread(&userDataFile, sizeof(struct PTCLData), 1, pointer);
-        if(userData.accountID == userDataFile.accountID) {
-            printf("\nUser already exist with this consumer ID. Enter another ID\n");
-            goto accountID;
-        }
-    }
-    
-    fseek(pointer, 0L, SEEK_END);
-
-    printf("Enter name of customer: ");
-    gets(userData.name);
-    fflush(stdin);
-    while(strlen(userData.name) <= 0) {
-        printf("\nName is required!\n");
-        printf("Enter name of customer again: ");
-        gets(userData.name);
-        fflush(stdin);
-    }
-
-    printf("Enter address of customer: ");
-    gets(userData.address);
-    fflush(stdin);
-    while(strlen(userData.address) <= 0) {
-        printf("\nAddress is required!\n");
-        printf("Enter address of customer again: ");
-        gets(userData.address);
-        fflush(stdin);
-    }
-
-    printf("Enter contact number of customer: ");
-    scanf("%llu", &userData.contactNumber);
-    fflush(stdin);
-    while (!ContactNumberVerification(userData.contactNumber)) {
-        printf("\nIncorrect value!\n");
-        printf("Enter contact number of customer again: ");
-        scanf("%llu", &userData.contactNumber);
-        fflush(stdin);
-    }
 
     printf("\nEnter 1 for Basic Package\n");
     printf("Enter 500 for Freedom 500\n");
@@ -234,21 +154,6 @@ int PTCLAddCustomer() {
     // PTCLPriceCalculator(&userData, month);
 
     userData.billYear[month] = time1->tm_year + 1900;
-    userData.total = userData.payments[4][month];
 
-    fwrite(&userData, sizeof(struct PTCLData), 1, pointer);
-    fclose(pointer);
-
-    return 1;
-}
-
-int ArraySize(FILE* pointer, int structSize) {
-    int size;
-
-    fseek(pointer, 0L, SEEK_END);
-    size = ftell(pointer);
-    size = size / structSize;
-    fseek(pointer, 0L, SEEK_SET);
-
-    return size;
-}
+    return userData;
+ }
