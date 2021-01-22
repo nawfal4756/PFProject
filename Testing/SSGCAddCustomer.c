@@ -133,7 +133,7 @@ int SSGCAddCustomer() {
         fflush(stdin);
     }
 
-    SSGCPriceCalculator();
+    // SSGCPriceCalculator(&userData, month);
 
     userData.billYear[month] = time1->tm_year + 1900;
     userData.total = userData.unitsAndPayment[4][month];

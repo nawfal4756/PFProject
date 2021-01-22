@@ -126,18 +126,21 @@ void SSGCPriceCalculator(struct SSGCData* data, int month) {
         }
 
         case 'I': {
-            price = units * 1225.25;
-            if (price <= 29967.34) {
-                price = 29967.34;
+            price = units * prices.unitPriceC;
+            if (price <= prices.minC) {
+                price = prices.minC;
             }
+
+            data->unitsAndPayment[1][month] = price;
+            data->unitsAndPayment[2][month] = price * prices.salesTaxC;
+            data->unitsAndPayment[3][month] = price * prices.incomeTaxC;
+            data->unitsAndPayment[4][month] = 0;
+
+            for (counter1 = 1; counter1 < 4; counter1++) {
+                data->unitsAndPayment[4][month] += data->unitsAndPayment[counter1][month];
+            }
+
             break;
         }
-
-        default: {
-            price = 0;
-            break;
-        }
-    }    
-
-    return price;
+    }        
 }

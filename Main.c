@@ -6,61 +6,13 @@
 #include <conio.h>
 #include "Functions.c"
 
-// struct KElectricData {
-//     //New Structure
-//     unsigned long long int accountNumber;
-//     char name[30];
-//     char address[70];
-//     unsigned long long int contactNumber;
-//     char usageType;
-//     float allotedLoad;
-//     int numberOfTV;
-//     // 0 = off peak units, 1 = on peak units, 2 = amount of electricity, 3 = electricity duty, 4 = Sales Tax, 5 = Income tax, 6 = tv license fee, 7 = amount due, 8 = amount paid
-//     float unitsAndPayment[9][12];
-//     int billYear[12];
-//     bool timePayment[12];
-//     float total;
-// };
-
-// struct SSGCData {
-//     // New Structure
-//     unsigned long long int consumerId;
-//     char name[30];
-//     char address[70];
-//     unsigned long long int contactNumber;
-//     char usageType;
-//     // 0 = units, 1 = amount os natural gas used, 2 = Sales Tax, 3 = Income Tax, 4 = amount due, 5 = amount paid
-//     float unitsAndPayment[6][12];
-//     int billYear[12];
-//     float total;
-// };
-
-// struct PTCLData {
-//     // New Structure
-//     unsigned long long int accountID;
-//     char name[30];
-//     char address[70];
-//     unsigned long long int contactNumber;
-//     int packageLandline;
-//     int packageBroadband;
-//     char packageTV;
-//     char packageCharji;
-//     int onNetMinutes[12];
-//     int mobileMinutes[12];
-//     int otherMinutes[12];
-//     int internationalZone1Minutes[12];
-//     int internationalOtherZoneMinutes[12];
-//     // 0 = bill of PTCL, 1 = Service Tax, 2 = Withholding Tax, 3 = Late Payment Surcgarge, 4 = Total Bill, 5 = Recieved Payment
-//     float payments[6][12];
-//     int billYear[12];
-//     float total;
-// };
-
 void Header(char id);
 int Admin();
 int Client();
 
 // From Functions.c
+// Client Function Prototypes
+
 int ArraySize(FILE* pointer, int structSize);
 bool KElectricAccountNumberVerification(unsigned long long int accountNumber);
 bool SSGCConsumerIDVerification(unsigned long long int consumerID);
@@ -83,7 +35,7 @@ bool StarConsumer(bool timePayment[12]);
 
 int main() {
     char userInputClient, exitSelection;
-    int selection;
+    int selection, response;    
 
     clientSelection:
     Header('m');
@@ -186,7 +138,42 @@ int Admin() {
     struct KElectricData dataKe;
     struct SSGCData dataSsgc;
     struct PTCLData dataPtcl;
+    struct AdminControl adminDetails;
+    
+    Header('m');
+    Header('a');    
+    printf("Enter your username: ");
+    gets(adminDetails.username);
 
+    printf("Enter your password: ");
+    gets(adminDetails.password);
+
+    system("cls");
+    Header('m');
+    Header('a');
+
+    response = AdminVerification(adminDetails);
+    if (response == 404) {
+        printf("Error while opening file!\nPress enter to continue...");
+        getch();
+        return 1;
+    }
+    else if (response == 0) {
+        printf("Incoorect username or password\nPress enter to continue...");
+        getch();
+        return 1;
+    }
+    else if (response == 1) {
+        system("cls");
+        goto adminTop;
+    }
+    else {
+        printf("\n\nOH NOO!! We crashed!\n");
+        printf("Press Enter to continue...");
+        getch();
+        return 1;
+    }
+    
     adminTop:
     Header('m');
     Header('a');
@@ -210,7 +197,11 @@ int Admin() {
             printf("Enter 2 to modify customer details\n");
             printf("Enter 3 to preview data of a customer\n");
             printf("Enter 4 to print a bill for the customer\n");
-            printf("Enter 5 to modify the rates\n");
+            printf("Enter 5 to generate a new bill for the current month\n");
+            printf("Enter 6 to modify the rates\n");
+            printf("Enter 7 to go to company selection\n");
+            printf("Enter 8 to go to panel selection\n");
+            printf("Enter 9 to exit the program\n");
             printf("Enter desired option: ");
             scanf("%d", &userInput2);
             fflush(stdin);
@@ -219,7 +210,7 @@ int Admin() {
 
             switch (userInput2) {
                 case 1: {
-                    // response = KElectricAddCustomer();
+                    response = KElectricAddCustomer();
                     if (response == 404) {
                         printf("\nA file error occured!\nPress enter to continue...\n\n");
                         getch();
@@ -242,7 +233,8 @@ int Admin() {
 
                 case 2:
                 case 3: 
-                case 4: {
+                case 4:
+                case 5: {
                     keAccountNum:
                     printf("Enter account number to get the data\n");
                     printf("Enter 1 to go to company selection\n");
@@ -315,8 +307,8 @@ int Admin() {
                         switch (selection1) {
                             case 'Y':
                             case 'y': {
-                                // dataKe = KElectricDataModification(dataKe);
-                                // response = KElectricRecordUpdate(dataKe);
+                                dataKe = KElectricDataModification(dataKe);
+                                response = KElectricRecordUpdate(dataKe);
 
                                 if (response == 404) {
                                     printf("\nA file error occured! Record not updated\nPress enter to continue...\n\n");
@@ -329,8 +321,9 @@ int Admin() {
                                     system("cls");
                                     goto adminTop;
                                 }
-                                else if (response == 0) {
-                                    printf("\n\nNo record found with this ID! Record could not be updated\nPress enter to continue...");
+                                else {
+                                    printf("\n\nOH NOO!! We crashed!\n");
+                                    printf("Press Enter to continue...");
                                     getch();
                                     system("cls");
                                     goto adminTop;
@@ -384,10 +377,34 @@ int Admin() {
                         break;
                     }
 
+                    if (userInput2 == 5) {
+                        dataKe = KElectricGenerateCurrentBill(dataKe);
+                        response = KElectricRecordUpdate(dataKe);
+
+                        if (response == 404) {
+                            printf("\nA file error occured! Record not updated\nPress enter to continue...\n\n");
+                            getch();
+                            goto kelectric;
+                        }
+                        else if (response == 1) {
+                            printf("\n\nCustomer record updated successfully!\nPress enter to continue...");
+                            getch();
+                            system("cls");
+                            goto adminTop;
+                        }
+                        else {
+                            printf("\n\nOH NOO!! We crashed!\n");
+                            printf("Press Enter to continue...");
+                            getch();
+                            system("cls");
+                            goto adminTop;
+                        }
+                    }
+
                     break;
                 }                                  
 
-                case 5: {
+                case 6: {
                     printf("Enter the category for which the rates are to be changed (R - Residential, C - Commercial): ");
                     scanf("%c", selection1);
                     fflush(stdin);
@@ -405,7 +422,7 @@ int Admin() {
                         selection1 = 'C';
                     }
 
-                    // response = KElectricRatesModification(selection1);
+                    response = KElectricRatesModification(selection1);
                     if (response == 404) {
                         printf("\n\nFile could not open!\nPress enter to continue...\n");
                         getch();
@@ -426,6 +443,22 @@ int Admin() {
                     break;
                 }
 
+                case 7: {
+                    system("cls");
+                    goto adminTop;
+                    break;
+                }
+
+                case 8: {
+                    return 1;
+                    break;
+                }
+
+                case 9: {
+                    return 0;
+                    break;
+                }
+
                 default: {
                     printf("\nIncorrect option entered!\n");
                     goto kelectric;
@@ -443,7 +476,11 @@ int Admin() {
             printf("Enter 2 to modify customer details\n");
             printf("Enter 3 to preview data of a customer\n");
             printf("Enter 4 to print a bill for the customer\n");
-            printf("Enter 5 to modify the rates\n");
+            printf("Enter 5 to generate a new bill for the current month\n");
+            printf("Enter 6 to modify the rates\n");
+            printf("Enter 7 to go to company selection\n");
+            printf("Enter 8 to go to panel selection\n");
+            printf("Enter 9 to exit the program\n");
             printf("Enter desired option: ");
             scanf("%d", &userInput2);
             fflush(stdin);
@@ -452,7 +489,7 @@ int Admin() {
 
             switch (userInput2) {
                 case 1: {
-                    // response = SSGCAddCustomer();
+                    response = SSGCAddCustomer();
                     if (response == 404) {
                         printf("\nA file error occured!\nPress enter to continue...\n\n");
                         getch();
@@ -475,7 +512,8 @@ int Admin() {
 
                 case 2:
                 case 3: 
-                case 4: {
+                case 4:
+                case 5: {
                     ssgcConsumerId:
                     printf("\n\nSSGC: \n");
                     printf("Enter consumer ID to get the data\n");
@@ -546,8 +584,8 @@ int Admin() {
                         switch (selection1) {
                             case 'Y':
                             case 'y': {
-                                // dataSsgc = SSGCDataModification(dataSsgc);
-                                // response = SSGCRecordUpdate(dataSsgc);
+                                dataSsgc = SSGCDataModification(dataSsgc);
+                                response = SSGCRecordUpdate(dataSsgc);
 
                                 if (response == 404) {
                                     printf("\nA file error occured! Record not updated\nPress enter to continue...\n\n");
@@ -615,10 +653,34 @@ int Admin() {
                         break;
                     }
 
+                    if (userInput2 == 5) {
+                        dataSsgc = SSGCGenerateCurrentBill(dataSsgc);
+                        response = SSGCRecordUpdate(dataSsgc);
+
+                        if (response == 404) {
+                            printf("\nA file error occured! Record not updated\nPress enter to continue...\n\n");
+                            getch();
+                            goto ssgc;
+                        }
+                        else if (response == 1) {
+                            printf("\n\nCustomer record updated successfully!\nPress enter to continue...");
+                            getch();
+                            system("cls");
+                            goto adminTop;
+                        }
+                        else {
+                            printf("\n\nOH NOO!! We crashed!\n");
+                            printf("Press Enter to continue...");
+                            getch();
+                            system("cls");
+                            goto adminTop;
+                        }
+                    }
+
                     break;
                 }
 
-                case 5: {
+                case 6: {
                     printf("Enter the category for which the rates are to be changed (R - Residential, I - Industrial): ");
                     scanf("%c", selection1);
                     fflush(stdin);
@@ -636,7 +698,7 @@ int Admin() {
                         selection1 = 'I';
                     }
 
-                    // response = SSGCRatesModification(selection1);
+                    response = SSGCRatesModification(selection1);
                     if (response == 404) {
                         printf("\n\nFile could not open!\nPress enter to continue...\n");
                         getch();
@@ -657,6 +719,22 @@ int Admin() {
                     break;
                 }
 
+                case 7: {
+                    system("cls");
+                    goto adminTop;
+                    break;
+                }
+
+                case 8: {
+                    return 1;
+                    break;
+                }
+
+                case 9: {
+                    return 0;
+                    break;
+                }
+
                 default: {
                     printf("\nIncorrect option entered!\n");
                     goto ssgc;
@@ -674,7 +752,11 @@ int Admin() {
             printf("Enter 2 to modify customer details\n");
             printf("Enter 3 to preview data of a customer\n");
             printf("Enter 4 to print a bill for the customer\n");
-            printf("Enter 5 to modify the rates\n");
+            printf("Enter 5 to generate a new bill for the current month\n");
+            printf("Enter 6 to modify the rates\n");
+            printf("Enter 7 to go to company selection\n");
+            printf("Enter 8 to go to panel selection\n");
+            printf("Enter 9 to exit the program\n");
             printf("Enter desired option: ");
             scanf("%d", &userInput2);
             fflush(stdin);
@@ -683,7 +765,7 @@ int Admin() {
 
             switch (userInput2) {
                 case 1: {
-                    // response = PTCLAddCustomer();
+                    response = PTCLAddCustomer();
                     if (response == 404) {
                         printf("\nA file error occured!\nPress enter to continue...\n\n");
                         getch();
@@ -706,7 +788,8 @@ int Admin() {
 
                 case 2:
                 case 3:
-                case 4: {
+                case 4:
+                case 5: {
                     ptclAccountId:
                     printf("\n\nPTCL: \n");
                     printf("Enter account ID to get the data\n");
@@ -777,8 +860,8 @@ int Admin() {
                         switch (selection1) {
                             case 'Y':
                             case 'y': {
-                                // dataPtcl = PTCLDataModification(dataPtcl);
-                                // response = PTCLRecordUpdate(dataPtcl);
+                                dataPtcl = PTCLDataModification(dataPtcl);
+                                response = PTCLRecordUpdate(dataPtcl);
 
                                 if (response == 404) {
                                     printf("\nA file error occured! Record not updated\nPress enter to continue...\n\n");
@@ -846,10 +929,34 @@ int Admin() {
                         break;
                     }
 
+                    if (userInput2 == 5) {
+                        dataPtcl = PTCLGenerateCurrentBill(dataPtcl);
+                        response = PTCLRecordUpdate(dataPtcl);
+
+                        if (response == 404) {
+                            printf("\nA file error occured! Record not updated\nPress enter to continue...\n\n");
+                            getch();
+                            goto ssgc;
+                        }
+                        else if (response == 1) {
+                            printf("\n\nCustomer record updated successfully!\nPress enter to continue...");
+                            getch();
+                            system("cls");
+                            goto adminTop;
+                        }
+                        else {
+                            printf("\n\nOH NOO!! We crashed!\n");
+                            printf("Press Enter to continue...");
+                            getch();
+                            system("cls");
+                            goto adminTop;
+                        }
+                    }
+
                     break;
                 }
 
-                case 5: {
+                case 6: {
                     
                     if (response == 404) {
                         printf("\n\nFile could not open!\nPress enter to continue...\n");
@@ -871,6 +978,22 @@ int Admin() {
                     break;
                 }
 
+                case 7: {
+                    system("cls");
+                    goto adminTop;
+                    break;
+                }
+
+                case 8: {
+                    return 1;
+                    break;
+                }
+
+                case 9: {
+                    return 0;
+                    break;
+                }
+
                 default: {
                     printf("\nIncorrect option entered!\n");
                     goto ssgc;
@@ -882,7 +1005,7 @@ int Admin() {
         }
 
         case 4: {
-            // response = AdminPasswordChange();
+            response = AdminPasswordChange();
             if (response == 404) {
                 printf("\nA file error occured!\nPress enter to continue...\n\n");
                 getch();
@@ -910,7 +1033,7 @@ int Admin() {
         }
 
         case 5: {
-            // response = AdminAdd();
+            response = AdminAdd();
             if (response == 404) {
                 printf("\nA file error occured!\nPress enter to continue...\n\n");
                 getch();
