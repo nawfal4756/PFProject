@@ -5606,7 +5606,8 @@ int KElectricRatesModification(char category) {
                     goto options1;
                     break;
                 }
-            }            
+            }
+            break;            
         }
 
         case 'C': {
@@ -5845,6 +5846,7 @@ int KElectricRatesModification(char category) {
                     break;
                 }
             }
+            break;
         }        
     }
 
@@ -6158,6 +6160,7 @@ int SSGCRatesModification(char category) {
                     break;
                 }
             }
+            break;
         }
 
         case 'C': {
@@ -6290,6 +6293,7 @@ int SSGCRatesModification(char category) {
                     break;
                 }
             }
+            break;
         }
     }
 
