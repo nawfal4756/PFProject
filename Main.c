@@ -33,6 +33,29 @@ int SSGCPrintBill(struct SSGCData SSGC);
 int PTCLPrintBill(struct PTCLData PTCL);
 bool StarConsumer(bool timePayment[12]);
 
+// Admin Function Prototypes
+
+int KElectricAddCustomer();
+int SSGCAddCustomer();
+int PTCLAddCustomer();
+void KElectricPriceCalculator(struct KElectricData* data, int month);
+void SSGCPriceCalculator(struct SSGCData* data, int month);
+void PTCLPriceCalculator(struct PTCLData* data, int month);
+struct KElectricData KElectricDataModification(struct KElectricData KE);
+struct SSGCData SSGCDataModification(struct SSGCData SSGC);
+struct PTCLData PTCLDataModification(struct PTCLData PTCL);
+struct KElectricData KElectricGenerateCurrentBill(struct KElectricData userData);
+struct SSGCData SSGCGenerateCurrentBill(struct SSGCData userData);
+struct PTCLData PTCLGenerateCurrentBill(struct PTCLData userData);
+int KElectricRatesModification(char category);
+int SSGCRatesModification(char category);
+int PTCLRatesModification();
+int AdminPasswordChange();
+int AdminAdd();
+int AdminVerification(struct AdminControl userData);
+
+// Main Program
+
 int main() {
     char userInputClient, exitSelection;
     int selection, response;    
