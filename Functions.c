@@ -7129,7 +7129,7 @@ int AdminAdd() {
     sizeFromFile = ArraySize(pointer, sizeof(struct AdminControl));
 
     username:
-    printf("Enter username: ");
+    printf("\n\nEnter username: ");
     gets(userData.username);
     fflush(stdin);
     while(strlen(userData.username) <= 0) {
