@@ -36,7 +36,7 @@ int KElectricPrintBill(struct KElectricData KE);
 int SSGCPrintBill(struct SSGCData SSGC);
 int PTCLPrintBill(struct PTCLData PTCL);
 bool StarConsumer(bool timePayment[12]);
-void PaymentSlip(float amount, char company, unsigned long long int id);
+int PaymentSlip(float amount, char company, unsigned long long int id);
 bool ContactNumberVerification(unsigned long long int number);
 
 // Admin Function Prototypes

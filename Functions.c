@@ -178,7 +178,7 @@ int KElectricPrintBill(struct KElectricData KE);
 int SSGCPrintBill(struct SSGCData SSGC);
 int PTCLPrintBill(struct PTCLData PTCL);
 bool StarConsumer(bool timePayment[12]);
-void PaymentSlip(float amount, char company, unsigned long long int id);
+int PaymentSlip(float amount, char company, unsigned long long int id);
 bool ContactNumberVerification(unsigned long long int number);
 
 // Admin Function Prototypes
@@ -1204,7 +1204,7 @@ int Admin() {
 }
 
 int Client() {
-    int userInput1, userInput2, userInput3, selection, selection2;
+    int userInput1, userInput2, userInput3, selection, selection2, selection3;
     float amount;
     unsigned long long int accountNumber;
     struct KElectricData dataKe;
@@ -1360,11 +1360,26 @@ int Client() {
 
                             switch (userInput3) {
                                 case 1: {
-                                    PaymentSlip(amount, 'K', dataKe.accountNumber);
-                                    printf("\nPrinted Successfully!\nPress enter to continue...");
-                                    getch();
-                                    system("cls");
-                                    goto clientTop;
+                                    selection3 = PaymentSlip(amount, 'K', dataKe.accountNumber);
+                                    if (selection3 == 404) {
+                                        printf("\nFile openeing error!\nPress enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
+                                    else if (selection3 == 1) {
+                                        printf("\nPrinted Successfully!\nPress enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
+                                    else {
+                                        printf("\n\nOH NOO!! We crashed!\n");
+                                        printf("Press Enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }                                    
                                     break;
                                 }
 
@@ -1564,11 +1579,26 @@ int Client() {
 
                             switch (userInput3) {
                                 case 1: {
-                                    PaymentSlip(amount, 'S', dataSsgc.consumerId);
-                                    printf("\nPrinted Successfully!\nPress enter to continue...");
-                                    getch();
-                                    system("cls");
-                                    goto clientTop;
+                                    selection3 = PaymentSlip(amount, 'S', dataSsgc.consumerId);
+                                    if (selection3 == 404) {
+                                        printf("\nFile openeing error!\nPress enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
+                                    else if (selection3 == 1) {
+                                        printf("\nPrinted Successfully!\nPress enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
+                                    else {
+                                        printf("\n\nOH NOO!! We crashed!\n");
+                                        printf("Press Enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
                                     break;
                                 }
 
@@ -1769,11 +1799,26 @@ int Client() {
 
                             switch (userInput3) {
                                 case 1: {
-                                    PaymentSlip(amount, 'P', dataPtcl.accountID);
-                                    printf("\nPrinted Successfully!\nPress enter to continue...");
-                                    getch();
-                                    system("cls");
-                                    goto clientTop;
+                                    selection3 = PaymentSlip(amount, 'P', dataPtcl.accountID);
+                                    if (selection3 == 404) {
+                                        printf("\nFile openeing error!\nPress enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
+                                    else if (selection3 == 1) {
+                                        printf("\nPrinted Successfully!\nPress enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
+                                    else {
+                                        printf("\n\nOH NOO!! We crashed!\n");
+                                        printf("Press Enter to continue...");
+                                        getch();
+                                        system("cls");
+                                        goto clientTop;
+                                    }
                                     break;
                                 }
 
@@ -2617,7 +2662,7 @@ int CreditCardVerification(struct CreditCard data) {
 
     // 1 = Verified, 0 = Not Verified, 404 = Error
     
-    pointer = fopen("CreditCardData.txt", "rb");
+    pointer = fopen(creditCardFile, "rb");
 
     if (pointer == NULL) {
         return 404;
@@ -3549,7 +3594,7 @@ bool StarConsumer(bool timePayment[12]) {
     return true;
 }
 
-void PaymentSlip(float amount, char company, unsigned long long int id) {
+int PaymentSlip(float amount, char company, unsigned long long int id) {
     FILE* pointer;
     char consumerId[15], companyName[50], monthYear[50], fileName[70] = "PaymentSlip-";
     time_t currentTime;
@@ -3558,7 +3603,7 @@ void PaymentSlip(float amount, char company, unsigned long long int id) {
     time(&currentTime);
     time1 = localtime(&currentTime);
 
-    snprintf(monthYear, sizeof(monthYear), "%d/%d", time1->tm_mon + 1, time1->tm_year + 1900);
+    snprintf(monthYear, sizeof(monthYear), "%d-%d", time1->tm_mon + 1, time1->tm_year + 1900);
     snprintf(consumerId, sizeof(consumerId), "%llu", id);
 
     switch (company) {
@@ -3582,10 +3627,15 @@ void PaymentSlip(float amount, char company, unsigned long long int id) {
     strcat(fileName, consumerId);
     strcat(fileName, "-");
     strcat(fileName, monthYear);
-    strcat(fileName, ".txt");
+    strcat(fileName, ".txt");    
 
     pointer = fopen(fileName, "w");
+
+    if (pointer == NULL) {        
+        return 404;
+    }
     
+    fprintf(pointer, "--------------------------------------------------------------------------------------------------------------------\n");
     fprintf(pointer, "\t\t\t\t\t\t\tPayment\n");
     fprintf(pointer, "--------------------------------------------------------------------------------------------------------------------\n\n");
     fprintf(pointer, "Payment against ID: %llu\n", id);
@@ -3595,7 +3645,7 @@ void PaymentSlip(float amount, char company, unsigned long long int id) {
     fprintf(pointer, "Payment made from Cedit Card");
 
     fclose(pointer);
-    
+    return 1;
 }
 
 bool ContactNumberVerification(unsigned long long int number) {

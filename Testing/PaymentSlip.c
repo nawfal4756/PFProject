@@ -3,13 +3,25 @@
 #include <string.h>
 #include <time.h>
 
-void PaymentSlip(float amount, char company, unsigned long long int id);
+int PaymentSlip(float amount, char company, unsigned long long int id);
 
 int main() {
-    PaymentSlip(252.25, 'K', 1234567113);
+    int res;
+    
+    res = PaymentSlip(252.25, 'K', 1234567113);
+
+    if (res == 404) {
+        printf("Error opening file");
+    }
+    else if (res == 1) {
+        printf("Completed");
+    }
+    else {
+        printf("ERROR");
+    }
 }
 
-void PaymentSlip(float amount, char company, unsigned long long int id) {
+int PaymentSlip(float amount, char company, unsigned long long int id) {
     FILE* pointer;
     char consumerId[15], companyName[50], monthYear[50], fileName[70] = "PaymentSlip-";
     time_t currentTime;
@@ -18,7 +30,7 @@ void PaymentSlip(float amount, char company, unsigned long long int id) {
     time(&currentTime);
     time1 = localtime(&currentTime);
 
-    snprintf(monthYear, sizeof(monthYear), "%d/%d", time1->tm_mon + 1, time1->tm_year + 1900);
+    snprintf(monthYear, sizeof(monthYear), "%d-%d", time1->tm_mon + 1, time1->tm_year + 1900);
     snprintf(consumerId, sizeof(consumerId), "%llu", id);
 
     switch (company) {
@@ -44,8 +56,15 @@ void PaymentSlip(float amount, char company, unsigned long long int id) {
     strcat(fileName, monthYear);
     strcat(fileName, ".txt");
 
+    printf("%s\n", fileName);
+
     pointer = fopen(fileName, "w");
+
+    if (pointer == NULL) {        
+        return 404;
+    }
     
+    fprintf(pointer, "--------------------------------------------------------------------------------------------------------------------\n");
     fprintf(pointer, "\t\t\t\t\t\t\tPayment\n");
     fprintf(pointer, "--------------------------------------------------------------------------------------------------------------------\n\n");
     fprintf(pointer, "Payment against ID: %llu\n", id);
@@ -55,5 +74,5 @@ void PaymentSlip(float amount, char company, unsigned long long int id) {
     fprintf(pointer, "Payment made from Cedit Card");
 
     fclose(pointer);
-    
+    return 1;
 }
