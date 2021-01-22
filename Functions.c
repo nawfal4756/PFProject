@@ -4873,22 +4873,22 @@ struct KElectricData KElectricGenerateCurrentBill(struct KElectricData userData)
     month = time1->tm_mon;
 
     printf("Enter the number of off peak units used: ");
-    scan("%f", &userData.unitsAndPayment[0][month]);
+    scanf("%f", &userData.unitsAndPayment[0][month]);
     fflush(stdin);
     while(userData.unitsAndPayment[0][month] < 0) {
         printf("\nIncorrect value entered!\n");
         printf("Enter the number of off peak units used again: ");
-        scan("%f", &userData.unitsAndPayment[0][month]);
+        scanf("%f", &userData.unitsAndPayment[0][month]);
         fflush(stdin);
     }
 
     printf("Enter the number of on peak units used: ");
-    scan("%f", &userData.unitsAndPayment[1][month]);
+    scanf("%f", &userData.unitsAndPayment[1][month]);
     fflush(stdin);
     while(userData.unitsAndPayment[1][month] < 0) {
         printf("\nIncorrect value entered!\n");
         printf("Enter the number of on peak units used again: ");
-        scan("%f", &userData.unitsAndPayment[1][month]);
+        scanf("%f", &userData.unitsAndPayment[1][month]);
         fflush(stdin);
     }
 
@@ -4910,12 +4910,12 @@ struct SSGCData SSGCGenerateCurrentBill(struct SSGCData userData) {
     month = time1->tm_mon;
 
     printf("Enter the number of units used: ");
-    scan("%f", &userData.unitsAndPayment[0][month]);
+    scanf("%f", &userData.unitsAndPayment[0][month]);
     fflush(stdin);
     while(userData.unitsAndPayment[0][month] < 0) {
         printf("\nIncorrect value entered!\n");
         printf("Enter the number of units used again: ");
-        scan("%f", &userData.unitsAndPayment[0][month]);
+        scanf("%f", &userData.unitsAndPayment[0][month]);
         fflush(stdin);
     }
 
@@ -5090,7 +5090,7 @@ int KElectricRatesModification(char category) {
             printf("Enter 13 to change the TV license fee\n");
             printf("Enter 14 to go back\n");
             printf("Enter you desired option: ");
-            scan("%d", &option1);
+            scanf("%d", &option1);
             fflush(stdin);
 
             switch (option1) {
@@ -5457,7 +5457,7 @@ int KElectricRatesModification(char category) {
             printf("Enter 8 to change the TV license fee\n");
             printf("Enter 9 to go back\n");
             printf("Enter you desired option: ");
-            scan("%d", &option1);
+            scanf("%d", &option1);
             fflush(stdin);
 
             switch (option1) {
@@ -5739,7 +5739,7 @@ int SSGCRatesModification(char category) {
             printf("Enter 9 to change the income tax percentage\n");
             printf("Enter 10 to go back\n");
             printf("Enter you desired option: ");
-            scan("%d", &option1);
+            scanf("%d", &option1);
             fflush(stdin);
 
             switch (option1) {
@@ -5999,7 +5999,7 @@ int SSGCRatesModification(char category) {
             printf("Enter 4 to change the income tax percentage\n");
             printf("Enter 5 to go back\n");
             printf("Enter you desired option: ");
-            scan("%d", &option1);
+            scanf("%d", &option1);
             fflush(stdin);
 
             switch (option1) {
@@ -6193,7 +6193,7 @@ int PTCLRatesModification() {
     printf("Enter 26 to change the percentage of service tax\n");
     printf("Enter 27 to go back\n");
     printf("Enter you desired option: ");
-    scan("%d", &option1);
+    scanf("%d", &option1);
     fflush(stdin);
 
     switch (option1) {
@@ -7083,3 +7083,15 @@ int AdminVerification(struct AdminControl userData) {
     }
 }
 
+bool ContactNumberVerification(unsigned long long int number) {
+    int temp;
+    temp = number / 1000000000;
+    
+    if (temp == 3) {        
+        if (number >= 3000000000 && number <= 39999999999) {
+            return true;
+        }
+    }
+
+    return false;
+}
